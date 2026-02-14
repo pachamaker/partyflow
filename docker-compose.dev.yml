@@ -1,3 +1,5 @@
+name: partyflow-dev
+
 services:
   redis:
     image: redis:7-alpine
@@ -14,14 +16,14 @@ services:
 
   backend:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile.dev
     env_file:
-      - .env.dev
+      - ./backend/.env.dev
     ports:
       - "3001:3001"
     volumes:
-      - .:/app
+      - ./backend:/app
       - backend-node-modules:/app/node_modules
     depends_on:
       redis:
@@ -30,7 +32,7 @@ services:
 
   frontend:
     build:
-      context: ../frontend
+      context: ./frontend
       dockerfile: Dockerfile.dev
     ports:
       - "5173:5173"
@@ -40,7 +42,7 @@ services:
       - VITE_API_URL=/api
       - VITE_WS_URL=
     volumes:
-      - ../frontend:/app
+      - ./frontend:/app
       - frontend-node-modules:/app/node_modules
     depends_on:
       - backend
