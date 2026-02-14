@@ -1,0 +1,643 @@
+```json
+{
+  "pack_id": "starter_pack_v1",
+  "pack_name": "Стартовый",
+  "pack_description": "Универсальный набор для домашних вечеринок и корпоративов",
+  "version": "1.0",
+  "total_words": 100,
+  "difficulty_distribution": {
+    "easy": 30,
+    "medium": 50,
+    "hard": 20
+  },
+  "words": [
+    {
+      "id": 1,
+      "word": "Пицца",
+      "difficulty": "easy",
+      "category": "food"
+    },
+    {
+      "id": 2,
+      "word": "Кот",
+      "difficulty": "easy",
+      "category": "animals"
+    },
+    {
+      "id": 3,
+      "word": "Телефон",
+      "difficulty": "easy",
+      "category": "objects"
+    },
+    {
+      "id": 4,
+      "word": "Кофе",
+      "difficulty": "easy",
+      "category": "food"
+    },
+    {
+      "id": 5,
+      "word": "Дождь",
+      "difficulty": "easy",
+      "category": "nature"
+    },
+    {
+      "id": 6,
+      "word": "Диван",
+      "difficulty": "easy",
+      "category": "objects"
+    },
+    {
+      "id": 7,
+      "word": "Машина",
+      "difficulty": "easy",
+      "category": "transport"
+    },
+    {
+      "id": 8,
+      "word": "Музыка",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 9,
+      "word": "Футбол",
+      "difficulty": "easy",
+      "category": "sports"
+    },
+    {
+      "id": 10,
+      "word": "Ноутбук",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 11,
+      "word": "Метро",
+      "difficulty": "easy",
+      "category": "transport"
+    },
+    {
+      "id": 12,
+      "word": "Чай",
+      "difficulty": "easy",
+      "category": "food"
+    },
+    {
+      "id": 13,
+      "word": "Фильм",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 14,
+      "word": "Шоколад",
+      "difficulty": "easy",
+      "category": "food"
+    },
+    {
+      "id": 15,
+      "word": "Ключи",
+      "difficulty": "easy",
+      "category": "objects"
+    },
+    {
+      "id": 16,
+      "word": "Друг",
+      "difficulty": "easy",
+      "category": "people"
+    },
+    {
+      "id": 17,
+      "word": "Спать",
+      "difficulty": "easy",
+      "category": "actions"
+    },
+    {
+      "id": 18,
+      "word": "Бегать",
+      "difficulty": "easy",
+      "category": "actions"
+    },
+    {
+      "id": 19,
+      "word": "Танцевать",
+      "difficulty": "easy",
+      "category": "actions"
+    },
+    {
+      "id": 20,
+      "word": "Смеяться",
+      "difficulty": "easy",
+      "category": "actions"
+    },
+    {
+      "id": 21,
+      "word": "Netflix",
+      "difficulty": "easy",
+      "category": "brands"
+    },
+    {
+      "id": 22,
+      "word": "Instagram",
+      "difficulty": "easy",
+      "category": "brands"
+    },
+    {
+      "id": 23,
+      "word": "Такси",
+      "difficulty": "easy",
+      "category": "transport"
+    },
+    {
+      "id": 24,
+      "word": "Пятница",
+      "difficulty": "easy",
+      "category": "time"
+    },
+    {
+      "id": 25,
+      "word": "Лето",
+      "difficulty": "easy",
+      "category": "time"
+    },
+    {
+      "id": 26,
+      "word": "Море",
+      "difficulty": "easy",
+      "category": "nature"
+    },
+    {
+      "id": 27,
+      "word": "Селфи",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 28,
+      "word": "Гитара",
+      "difficulty": "easy",
+      "category": "objects"
+    },
+    {
+      "id": 29,
+      "word": "Суши",
+      "difficulty": "easy",
+      "category": "food"
+    },
+    {
+      "id": 30,
+      "word": "Подарок",
+      "difficulty": "easy",
+      "category": "objects"
+    },
+    {
+      "id": 31,
+      "word": "Дедлайн",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 32,
+      "word": "Апдейт",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 33,
+      "word": "Баг",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 34,
+      "word": "Тимлид",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 35,
+      "word": "Фриланс",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 36,
+      "word": "Стендап",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 37,
+      "word": "Мерч",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 38,
+      "word": "Вайб",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 39,
+      "word": "Краш",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 40,
+      "word": "Кринж",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 41,
+      "word": "Флексить",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 42,
+      "word": "Токсик",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 43,
+      "word": "Хейтер",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 44,
+      "word": "Скролл",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 45,
+      "word": "Тренд",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 46,
+      "word": "Подкаст",
+      "difficulty": "medium",
+      "category": "entertainment"
+    },
+    {
+      "id": 47,
+      "word": "Стример",
+      "difficulty": "medium",
+      "category": "entertainment"
+    },
+    {
+      "id": 48,
+      "word": "Донат",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 49,
+      "word": "Мем",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 50,
+      "word": "Лайк",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 51,
+      "word": "Репост",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 52,
+      "word": "Сториз",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 53,
+      "word": "Стикер",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 54,
+      "word": "Чилить",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 55,
+      "word": "Зумить",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 56,
+      "word": "Майндфулнесс",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 57,
+      "word": "Ностальгия",
+      "difficulty": "medium",
+      "category": "emotions"
+    },
+    {
+      "id": 58,
+      "word": "Прокрастинация",
+      "difficulty": "medium",
+      "category": "psychology"
+    },
+    {
+      "id": 59,
+      "word": "Мотивация",
+      "difficulty": "medium",
+      "category": "psychology"
+    },
+    {
+      "id": 60,
+      "word": "Импровизация",
+      "difficulty": "medium",
+      "category": "creativity"
+    },
+    {
+      "id": 61,
+      "word": "Рефакторинг",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 62,
+      "word": "Криптовалюта",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 63,
+      "word": "Воркшоп",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 64,
+      "word": "Нетворкинг",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 65,
+      "word": "Тиндер",
+      "difficulty": "medium",
+      "category": "brands"
+    },
+    {
+      "id": 66,
+      "word": "Буллинг",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 67,
+      "word": "Баттл",
+      "difficulty": "medium",
+      "category": "entertainment"
+    },
+    {
+      "id": 68,
+      "word": "Спойлер",
+      "difficulty": "medium",
+      "category": "entertainment"
+    },
+    {
+      "id": 69,
+      "word": "Челлендж",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 70,
+      "word": "Лайфхак",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 71,
+      "word": "Бумер",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 72,
+      "word": "Зумер",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 73,
+      "word": "Инфлюенсер",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 74,
+      "word": "Контент",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 75,
+      "word": "Коллаб",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 76,
+      "word": "Перфекционизм",
+      "difficulty": "medium",
+      "category": "psychology"
+    },
+    {
+      "id": 77,
+      "word": "Харассмент",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 78,
+      "word": "Фидбэк",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 79,
+      "word": "Овертайм",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 80,
+      "word": "Бёрнаут",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 81,
+      "word": "Газлайтинг",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Манипуляция, когда тебе говорят, что ты всё придумал"
+    },
+    {
+      "id": 82,
+      "word": "Импостер-синдром",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Чувство, что ты недостаточно компетентен, даже если объективно крутой специалист"
+    },
+    {
+      "id": 83,
+      "word": "Токсичная позитивность",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Когда говорят 'просто улыбайся' вместо выслушивания проблемы"
+    },
+    {
+      "id": 84,
+      "word": "Эмоциональный интеллект",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Способность понимать свои и чужие эмоции, управлять ими"
+    },
+    {
+      "id": 85,
+      "word": "Когнитивный диссонанс",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Дискомфорт, когда убеждения противоречат друг другу"
+    },
+    {
+      "id": 86,
+      "word": "Эмпатия",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Способность поставить себя на место другого человека"
+    },
+    {
+      "id": 87,
+      "word": "Делегирование",
+      "difficulty": "hard",
+      "category": "work",
+      "hint": "Передача задач подчинённым с правами и ответственностью"
+    },
+    {
+      "id": 88,
+      "word": "Фасилитация",
+      "difficulty": "hard",
+      "category": "work",
+      "hint": "Ведение групповой дискуссии так, чтобы все участвовали"
+    },
+    {
+      "id": 89,
+      "word": "Самоирония",
+      "difficulty": "hard",
+      "category": "personality",
+      "hint": "Шутки над своими недостатками или ошибками"
+    },
+    {
+      "id": 90,
+      "word": "Метавселенная",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Виртуальное пространство с аватарами, как в 'Первому игроку приготовиться'"
+    },
+    {
+      "id": 91,
+      "word": "NFT",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Уникальный цифровой сертификат на картинку/видео"
+    },
+    {
+      "id": 92,
+      "word": "Блокчейн",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Технология, где данные хранятся у всех участников сети"
+    },
+    {
+      "id": 93,
+      "word": "Этичное потребление",
+      "difficulty": "hard",
+      "category": "lifestyle",
+      "hint": "Покупать товары, которые не вредят природе"
+    },
+    {
+      "id": 94,
+      "word": "Экологический след",
+      "difficulty": "hard",
+      "category": "lifestyle",
+      "hint": "Сколько ресурсов планеты ты потребляешь своим образом жизни"
+    },
+    {
+      "id": 95,
+      "word": "Осознанность",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Полное присутствие в моменте, без мыслей о прошлом/будущем"
+    },
+    {
+      "id": 96,
+      "word": "Бодипозитив",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Движение за принятие любого типа тела"
+    },
+    {
+      "id": 97,
+      "word": "Прайвеси",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Право на личную жизнь, защита персональных данных"
+    },
+    {
+      "id": 98,
+      "word": "Инклюзивность",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Учёт потребностей всех людей, включая меньшинства"
+    },
+    {
+      "id": 99,
+      "word": "Микроменеджмент",
+      "difficulty": "hard",
+      "category": "work",
+      "hint": "Контроль каждого шага подчинённого без самостоятельности"
+    },
+    {
+      "id": 100,
+      "word": "Ресурсное состояние",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Когда есть силы, энергия и настрой для достижения целей"
+    }
+  ],
+  "metadata": {
+    "created_at": "2026-02-11",
+    "author": "Content Manager",
+    "target_audience": "Gen Z + Millennials (20-35 years)",
+    "language": "ru",
+    "tags": ["universal", "party", "corporate", "mvp", "family-friendly"]
+  }
+}
+```
