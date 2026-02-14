@@ -1,643 +1,3121 @@
-```json
 {
-  "pack_id": "starter_pack_v1",
-  "pack_name": "Стартовый",
-  "pack_description": "Универсальный набор для домашних вечеринок и корпоративов",
+  "pack_id": "starter_pack_extended_v1",
+  "pack_name": "Стартовый Extended",
+  "pack_description": "Расширенный универсальный набор с фокусом на мемы и IT-сленг для Gen Z и миллениалов",
   "version": "1.0",
-  "total_words": 100,
+  "total_words": 500,
   "difficulty_distribution": {
-    "easy": 30,
-    "medium": 50,
-    "hard": 20
+    "easy": 150,
+    "medium": 250,
+    "hard": 100
   },
   "words": [
     {
       "id": 1,
-      "word": "Пицца",
+      "word": "Мем",
       "difficulty": "easy",
-      "category": "food"
+      "category": "internet"
     },
     {
       "id": 2,
-      "word": "Кот",
+      "word": "Лайк",
       "difficulty": "easy",
-      "category": "animals"
+      "category": "social"
     },
     {
       "id": 3,
-      "word": "Телефон",
-      "difficulty": "easy",
-      "category": "objects"
-    },
-    {
-      "id": 4,
-      "word": "Кофе",
-      "difficulty": "easy",
-      "category": "food"
-    },
-    {
-      "id": 5,
-      "word": "Дождь",
-      "difficulty": "easy",
-      "category": "nature"
-    },
-    {
-      "id": 6,
-      "word": "Диван",
-      "difficulty": "easy",
-      "category": "objects"
-    },
-    {
-      "id": 7,
-      "word": "Машина",
-      "difficulty": "easy",
-      "category": "transport"
-    },
-    {
-      "id": 8,
-      "word": "Музыка",
-      "difficulty": "easy",
-      "category": "entertainment"
-    },
-    {
-      "id": 9,
-      "word": "Футбол",
-      "difficulty": "easy",
-      "category": "sports"
-    },
-    {
-      "id": 10,
-      "word": "Ноутбук",
-      "difficulty": "easy",
-      "category": "tech"
-    },
-    {
-      "id": 11,
-      "word": "Метро",
-      "difficulty": "easy",
-      "category": "transport"
-    },
-    {
-      "id": 12,
-      "word": "Чай",
-      "difficulty": "easy",
-      "category": "food"
-    },
-    {
-      "id": 13,
-      "word": "Фильм",
-      "difficulty": "easy",
-      "category": "entertainment"
-    },
-    {
-      "id": 14,
-      "word": "Шоколад",
-      "difficulty": "easy",
-      "category": "food"
-    },
-    {
-      "id": 15,
-      "word": "Ключи",
-      "difficulty": "easy",
-      "category": "objects"
-    },
-    {
-      "id": 16,
-      "word": "Друг",
-      "difficulty": "easy",
-      "category": "people"
-    },
-    {
-      "id": 17,
-      "word": "Спать",
-      "difficulty": "easy",
-      "category": "actions"
-    },
-    {
-      "id": 18,
-      "word": "Бегать",
-      "difficulty": "easy",
-      "category": "actions"
-    },
-    {
-      "id": 19,
-      "word": "Танцевать",
-      "difficulty": "easy",
-      "category": "actions"
-    },
-    {
-      "id": 20,
-      "word": "Смеяться",
-      "difficulty": "easy",
-      "category": "actions"
-    },
-    {
-      "id": 21,
-      "word": "Netflix",
-      "difficulty": "easy",
-      "category": "brands"
-    },
-    {
-      "id": 22,
-      "word": "Instagram",
-      "difficulty": "easy",
-      "category": "brands"
-    },
-    {
-      "id": 23,
-      "word": "Такси",
-      "difficulty": "easy",
-      "category": "transport"
-    },
-    {
-      "id": 24,
-      "word": "Пятница",
-      "difficulty": "easy",
-      "category": "time"
-    },
-    {
-      "id": 25,
-      "word": "Лето",
-      "difficulty": "easy",
-      "category": "time"
-    },
-    {
-      "id": 26,
-      "word": "Море",
-      "difficulty": "easy",
-      "category": "nature"
-    },
-    {
-      "id": 27,
       "word": "Селфи",
       "difficulty": "easy",
       "category": "social"
     },
     {
-      "id": 28,
-      "word": "Гитара",
+      "id": 4,
+      "word": "Гугл",
       "difficulty": "easy",
-      "category": "objects"
+      "category": "brands"
     },
     {
-      "id": 29,
+      "id": 5,
+      "word": "YouTube",
+      "difficulty": "easy",
+      "category": "brands"
+    },
+    {
+      "id": 6,
+      "word": "Instagram",
+      "difficulty": "easy",
+      "category": "brands"
+    },
+    {
+      "id": 7,
+      "word": "TikTok",
+      "difficulty": "easy",
+      "category": "brands"
+    },
+    {
+      "id": 8,
+      "word": "WhatsApp",
+      "difficulty": "easy",
+      "category": "brands"
+    },
+    {
+      "id": 9,
+      "word": "Telegram",
+      "difficulty": "easy",
+      "category": "brands"
+    },
+    {
+      "id": 10,
+      "word": "Netflix",
+      "difficulty": "easy",
+      "category": "brands"
+    },
+    {
+      "id": 11,
+      "word": "Spotify",
+      "difficulty": "easy",
+      "category": "brands"
+    },
+    {
+      "id": 12,
+      "word": "Твиттер",
+      "difficulty": "easy",
+      "category": "brands"
+    },
+    {
+      "id": 13,
+      "word": "Яндекс",
+      "difficulty": "easy",
+      "category": "brands"
+    },
+    {
+      "id": 14,
+      "word": "Вконтакте",
+      "difficulty": "easy",
+      "category": "brands"
+    },
+    {
+      "id": 15,
+      "word": "Zoom",
+      "difficulty": "easy",
+      "category": "brands"
+    },
+    {
+      "id": 16,
+      "word": "WiFi",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 17,
+      "word": "Смартфон",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 18,
+      "word": "Ноутбук",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 19,
+      "word": "Хэштег",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 20,
+      "word": "Эмодзи",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 21,
+      "word": "Скриншот",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 22,
+      "word": "Репост",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 23,
+      "word": "Подкаст",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 24,
+      "word": "Блогер",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 25,
+      "word": "Стример",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 26,
+      "word": "Геймер",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 27,
+      "word": "Пицца",
+      "difficulty": "easy",
+      "category": "food"
+    },
+    {
+      "id": 28,
       "word": "Суши",
       "difficulty": "easy",
       "category": "food"
     },
     {
-      "id": 30,
-      "word": "Подарок",
+      "id": 29,
+      "word": "Бургер",
       "difficulty": "easy",
-      "category": "objects"
+      "category": "food"
+    },
+    {
+      "id": 30,
+      "word": "Кофе",
+      "difficulty": "easy",
+      "category": "food"
     },
     {
       "id": 31,
-      "word": "Дедлайн",
-      "difficulty": "medium",
-      "category": "work"
+      "word": "Доставка",
+      "difficulty": "easy",
+      "category": "services"
     },
     {
       "id": 32,
-      "word": "Апдейт",
-      "difficulty": "medium",
-      "category": "tech"
+      "word": "Такси",
+      "difficulty": "easy",
+      "category": "transport"
     },
     {
       "id": 33,
-      "word": "Баг",
-      "difficulty": "medium",
-      "category": "tech"
+      "word": "Самокат",
+      "difficulty": "easy",
+      "category": "transport"
     },
     {
       "id": 34,
-      "word": "Тимлид",
-      "difficulty": "medium",
-      "category": "work"
+      "word": "Каршеринг",
+      "difficulty": "easy",
+      "category": "transport"
     },
     {
       "id": 35,
-      "word": "Фриланс",
-      "difficulty": "medium",
-      "category": "work"
+      "word": "QR-код",
+      "difficulty": "easy",
+      "category": "tech"
     },
     {
       "id": 36,
-      "word": "Стендап",
-      "difficulty": "medium",
-      "category": "work"
+      "word": "Банковская карта",
+      "difficulty": "easy",
+      "category": "finance"
     },
     {
       "id": 37,
-      "word": "Мерч",
-      "difficulty": "medium",
-      "category": "social"
+      "word": "Кэшбэк",
+      "difficulty": "easy",
+      "category": "finance"
     },
     {
       "id": 38,
-      "word": "Вайб",
-      "difficulty": "medium",
-      "category": "slang"
+      "word": "Скидка",
+      "difficulty": "easy",
+      "category": "shopping"
     },
     {
       "id": 39,
-      "word": "Краш",
-      "difficulty": "medium",
-      "category": "slang"
+      "word": "Интернет-магазин",
+      "difficulty": "easy",
+      "category": "shopping"
     },
     {
       "id": 40,
-      "word": "Кринж",
-      "difficulty": "medium",
-      "category": "slang"
+      "word": "Распродажа",
+      "difficulty": "easy",
+      "category": "shopping"
     },
     {
       "id": 41,
-      "word": "Флексить",
-      "difficulty": "medium",
-      "category": "slang"
+      "word": "Онлайн",
+      "difficulty": "easy",
+      "category": "tech"
     },
     {
       "id": 42,
-      "word": "Токсик",
-      "difficulty": "medium",
-      "category": "slang"
+      "word": "Офлайн",
+      "difficulty": "easy",
+      "category": "tech"
     },
     {
       "id": 43,
-      "word": "Хейтер",
-      "difficulty": "medium",
-      "category": "social"
+      "word": "Пароль",
+      "difficulty": "easy",
+      "category": "tech"
     },
     {
       "id": 44,
+      "word": "Аккаунт",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 45,
+      "word": "Профиль",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 46,
+      "word": "Аватарка",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 47,
+      "word": "Подписка",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 48,
+      "word": "Подписчик",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 49,
+      "word": "Фолловер",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 50,
+      "word": "Комментарий",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 51,
+      "word": "Реакция",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 52,
+      "word": "Стикер",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 53,
+      "word": "Гифка",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 54,
+      "word": "Видео",
+      "difficulty": "easy",
+      "category": "media"
+    },
+    {
+      "id": 55,
+      "word": "Фото",
+      "difficulty": "easy",
+      "category": "media"
+    },
+    {
+      "id": 56,
+      "word": "Плейлист",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 57,
+      "word": "Трек",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 58,
+      "word": "Альбом",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 59,
+      "word": "Концерт",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 60,
+      "word": "Фестиваль",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 61,
+      "word": "Сериал",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 62,
+      "word": "Сезон",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 63,
+      "word": "Серия",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 64,
+      "word": "Трейлер",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 65,
+      "word": "Премьера",
+      "difficulty": "easy",
+      "category": "entertainment"
+    },
+    {
+      "id": 66,
+      "word": "Рейтинг",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 67,
+      "word": "Отзыв",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 68,
+      "word": "Звезда",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 69,
+      "word": "Лайфхак",
+      "difficulty": "easy",
+      "category": "lifestyle"
+    },
+    {
+      "id": 70,
+      "word": "Челлендж",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 71,
+      "word": "Тренд",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 72,
+      "word": "Вирусный",
+      "difficulty": "easy",
+      "category": "social"
+    },
+    {
+      "id": 73,
+      "word": "Хайп",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 74,
+      "word": "Топ",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 75,
+      "word": "Бомба",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 76,
+      "word": "Огонь",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 77,
+      "word": "Кайф",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 78,
+      "word": "Вау",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 79,
+      "word": "Упс",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 80,
+      "word": "Окей",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 81,
+      "word": "Привет",
+      "difficulty": "easy",
+      "category": "communication"
+    },
+    {
+      "id": 82,
+      "word": "Пока",
+      "difficulty": "easy",
+      "category": "communication"
+    },
+    {
+      "id": 83,
+      "word": "Спасибо",
+      "difficulty": "easy",
+      "category": "communication"
+    },
+    {
+      "id": 84,
+      "word": "Извини",
+      "difficulty": "easy",
+      "category": "communication"
+    },
+    {
+      "id": 85,
+      "word": "Круто",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 86,
+      "word": "Класс",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 87,
+      "word": "Супер",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 88,
+      "word": "Мега",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 89,
+      "word": "Ультра",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 90,
+      "word": "Гига",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 91,
+      "word": "Мини",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 92,
+      "word": "Макси",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 93,
+      "word": "Про",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 94,
+      "word": "Премиум",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 95,
+      "word": "Лайт",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 96,
+      "word": "Фулл",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 97,
+      "word": "Нон-стоп",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 98,
+      "word": "Безлимит",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 99,
+      "word": "Бонус",
+      "difficulty": "easy",
+      "category": "slang"
+    },
+    {
+      "id": 100,
+      "word": "Промокод",
+      "difficulty": "easy",
+      "category": "shopping"
+    },
+    {
+      "id": 101,
+      "word": "Купон",
+      "difficulty": "easy",
+      "category": "shopping"
+    },
+    {
+      "id": 102,
+      "word": "Акция",
+      "difficulty": "easy",
+      "category": "shopping"
+    },
+    {
+      "id": 103,
+      "word": "Маркетплейс",
+      "difficulty": "easy",
+      "category": "shopping"
+    },
+    {
+      "id": 104,
+      "word": "Корзина",
+      "difficulty": "easy",
+      "category": "shopping"
+    },
+    {
+      "id": 105,
+      "word": "Оформить заказ",
+      "difficulty": "easy",
+      "category": "shopping"
+    },
+    {
+      "id": 106,
+      "word": "Трекинг",
+      "difficulty": "easy",
+      "category": "shopping"
+    },
+    {
+      "id": 107,
+      "word": "Курьер",
+      "difficulty": "easy",
+      "category": "services"
+    },
+    {
+      "id": 108,
+      "word": "Пункт выдачи",
+      "difficulty": "easy",
+      "category": "shopping"
+    },
+    {
+      "id": 109,
+      "word": "Возврат",
+      "difficulty": "easy",
+      "category": "shopping"
+    },
+    {
+      "id": 110,
+      "word": "Обмен",
+      "difficulty": "easy",
+      "category": "shopping"
+    },
+    {
+      "id": 111,
+      "word": "Гарантия",
+      "difficulty": "easy",
+      "category": "shopping"
+    },
+    {
+      "id": 112,
+      "word": "Сервис",
+      "difficulty": "easy",
+      "category": "services"
+    },
+    {
+      "id": 113,
+      "word": "Поддержка",
+      "difficulty": "easy",
+      "category": "services"
+    },
+    {
+      "id": 114,
+      "word": "Чат",
+      "difficulty": "easy",
+      "category": "communication"
+    },
+    {
+      "id": 115,
+      "word": "Сообщение",
+      "difficulty": "easy",
+      "category": "communication"
+    },
+    {
+      "id": 116,
+      "word": "Уведомление",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 117,
+      "word": "Будильник",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 118,
+      "word": "Календарь",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 119,
+      "word": "Напоминание",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 120,
+      "word": "Событие",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 121,
+      "word": "Встреча",
+      "difficulty": "easy",
+      "category": "work"
+    },
+    {
+      "id": 122,
+      "word": "Созвон",
+      "difficulty": "easy",
+      "category": "work"
+    },
+    {
+      "id": 123,
+      "word": "Видеозвонок",
+      "difficulty": "easy",
+      "category": "communication"
+    },
+    {
+      "id": 124,
+      "word": "Конференция",
+      "difficulty": "easy",
+      "category": "work"
+    },
+    {
+      "id": 125,
+      "word": "Презентация",
+      "difficulty": "easy",
+      "category": "work"
+    },
+    {
+      "id": 126,
+      "word": "Слайд",
+      "difficulty": "easy",
+      "category": "work"
+    },
+    {
+      "id": 127,
+      "word": "Документ",
+      "difficulty": "easy",
+      "category": "work"
+    },
+    {
+      "id": 128,
+      "word": "Файл",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 129,
+      "word": "Папка",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 130,
+      "word": "Облако",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 131,
+      "word": "Загрузка",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 132,
+      "word": "Скачивание",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 133,
+      "word": "Установка",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 134,
+      "word": "Обновление",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 135,
+      "word": "Перезагрузка",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 136,
+      "word": "Батарея",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 137,
+      "word": "Зарядка",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 138,
+      "word": "Наушники",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 139,
+      "word": "Колонка",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 140,
+      "word": "Экран",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 141,
+      "word": "Камера",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 142,
+      "word": "Микрофон",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 143,
+      "word": "Громкость",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 144,
+      "word": "Яркость",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 145,
+      "word": "Настройки",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 146,
+      "word": "Меню",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 147,
+      "word": "Кнопка",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 148,
+      "word": "Свайп",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 149,
+      "word": "Клик",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 150,
+      "word": "Тап",
+      "difficulty": "easy",
+      "category": "tech"
+    },
+    {
+      "id": 151,
       "word": "Скролл",
       "difficulty": "medium",
       "category": "tech"
     },
     {
-      "id": 45,
-      "word": "Тренд",
-      "difficulty": "medium",
-      "category": "social"
-    },
-    {
-      "id": 46,
-      "word": "Подкаст",
-      "difficulty": "medium",
-      "category": "entertainment"
-    },
-    {
-      "id": 47,
-      "word": "Стример",
-      "difficulty": "medium",
-      "category": "entertainment"
-    },
-    {
-      "id": 48,
-      "word": "Донат",
-      "difficulty": "medium",
-      "category": "social"
-    },
-    {
-      "id": 49,
-      "word": "Мем",
-      "difficulty": "medium",
-      "category": "social"
-    },
-    {
-      "id": 50,
-      "word": "Лайк",
-      "difficulty": "medium",
-      "category": "social"
-    },
-    {
-      "id": 51,
-      "word": "Репост",
-      "difficulty": "medium",
-      "category": "social"
-    },
-    {
-      "id": 52,
-      "word": "Сториз",
-      "difficulty": "medium",
-      "category": "social"
-    },
-    {
-      "id": 53,
-      "word": "Стикер",
-      "difficulty": "medium",
-      "category": "social"
-    },
-    {
-      "id": 54,
-      "word": "Чилить",
-      "difficulty": "medium",
-      "category": "slang"
-    },
-    {
-      "id": 55,
-      "word": "Зумить",
+      "id": 152,
+      "word": "Зум",
       "difficulty": "medium",
       "category": "tech"
     },
     {
-      "id": 56,
-      "word": "Майндфулнесс",
+      "id": 153,
+      "word": "Ротация",
       "difficulty": "medium",
-      "category": "lifestyle"
+      "category": "tech"
     },
     {
-      "id": 57,
-      "word": "Ностальгия",
+      "id": 154,
+      "word": "Ориентация",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 155,
+      "word": "Интерфейс",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 156,
+      "word": "Юзабилити",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 157,
+      "word": "Навигация",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 158,
+      "word": "Фильтр",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 159,
+      "word": "Сортировка",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 160,
+      "word": "Поиск",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 161,
+      "word": "Алгоритм",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 162,
+      "word": "Рекомендация",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 163,
+      "word": "Персонализация",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 164,
+      "word": "Таргетинг",
+      "difficulty": "medium",
+      "category": "marketing"
+    },
+    {
+      "id": 165,
+      "word": "Реклама",
+      "difficulty": "medium",
+      "category": "marketing"
+    },
+    {
+      "id": 166,
+      "word": "Баннер",
+      "difficulty": "medium",
+      "category": "marketing"
+    },
+    {
+      "id": 167,
+      "word": "Спонсор",
+      "difficulty": "medium",
+      "category": "marketing"
+    },
+    {
+      "id": 168,
+      "word": "Интеграция",
+      "difficulty": "medium",
+      "category": "marketing"
+    },
+    {
+      "id": 169,
+      "word": "Коллаборация",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 170,
+      "word": "Партнёрство",
+      "difficulty": "medium",
+      "category": "business"
+    },
+    {
+      "id": 171,
+      "word": "Бренд",
+      "difficulty": "medium",
+      "category": "marketing"
+    },
+    {
+      "id": 172,
+      "word": "Лого",
+      "difficulty": "medium",
+      "category": "marketing"
+    },
+    {
+      "id": 173,
+      "word": "Айдентика",
+      "difficulty": "medium",
+      "category": "marketing"
+    },
+    {
+      "id": 174,
+      "word": "Фирстиль",
+      "difficulty": "medium",
+      "category": "marketing"
+    },
+    {
+      "id": 175,
+      "word": "Брендинг",
+      "difficulty": "medium",
+      "category": "marketing"
+    },
+    {
+      "id": 176,
+      "word": "Упаковка",
+      "difficulty": "medium",
+      "category": "marketing"
+    },
+    {
+      "id": 177,
+      "word": "Дизайн",
+      "difficulty": "medium",
+      "category": "creative"
+    },
+    {
+      "id": 178,
+      "word": "Креатив",
+      "difficulty": "medium",
+      "category": "creative"
+    },
+    {
+      "id": 179,
+      "word": "Концепция",
+      "difficulty": "medium",
+      "category": "creative"
+    },
+    {
+      "id": 180,
+      "word": "Мудборд",
+      "difficulty": "medium",
+      "category": "creative"
+    },
+    {
+      "id": 181,
+      "word": "Референс",
+      "difficulty": "medium",
+      "category": "creative"
+    },
+    {
+      "id": 182,
+      "word": "Инспирация",
+      "difficulty": "medium",
+      "category": "creative"
+    },
+    {
+      "id": 183,
+      "word": "Эстетика",
+      "difficulty": "medium",
+      "category": "creative"
+    },
+    {
+      "id": 184,
+      "word": "Вайб",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 185,
+      "word": "Энергетика",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 186,
+      "word": "Атмосфера",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 187,
+      "word": "Настроение",
       "difficulty": "medium",
       "category": "emotions"
     },
     {
-      "id": 58,
-      "word": "Прокрастинация",
+      "id": 188,
+      "word": "Флюиды",
       "difficulty": "medium",
-      "category": "psychology"
+      "category": "slang"
     },
     {
-      "id": 59,
-      "word": "Мотивация",
+      "id": 189,
+      "word": "Аура",
       "difficulty": "medium",
-      "category": "psychology"
+      "category": "slang"
     },
     {
-      "id": 60,
-      "word": "Импровизация",
-      "difficulty": "medium",
-      "category": "creativity"
-    },
-    {
-      "id": 61,
-      "word": "Рефакторинг",
-      "difficulty": "medium",
-      "category": "tech"
-    },
-    {
-      "id": 62,
-      "word": "Криптовалюта",
-      "difficulty": "medium",
-      "category": "tech"
-    },
-    {
-      "id": 63,
-      "word": "Воркшоп",
-      "difficulty": "medium",
-      "category": "work"
-    },
-    {
-      "id": 64,
-      "word": "Нетворкинг",
-      "difficulty": "medium",
-      "category": "work"
-    },
-    {
-      "id": 65,
-      "word": "Тиндер",
-      "difficulty": "medium",
-      "category": "brands"
-    },
-    {
-      "id": 66,
-      "word": "Буллинг",
-      "difficulty": "medium",
-      "category": "social"
-    },
-    {
-      "id": 67,
-      "word": "Баттл",
-      "difficulty": "medium",
-      "category": "entertainment"
-    },
-    {
-      "id": 68,
-      "word": "Спойлер",
-      "difficulty": "medium",
-      "category": "entertainment"
-    },
-    {
-      "id": 69,
-      "word": "Челлендж",
-      "difficulty": "medium",
-      "category": "social"
-    },
-    {
-      "id": 70,
-      "word": "Лайфхак",
+      "id": 190,
+      "word": "Чакры",
       "difficulty": "medium",
       "category": "lifestyle"
     },
     {
-      "id": 71,
-      "word": "Бумер",
+      "id": 191,
+      "word": "Медитация",
       "difficulty": "medium",
-      "category": "slang"
+      "category": "lifestyle"
     },
     {
-      "id": 72,
-      "word": "Зумер",
+      "id": 192,
+      "word": "Йога",
       "difficulty": "medium",
-      "category": "slang"
+      "category": "lifestyle"
     },
     {
-      "id": 73,
-      "word": "Инфлюенсер",
+      "id": 193,
+      "word": "Пилатес",
       "difficulty": "medium",
-      "category": "social"
+      "category": "lifestyle"
     },
     {
-      "id": 74,
-      "word": "Контент",
+      "id": 194,
+      "word": "Фитнес",
       "difficulty": "medium",
-      "category": "social"
+      "category": "lifestyle"
     },
     {
-      "id": 75,
-      "word": "Коллаб",
+      "id": 195,
+      "word": "Кардио",
       "difficulty": "medium",
-      "category": "social"
+      "category": "lifestyle"
     },
     {
-      "id": 76,
-      "word": "Перфекционизм",
+      "id": 196,
+      "word": "Качалка",
       "difficulty": "medium",
-      "category": "psychology"
+      "category": "lifestyle"
     },
     {
-      "id": 77,
-      "word": "Харассмент",
+      "id": 197,
+      "word": "Тренажёрка",
       "difficulty": "medium",
-      "category": "social"
+      "category": "lifestyle"
     },
     {
-      "id": 78,
+      "id": 198,
+      "word": "Воркаут",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 199,
+      "word": "Кроссфит",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 200,
+      "word": "ПП",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 201,
+      "word": "ЗОЖ",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 202,
+      "word": "Детокс",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 203,
+      "word": "Смузи",
+      "difficulty": "medium",
+      "category": "food"
+    },
+    {
+      "id": 204,
+      "word": "Веган",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 205,
+      "word": "Вегетарианец",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 206,
+      "word": "Глютен",
+      "difficulty": "medium",
+      "category": "food"
+    },
+    {
+      "id": 207,
+      "word": "Лактоза",
+      "difficulty": "medium",
+      "category": "food"
+    },
+    {
+      "id": 208,
+      "word": "БЖУ",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 209,
+      "word": "Калории",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 210,
+      "word": "Дефицит",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 211,
+      "word": "Профицит",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 212,
+      "word": "Метаболизм",
+      "difficulty": "medium",
+      "category": "lifestyle"
+    },
+    {
+      "id": 213,
+      "word": "Иммунитет",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 214,
+      "word": "Витамины",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 215,
+      "word": "БАДы",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 216,
+      "word": "Антибиотики",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 217,
+      "word": "Аптека",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 218,
+      "word": "Рецепт",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 219,
+      "word": "Диагноз",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 220,
+      "word": "Симптом",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 221,
+      "word": "Температура",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 222,
+      "word": "Градусник",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 223,
+      "word": "Анализ",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 224,
+      "word": "Прививка",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 225,
+      "word": "Вакцина",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 226,
+      "word": "Карантин",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 227,
+      "word": "Изоляция",
+      "difficulty": "medium",
+      "category": "health"
+    },
+    {
+      "id": 228,
+      "word": "Удалёнка",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 229,
+      "word": "Хоум-офис",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 230,
+      "word": "Фриланс",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 231,
+      "word": "Самозанятый",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 232,
+      "word": "ИП",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 233,
+      "word": "Стартап",
+      "difficulty": "medium",
+      "category": "business"
+    },
+    {
+      "id": 234,
+      "word": "Предприниматель",
+      "difficulty": "medium",
+      "category": "business"
+    },
+    {
+      "id": 235,
+      "word": "Бизнес",
+      "difficulty": "medium",
+      "category": "business"
+    },
+    {
+      "id": 236,
+      "word": "Инвестор",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 237,
+      "word": "Инвестиция",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 238,
+      "word": "Акции",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 239,
+      "word": "Биржа",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 240,
+      "word": "Криптовалюта",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 241,
+      "word": "Биткоин",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 242,
+      "word": "Майнинг",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 243,
+      "word": "Кошелёк",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 244,
+      "word": "Транзакция",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 245,
+      "word": "Комиссия",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 246,
+      "word": "Процент",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 247,
+      "word": "Вклад",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 248,
+      "word": "Депозит",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 249,
+      "word": "Кредит",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 250,
+      "word": "Ипотека",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 251,
+      "word": "Рассрочка",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 252,
+      "word": "Платёж",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 253,
+      "word": "Перевод",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 254,
+      "word": "Баланс",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 255,
+      "word": "Счёт",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 256,
+      "word": "Чек",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 257,
+      "word": "Квитанция",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 258,
+      "word": "Налог",
+      "difficulty": "medium",
+      "category": "finance"
+    },
+    {
+      "id": 259,
+      "word": "Зарплата",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 260,
+      "word": "Оклад",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 261,
+      "word": "Премия",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 262,
+      "word": "Бонус",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 263,
+      "word": "Оффер",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 264,
+      "word": "Резюме",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 265,
+      "word": "Вакансия",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 266,
+      "word": "Собеседование",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 267,
+      "word": "Кандидат",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 268,
+      "word": "Рекрутер",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 269,
+      "word": "HR",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 270,
+      "word": "Тимлид",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 271,
+      "word": "Менеджер",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 272,
+      "word": "Руководитель",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 273,
+      "word": "Подчинённый",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 274,
+      "word": "Коллега",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 275,
+      "word": "Команда",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 276,
+      "word": "Проект",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 277,
+      "word": "Задача",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 278,
+      "word": "Дедлайн",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 279,
+      "word": "Срочно",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 280,
+      "word": "Приоритет",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 281,
+      "word": "Бэклог",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 282,
+      "word": "Спринт",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 283,
+      "word": "Стендап",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 284,
+      "word": "Ретроспектива",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 285,
+      "word": "Планирование",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 286,
+      "word": "Оценка",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 287,
+      "word": "Ревью",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 288,
       "word": "Фидбэк",
       "difficulty": "medium",
       "category": "work"
     },
     {
-      "id": 79,
-      "word": "Овертайм",
+      "id": 289,
+      "word": "Апдейт",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 290,
+      "word": "Фича",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 291,
+      "word": "Баг",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 292,
+      "word": "Фикс",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 293,
+      "word": "Патч",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 294,
+      "word": "Релиз",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 295,
+      "word": "Деплой",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 296,
+      "word": "Прод",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 297,
+      "word": "Дев",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 298,
+      "word": "Тест",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 299,
+      "word": "QA",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 300,
+      "word": "Код",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 301,
+      "word": "Программирование",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 302,
+      "word": "Разработка",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 303,
+      "word": "Фронтенд",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 304,
+      "word": "Бэкенд",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 305,
+      "word": "Фулстек",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 306,
+      "word": "База данных",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 307,
+      "word": "Сервер",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 308,
+      "word": "Хостинг",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 309,
+      "word": "Домен",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 310,
+      "word": "Сайт",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 311,
+      "word": "Лендинг",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 312,
+      "word": "Веб-приложение",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 313,
+      "word": "Мобильное приложение",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 314,
+      "word": "Десктоп",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 315,
+      "word": "Кроссплатформенность",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 316,
+      "word": "Адаптивность",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 317,
+      "word": "Респонсив",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 318,
+      "word": "Мобильная версия",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 319,
+      "word": "Десктопная версия",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 320,
+      "word": "Браузер",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 321,
+      "word": "Вкладка",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 322,
+      "word": "Закладка",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 323,
+      "word": "История",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 324,
+      "word": "Куки",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 325,
+      "word": "Кэш",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 326,
+      "word": "Инкогнито",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 327,
+      "word": "VPN",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 328,
+      "word": "Прокси",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 329,
+      "word": "Блокировка",
+      "difficulty": "medium",
+      "category": "tech"
+    },
+    {
+      "id": 330,
+      "word": "Цензура",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 331,
+      "word": "Модерация",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 332,
+      "word": "Бан",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 333,
+      "word": "Мут",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 334,
+      "word": "Разбан",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 335,
+      "word": "Жалоба",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 336,
+      "word": "Спам",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 337,
+      "word": "Троллинг",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 338,
+      "word": "Хейт",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 339,
+      "word": "Токсичность",
+      "difficulty": "medium",
+      "category": "social"
+    },
+    {
+      "id": 340,
+      "word": "Кринж",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 341,
+      "word": "Флексить",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 342,
+      "word": "Чилить",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 343,
+      "word": "Рофлить",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 344,
+      "word": "Кекать",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 345,
+      "word": "Лулзы",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 346,
+      "word": "Лол",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 347,
+      "word": "Кек",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 348,
+      "word": "Ору",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 349,
+      "word": "Ржу",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 350,
+      "word": "ИМХО",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 351,
+      "word": "ЛС",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 352,
+      "word": "ДМ",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 353,
+      "word": "Краш",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 354,
+      "word": "Шипперить",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 355,
+      "word": "Стэнить",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 356,
+      "word": "Фанатеть",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 357,
+      "word": "Фандом",
+      "difficulty": "medium",
+      "category": "entertainment"
+    },
+    {
+      "id": 358,
+      "word": "Канон",
+      "difficulty": "medium",
+      "category": "entertainment"
+    },
+    {
+      "id": 359,
+      "word": "Фанфик",
+      "difficulty": "medium",
+      "category": "entertainment"
+    },
+    {
+      "id": 360,
+      "word": "Косплей",
+      "difficulty": "medium",
+      "category": "entertainment"
+    },
+    {
+      "id": 361,
+      "word": "Мерч",
+      "difficulty": "medium",
+      "category": "entertainment"
+    },
+    {
+      "id": 362,
+      "word": "Постер",
+      "difficulty": "medium",
+      "category": "entertainment"
+    },
+    {
+      "id": 363,
+      "word": "Коллекция",
+      "difficulty": "medium",
+      "category": "hobby"
+    },
+    {
+      "id": 364,
+      "word": "Коллекционер",
+      "difficulty": "medium",
+      "category": "hobby"
+    },
+    {
+      "id": 365,
+      "word": "Хобби",
+      "difficulty": "medium",
+      "category": "hobby"
+    },
+    {
+      "id": 366,
+      "word": "Увлечение",
+      "difficulty": "medium",
+      "category": "hobby"
+    },
+    {
+      "id": 367,
+      "word": "Страсть",
+      "difficulty": "medium",
+      "category": "hobby"
+    },
+    {
+      "id": 368,
+      "word": "Талант",
+      "difficulty": "medium",
+      "category": "personality"
+    },
+    {
+      "id": 369,
+      "word": "Навык",
+      "difficulty": "medium",
+      "category": "personality"
+    },
+    {
+      "id": 370,
+      "word": "Скилл",
+      "difficulty": "medium",
+      "category": "slang"
+    },
+    {
+      "id": 371,
+      "word": "Экспертиза",
       "difficulty": "medium",
       "category": "work"
     },
     {
-      "id": 80,
-      "word": "Бёрнаут",
+      "id": 372,
+      "word": "Компетенция",
       "difficulty": "medium",
       "category": "work"
     },
     {
-      "id": 81,
+      "id": 373,
+      "word": "Квалификация",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 374,
+      "word": "Опыт",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 375,
+      "word": "Стаж",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 376,
+      "word": "Портфолио",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 377,
+      "word": "Кейс",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 378,
+      "word": "Проджект",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 379,
+      "word": "Воркшоп",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 380,
+      "word": "Мастер-класс",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 381,
+      "word": "Тренинг",
+      "difficulty": "medium",
+      "category": "work"
+    },
+    {
+      "id": 382,
+      "word": "Курс",
+      "difficulty": "medium",
+      "category": "education"
+    },
+    {
+      "id": 383,
+      "word": "Вебинар",
+      "difficulty": "medium",
+      "category": "education"
+    },
+    {
+      "id": 384,
+      "word": "Лекция",
+      "difficulty": "medium",
+      "category": "education"
+    },
+    {
+      "id": 385,
+      "word": "Семинар",
+      "difficulty": "medium",
+      "category": "education"
+    },
+    {
+      "id": 386,
+      "word": "Практика",
+      "difficulty": "medium",
+      "category": "education"
+    },
+    {
+      "id": 387,
+      "word": "Теория",
+      "difficulty": "medium",
+      "category": "education"
+    },
+    {
+      "id": 388,
+      "word": "Знания",
+      "difficulty": "medium",
+      "category": "education"
+    },
+    {
+      "id": 389,
+      "word": "Обучение",
+      "difficulty": "medium",
+      "category": "education"
+    },
+    {
+      "id": 390,
+      "word": "Самообразование",
+      "difficulty": "medium",
+      "category": "education"
+    },
+    {
+      "id": 391,
+      "word": "Развитие",
+      "difficulty": "medium",
+      "category": "personal"
+    },
+    {
+      "id": 392,
+      "word": "Рост",
+      "difficulty": "medium",
+      "category": "personal"
+    },
+    {
+      "id": 393,
+      "word": "Прогресс",
+      "difficulty": "medium",
+      "category": "personal"
+    },
+    {
+      "id": 394,
+      "word": "Эволюция",
+      "difficulty": "medium",
+      "category": "personal"
+    },
+    {
+      "id": 395,
+      "word": "Трансформация",
+      "difficulty": "medium",
+      "category": "personal"
+    },
+    {
+      "id": 396,
+      "word": "Изменение",
+      "difficulty": "medium",
+      "category": "personal"
+    },
+    {
+      "id": 397,
+      "word": "Адаптация",
+      "difficulty": "medium",
+      "category": "personal"
+    },
+    {
+      "id": 398,
+      "word": "Гибкость",
+      "difficulty": "medium",
+      "category": "personal"
+    },
+    {
+      "id": 399,
+      "word": "Устойчивость",
+      "difficulty": "medium",
+      "category": "personal"
+    },
+    {
+      "id": 400,
+      "word": "Резильентность",
+      "difficulty": "medium",
+      "category": "psychology"
+    },
+    {
+      "id": 401,
       "word": "Газлайтинг",
       "difficulty": "hard",
       "category": "psychology",
       "hint": "Манипуляция, когда тебе говорят, что ты всё придумал"
     },
     {
-      "id": 82,
+      "id": 402,
       "word": "Импостер-синдром",
       "difficulty": "hard",
       "category": "psychology",
-      "hint": "Чувство, что ты недостаточно компетентен, даже если объективно крутой специалист"
+      "hint": "Чувство недостаточной компетентности, даже если объективно крут"
     },
     {
-      "id": 83,
+      "id": 403,
       "word": "Токсичная позитивность",
       "difficulty": "hard",
       "category": "psychology",
       "hint": "Когда говорят 'просто улыбайся' вместо выслушивания проблемы"
     },
     {
-      "id": 84,
+      "id": 404,
       "word": "Эмоциональный интеллект",
       "difficulty": "hard",
       "category": "psychology",
-      "hint": "Способность понимать свои и чужие эмоции, управлять ими"
+      "hint": "Способность понимать свои и чужие эмоции"
     },
     {
-      "id": 85,
+      "id": 405,
       "word": "Когнитивный диссонанс",
       "difficulty": "hard",
       "category": "psychology",
-      "hint": "Дискомфорт, когда убеждения противоречат друг другу"
+      "hint": "Дискомфорт от противоречащих убеждений"
     },
     {
-      "id": 86,
+      "id": 406,
       "word": "Эмпатия",
       "difficulty": "hard",
       "category": "psychology",
-      "hint": "Способность поставить себя на место другого человека"
+      "hint": "Способность поставить себя на место другого"
     },
     {
-      "id": 87,
+      "id": 407,
+      "word": "Прокрастинация",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Откладывание дел на потом"
+    },
+    {
+      "id": 408,
+      "word": "Перфекционизм",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Стремление к идеалу во всём"
+    },
+    {
+      "id": 409,
+      "word": "Бёрнаут",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Эмоциональное выгорание от работы"
+    },
+    {
+      "id": 410,
+      "word": "Мотивация",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Внутренняя сила для достижения целей"
+    },
+    {
+      "id": 411,
       "word": "Делегирование",
       "difficulty": "hard",
       "category": "work",
-      "hint": "Передача задач подчинённым с правами и ответственностью"
+      "hint": "Передача задач подчинённым с ответственностью"
     },
     {
-      "id": 88,
+      "id": 412,
       "word": "Фасилитация",
       "difficulty": "hard",
       "category": "work",
-      "hint": "Ведение групповой дискуссии так, чтобы все участвовали"
+      "hint": "Ведение групповой дискуссии"
     },
     {
-      "id": 89,
-      "word": "Самоирония",
+      "id": 413,
+      "word": "Медиация",
       "difficulty": "hard",
-      "category": "personality",
-      "hint": "Шутки над своими недостатками или ошибками"
+      "category": "work",
+      "hint": "Посредничество в разрешении конфликта"
     },
     {
-      "id": 90,
-      "word": "Метавселенная",
+      "id": 414,
+      "word": "Арбитраж",
       "difficulty": "hard",
-      "category": "tech",
-      "hint": "Виртуальное пространство с аватарами, как в 'Первому игроку приготовиться'"
+      "category": "work",
+      "hint": "Третейское разрешение спора"
     },
     {
-      "id": 91,
-      "word": "NFT",
+      "id": 415,
+      "word": "Эскалация",
       "difficulty": "hard",
-      "category": "tech",
-      "hint": "Уникальный цифровой сертификат на картинку/видео"
+      "category": "work",
+      "hint": "Передача проблемы на уровень выше"
     },
     {
-      "id": 92,
-      "word": "Блокчейн",
-      "difficulty": "hard",
-      "category": "tech",
-      "hint": "Технология, где данные хранятся у всех участников сети"
-    },
-    {
-      "id": 93,
-      "word": "Этичное потребление",
-      "difficulty": "hard",
-      "category": "lifestyle",
-      "hint": "Покупать товары, которые не вредят природе"
-    },
-    {
-      "id": 94,
-      "word": "Экологический след",
-      "difficulty": "hard",
-      "category": "lifestyle",
-      "hint": "Сколько ресурсов планеты ты потребляешь своим образом жизни"
-    },
-    {
-      "id": 95,
-      "word": "Осознанность",
-      "difficulty": "hard",
-      "category": "psychology",
-      "hint": "Полное присутствие в моменте, без мыслей о прошлом/будущем"
-    },
-    {
-      "id": 96,
-      "word": "Бодипозитив",
-      "difficulty": "hard",
-      "category": "social",
-      "hint": "Движение за принятие любого типа тела"
-    },
-    {
-      "id": 97,
-      "word": "Прайвеси",
-      "difficulty": "hard",
-      "category": "tech",
-      "hint": "Право на личную жизнь, защита персональных данных"
-    },
-    {
-      "id": 98,
-      "word": "Инклюзивность",
-      "difficulty": "hard",
-      "category": "social",
-      "hint": "Учёт потребностей всех людей, включая меньшинства"
-    },
-    {
-      "id": 99,
+      "id": 416,
       "word": "Микроменеджмент",
       "difficulty": "hard",
       "category": "work",
-      "hint": "Контроль каждого шага подчинённого без самостоятельности"
+      "hint": "Контроль каждого шага подчинённого"
     },
     {
-      "id": 100,
+      "id": 417,
+      "word": "Автономность",
+      "difficulty": "hard",
+      "category": "work",
+      "hint": "Самостоятельность в принятии решений"
+    },
+    {
+      "id": 418,
+      "word": "Овертайм",
+      "difficulty": "hard",
+      "category": "work",
+      "hint": "Переработки сверх нормы"
+    },
+    {
+      "id": 419,
+      "word": "Харассмент",
+      "difficulty": "hard",
+      "category": "work",
+      "hint": "Домогательство или притеснение на работе"
+    },
+    {
+      "id": 420,
+      "word": "Дискриминация",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Ограничение прав по определённому признаку"
+    },
+    {
+      "id": 421,
+      "word": "Инклюзивность",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Учёт потребностей всех групп людей"
+    },
+    {
+      "id": 422,
+      "word": "Дайверсити",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Разнообразие в команде/обществе"
+    },
+    {
+      "id": 423,
+      "word": "Эквити",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Справедливость с учётом разных стартовых позиций"
+    },
+    {
+      "id": 424,
+      "word": "Бодипозитив",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Принятие любого типа тела"
+    },
+    {
+      "id": 425,
+      "word": "Бодинейтралитет",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Нейтральное отношение к телу без акцента"
+    },
+    {
+      "id": 426,
+      "word": "Бодишейминг",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Критика чужой внешности"
+    },
+    {
+      "id": 427,
+      "word": "Фэтшейминг",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Осуждение людей с лишним весом"
+    },
+    {
+      "id": 428,
+      "word": "Лукизм",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Дискриминация по внешности"
+    },
+    {
+      "id": 429,
+      "word": "Эйджизм",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Дискриминация по возрасту"
+    },
+    {
+      "id": 430,
+      "word": "Сексизм",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Дискриминация по полу"
+    },
+    {
+      "id": 431,
+      "word": "Мизогиния",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Ненависть к женщинам"
+    },
+    {
+      "id": 432,
+      "word": "Мизандрия",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Ненависть к мужчинам"
+    },
+    {
+      "id": 433,
+      "word": "Феминизм",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Движение за равенство полов"
+    },
+    {
+      "id": 434,
+      "word": "Маскулинизм",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Движение за права мужчин"
+    },
+    {
+      "id": 435,
+      "word": "Токсичная маскулинность",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Вредные стереотипы о мужественности"
+    },
+    {
+      "id": 436,
+      "word": "Патриархат",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Система доминирования мужчин"
+    },
+    {
+      "id": 437,
+      "word": "Матриархат",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Система доминирования женщин"
+    },
+    {
+      "id": 438,
+      "word": "Гендер",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Социальный пол"
+    },
+    {
+      "id": 439,
+      "word": "Небинарность",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Гендерная идентичность вне бинарной системы"
+    },
+    {
+      "id": 440,
+      "word": "Прайвеси",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Защита персональных данных"
+    },
+    {
+      "id": 441,
+      "word": "Анонимность",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Сокрытие личности в сети"
+    },
+    {
+      "id": 442,
+      "word": "Деанонимизация",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Раскрытие личности анонимного пользователя"
+    },
+    {
+      "id": 443,
+      "word": "Дипфейк",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Поддельное видео с подменой лица через ИИ"
+    },
+    {
+      "id": 444,
+      "word": "Дезинформация",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Намеренное распространение ложной информации"
+    },
+    {
+      "id": 445,
+      "word": "Фактчекинг",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Проверка фактов на достоверность"
+    },
+    {
+      "id": 446,
+      "word": "Верификация",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Подтверждение подлинности"
+    },
+    {
+      "id": 447,
+      "word": "Аутентификация",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Проверка подлинности пользователя"
+    },
+    {
+      "id": 448,
+      "word": "Двухфакторная аутентификация",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Вход с двумя способами подтверждения личности"
+    },
+    {
+      "id": 449,
+      "word": "Биометрия",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Идентификация по отпечатку/лицу/голосу"
+    },
+    {
+      "id": 450,
+      "word": "Блокчейн",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Технология децентрализованной базы данных"
+    },
+    {
+      "id": 451,
+      "word": "NFT",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Уникальный цифровой сертификат"
+    },
+    {
+      "id": 452,
+      "word": "Метавселенная",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Виртуальное пространство с аватарами"
+    },
+    {
+      "id": 453,
+      "word": "Дополненная реальность",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "AR — наложение цифровых объектов на реальный мир"
+    },
+    {
+      "id": 454,
+      "word": "Виртуальная реальность",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "VR — полное погружение в цифровой мир"
+    },
+    {
+      "id": 455,
+      "word": "Смешанная реальность",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "MR — комбинация AR и VR"
+    },
+    {
+      "id": 456,
+      "word": "Машинное обучение",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Обучение компьютера на данных без явного программирования"
+    },
+    {
+      "id": 457,
+      "word": "Нейросеть",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Компьютерная модель, имитирующая работу мозга"
+    },
+    {
+      "id": 458,
+      "word": "Генеративный ИИ",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "ИИ, создающий новый контент (текст, картинки)"
+    },
+    {
+      "id": 459,
+      "word": "Промпт-инжиниринг",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Искусство составления запросов к ИИ"
+    },
+    {
+      "id": 460,
+      "word": "Халлюцинация ИИ",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Когда ИИ генерирует ложную информацию"
+    },
+    {
+      "id": 461,
+      "word": "Автоматизация",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Выполнение задач без участия человека"
+    },
+    {
+      "id": 462,
+      "word": "Роботизация",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Замена людей роботами в процессах"
+    },
+    {
+      "id": 463,
+      "word": "Цифровизация",
+      "difficulty": "hard",
+      "category": "tech",
+      "hint": "Перевод процессов в цифровой формат"
+    },
+    {
+      "id": 464,
+      "word": "Цифровой детокс",
+      "difficulty": "hard",
+      "category": "lifestyle",
+      "hint": "Временный отказ от гаджетов и интернета"
+    },
+    {
+      "id": 465,
+      "word": "Осознанное потребление",
+      "difficulty": "hard",
+      "category": "lifestyle",
+      "hint": "Вдумчивый подход к покупкам"
+    },
+    {
+      "id": 466,
+      "word": "Этичное потребление",
+      "difficulty": "hard",
+      "category": "lifestyle",
+      "hint": "Покупки, не вредящие природе и людям"
+    },
+    {
+      "id": 467,
+      "word": "Экологический след",
+      "difficulty": "hard",
+      "category": "lifestyle",
+      "hint": "Влияние образа жизни на планету"
+    },
+    {
+      "id": 468,
+      "word": "Углеродный след",
+      "difficulty": "hard",
+      "category": "lifestyle",
+      "hint": "Количество CO2 от твоей деятельности"
+    },
+    {
+      "id": 469,
+      "word": "Зеро вейст",
+      "difficulty": "hard",
+      "category": "lifestyle",
+      "hint": "Жизнь без отходов"
+    },
+    {
+      "id": 470,
+      "word": "Апсайклинг",
+      "difficulty": "hard",
+      "category": "lifestyle",
+      "hint": "Переработка вещей в более ценные"
+    },
+    {
+      "id": 471,
+      "word": "Даунсайклинг",
+      "difficulty": "hard",
+      "category": "lifestyle",
+      "hint": "Переработка с потерей качества"
+    },
+    {
+      "id": 472,
+      "word": "Рециклинг",
+      "difficulty": "hard",
+      "category": "lifestyle",
+      "hint": "Переработка отходов во вторсырьё"
+    },
+    {
+      "id": 473,
+      "word": "Компостирование",
+      "difficulty": "hard",
+      "category": "lifestyle",
+      "hint": "Превращение органики в удобрение"
+    },
+    {
+      "id": 474,
+      "word": "Гринвошинг",
+      "difficulty": "hard",
+      "category": "marketing",
+      "hint": "Ложная экологичность бренда"
+    },
+    {
+      "id": 475,
+      "word": "Воукизм",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Перформативная социальная осознанность"
+    },
+    {
+      "id": 476,
+      "word": "Кэнсел-культура",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Публичное бойкотирование за проступки"
+    },
+    {
+      "id": 477,
+      "word": "Дрифт",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Постепенное отдаление от друзей без конфликта"
+    },
+    {
+      "id": 478,
+      "word": "Призрачно-серийное общение",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Ghosting — внезапное прекращение контакта"
+    },
+    {
+      "id": 479,
+      "word": "Зомбинг",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Возвращение человека после игнора"
+    },
+    {
+      "id": 480,
+      "word": "Орбитинг",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Лайкать посты, но не общаться"
+    },
+    {
+      "id": 481,
+      "word": "Бенчинг",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Держать человека в резерве на случай"
+    },
+    {
+      "id": 482,
+      "word": "Бредкрамбинг",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Подавать надежду редкими знаками внимания"
+    },
+    {
+      "id": 483,
+      "word": "Лав-бомбинг",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Чрезмерная демонстрация любви на старте"
+    },
+    {
+      "id": 484,
+      "word": "Фиш-боулинг",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Намеренная демонстрация отношений для ревности"
+    },
+    {
+      "id": 485,
+      "word": "Куш-энинг",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Открытые отношения без ярлыков"
+    },
+    {
+      "id": 486,
+      "word": "Фрэндзонинг",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Перевод в статус 'просто друзья'"
+    },
+    {
+      "id": 487,
+      "word": "Ситуейшншип",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Неопределённые отношения между дружбой и романтикой"
+    },
+    {
+      "id": 488,
+      "word": "Полиамория",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Множественные романтические связи с согласия"
+    },
+    {
+      "id": 489,
+      "word": "Моногамия",
+      "difficulty": "hard",
+      "category": "social",
+      "hint": "Отношения с одним партнёром"
+    },
+    {
+      "id": 490,
       "word": "Ресурсное состояние",
       "difficulty": "hard",
       "category": "psychology",
-      "hint": "Когда есть силы, энергия и настрой для достижения целей"
+      "hint": "Состояние энергии и настроя для целей"
+    },
+    {
+      "id": 491,
+      "word": "Триггер",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Раздражитель, вызывающий эмоциональную реакцию"
+    },
+    {
+      "id": 492,
+      "word": "Проекция",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Приписывание другим своих чувств"
+    },
+    {
+      "id": 493,
+      "word": "Сублимация",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Перенаправление негативных чувств в творчество"
+    },
+    {
+      "id": 494,
+      "word": "Рационализация",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Логическое оправдание иррациональных действий"
+    },
+    {
+      "id": 495,
+      "word": "Вытеснение",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Бессознательное забывание неприятного"
+    },
+    {
+      "id": 496,
+      "word": "Регрессия",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Возврат к детским моделям поведения"
+    },
+    {
+      "id": 497,
+      "word": "Компенсация",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Замещение слабости развитием другой стороны"
+    },
+    {
+      "id": 498,
+      "word": "Идентификация",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Отождествление себя с другим человеком"
+    },
+    {
+      "id": 499,
+      "word": "Сепарация",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Психологическое отделение от родителей"
+    },
+    {
+      "id": 500,
+      "word": "Интроекция",
+      "difficulty": "hard",
+      "category": "psychology",
+      "hint": "Усвоение чужих ценностей как своих без осмысления"
     }
   ],
   "metadata": {
-    "created_at": "2026-02-11",
+    "created_at": "2026-02-15",
     "author": "Content Manager",
     "target_audience": "Gen Z + Millennials (20-35 years)",
     "language": "ru",
-    "tags": ["universal", "party", "corporate", "mvp", "family-friendly"]
+    "tags": ["universal", "party", "corporate", "mvp", "memes", "IT-slang", "trending"]
   }
 }
-```

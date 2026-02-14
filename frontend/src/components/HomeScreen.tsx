@@ -3,6 +3,8 @@ import { motion } from 'framer-motion'
 import { QRCodeSVG } from 'qrcode.react'
 import { useNavigate } from 'react-router-dom'
 import { createRoom } from '../services/rooms'
+import { ensurePlayerId, getStoredPlayerName, setStoredPlayerName } from '../services/session'
+import { connectSocket } from '../services/socket'
 import { routes } from '../utils/routes'
 
 const ROOM_ID_PATTERN = /^[A-Z0-9]{6}$/
@@ -11,6 +13,7 @@ export function HomeScreen() {
   const navigate = useNavigate()
   const [isCreating, setIsCreating] = useState(false)
   const [showJoinForm, setShowJoinForm] = useState(false)
+  const [playerName, setPlayerName] = useState(getStoredPlayerName() ?? '')
   const [joinCode, setJoinCode] = useState('')
   const [createdRoomId, setCreatedRoomId] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -37,11 +40,32 @@ export function HomeScreen() {
     }
   }, [createdRoomId, navigate])
 
+  const commitPlayerName = (): string | null => {
+    const normalizedName = playerName.trim()
+    if (!normalizedName) {
+      setErrorMessage('Введите ваше имя')
+      return null
+    }
+
+    setStoredPlayerName(normalizedName)
+    return normalizedName
+  }
+
   const handleCreateRoom = async () => {
     try {
       setErrorMessage(null)
       setIsCreating(true)
-      const { roomId } = await createRoom()
+
+      const creatorName = commitPlayerName()
+      if (!creatorName) {
+        setIsCreating(false)
+        return
+      }
+
+      const creatorId = ensurePlayerId()
+      const creatorSocketId = await connectSocket()
+      const { roomId } = await createRoom({ creatorSocketId, creatorId, creatorName })
+
       setCreatedRoomId(roomId)
     } catch (error) {
       setCreatedRoomId(null)
@@ -53,6 +77,11 @@ export function HomeScreen() {
 
   const handleJoinSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    const normalizedName = commitPlayerName()
+    if (!normalizedName) {
+      return
+    }
 
     const normalizedCode = joinCode.trim().toUpperCase()
     if (!ROOM_ID_PATTERN.test(normalizedCode)) {
@@ -80,8 +109,23 @@ export function HomeScreen() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.05 }}
-        className="flex flex-wrap gap-3"
+        className="space-y-3"
       >
+        <div className="space-y-1">
+          <label htmlFor="player-name" className="block text-sm text-slate-300">
+            Ваше имя
+          </label>
+          <input
+            id="player-name"
+            value={playerName}
+            onChange={(event) => setPlayerName(event.target.value)}
+            maxLength={32}
+            placeholder="Например, Саша"
+            className="w-full rounded-lg border border-white/20 bg-secondary px-3 py-2 text-base text-white outline-none transition focus:border-accent"
+          />
+        </div>
+
+        <div className="flex flex-wrap gap-3">
         <button
           type="button"
           onClick={handleCreateRoom}
@@ -100,6 +144,7 @@ export function HomeScreen() {
         >
           Присоединиться
         </button>
+        </div>
       </motion.div>
 
       {showJoinForm ? (

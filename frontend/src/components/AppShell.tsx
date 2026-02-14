@@ -3,9 +3,9 @@ import { Link, Outlet, useLocation } from 'react-router-dom'
 import { routes } from '../utils/routes'
 
 const navItems = [
-  { to: routes.home, label: 'Home' },
-  { to: routes.game, label: 'Game' },
-  { to: routes.results, label: 'Results' },
+  { to: routes.home, label: 'Главная' },
+  { to: routes.game, label: 'Игра' },
+  { to: routes.results, label: 'Результаты игры' },
 ]
 
 export function AppShell() {
