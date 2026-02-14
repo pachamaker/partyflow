@@ -1,10 +1,9 @@
-import { Link, Outlet, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { routes } from '../utils/routes'
 
 const navItems = [
   { to: routes.home, label: 'Home' },
-  { to: routes.lobby, label: 'Lobby' },
   { to: routes.game, label: 'Game' },
   { to: routes.results, label: 'Results' },
 ]

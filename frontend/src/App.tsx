@@ -11,7 +11,7 @@ function App() {
     <Routes>
       <Route element={<AppShell />}>
         <Route path={routes.home} element={<HomePage />} />
-        <Route path={routes.lobby} element={<LobbyPage />} />
+        <Route path={routes.lobbyWithRoomParam} element={<LobbyPage />} />
         <Route path={routes.game} element={<GamePage />} />
         <Route path={routes.results} element={<ResultsPage />} />
       </Route>

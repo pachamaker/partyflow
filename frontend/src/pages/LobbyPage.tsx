@@ -1,6 +1,8 @@
+import { useParams } from 'react-router-dom'
 import { useSocketStatus } from '../hooks/useSocketStatus'
 
 export function LobbyPage() {
+  const { roomId = '' } = useParams<{ roomId: string }>()
   const { isConnected } = useSocketStatus()
 
   return (
@@ -8,6 +10,9 @@ export function LobbyPage() {
       <h1 className="text-3xl font-bold">Lobby</h1>
       <p className="text-slate-200">Игроки ожидают старта игры.</p>
       <div className="rounded-lg bg-black/20 p-4">
+        <p className="font-medium text-slate-100">
+          Комната: <span className="font-bold tracking-[0.2em] text-accent">{roomId}</span>
+        </p>
         <p className="font-medium">
           WebSocket:{' '}
           <span className={isConnected ? 'text-accent' : 'text-orange-300'}>
