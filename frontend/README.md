@@ -14,13 +14,13 @@ Notes:
 - `/api` and `/socket.io` are proxied to `http://host.docker.internal:3001`.
 - If backend runs in Docker Compose from `backend/`, prefer launching the full stack there.
 
-### Production-like static serve
+### Production static build (for host nginx)
 
 ```bash
-docker compose -f docker-compose.prod.yml up --build
+docker compose -f docker-compose.prod.yml --profile build run --rm frontend-builder
 ```
 
-Frontend: `http://localhost:8080`
+Build output: `frontend/dist/`
 
 ## Run full stack from backend compose
 

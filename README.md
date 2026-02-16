@@ -19,17 +19,38 @@ Stop:
 docker compose -f docker-compose.dev.yml down
 ```
 
-### Production-like run (frontend + backend + redis)
+### Production runtime (system nginx + backend + redis)
 
-Start stack:
+1. Start backend + redis:
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 
+2. Build frontend static bundle:
+
+```bash
+docker compose -f docker-compose.prod.yml --profile build run --rm frontend-builder
+```
+
+3. Deploy static files to nginx web root (example):
+
+```bash
+sudo mkdir -p /var/www/poyasni.ru/current
+sudo rsync -av --delete ./frontend/dist/ /var/www/poyasni.ru/current/
+```
+
+4. Put nginx config:
+
+```bash
+sudo cp ./deploy/nginx/poyasni.ru.conf /etc/nginx/sites-available/poyasni.ru
+sudo ln -sfn /etc/nginx/sites-available/poyasni.ru /etc/nginx/sites-enabled/poyasni.ru
+sudo nginx -t && sudo systemctl reload nginx
+```
+
 Endpoints:
-- Frontend: http://localhost:8080
-- Backend: http://localhost:3001
+- Frontend: `https://poyasni.ru`
+- Backend (origin): `http://127.0.0.1:3001`
 
 Stop:
 
