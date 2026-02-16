@@ -1,4 +1,4 @@
-# PartyFlow Frontend
+# Поясни Frontend
 
 ## Run in Docker (frontend only)
 

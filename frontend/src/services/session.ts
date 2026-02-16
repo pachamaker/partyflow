@@ -1,9 +1,24 @@
-const PLAYER_ID_KEY = 'partyflow_player_id'
-const PLAYER_NAME_KEY = 'partyflow_player_name'
-const ROOM_ID_KEY = 'partyflow_room_id'
+const PLAYER_ID_KEY = 'poyasni_player_id'
+const PLAYER_NAME_KEY = 'poyasni_player_name'
+const ROOM_ID_KEY = 'poyasni_room_id'
+
+const LEGACY_PLAYER_ID_KEY = 'partyflow_player_id'
+const LEGACY_PLAYER_NAME_KEY = 'partyflow_player_name'
+const LEGACY_ROOM_ID_KEY = 'partyflow_room_id'
 
 export function getStoredPlayerId(): string | null {
-  return localStorage.getItem(PLAYER_ID_KEY)
+  const current = localStorage.getItem(PLAYER_ID_KEY)
+  if (current) {
+    return current
+  }
+
+  const legacy = localStorage.getItem(LEGACY_PLAYER_ID_KEY)
+  if (legacy) {
+    localStorage.setItem(PLAYER_ID_KEY, legacy)
+    return legacy
+  }
+
+  return null
 }
 
 export function setStoredPlayerId(playerId: string): void {
@@ -25,7 +40,18 @@ export function ensurePlayerId(): string {
 }
 
 export function getStoredPlayerName(): string | null {
-  return localStorage.getItem(PLAYER_NAME_KEY)
+  const current = localStorage.getItem(PLAYER_NAME_KEY)
+  if (current) {
+    return current
+  }
+
+  const legacy = localStorage.getItem(LEGACY_PLAYER_NAME_KEY)
+  if (legacy) {
+    localStorage.setItem(PLAYER_NAME_KEY, legacy)
+    return legacy
+  }
+
+  return null
 }
 
 export function setStoredPlayerName(name: string): void {
@@ -33,7 +59,18 @@ export function setStoredPlayerName(name: string): void {
 }
 
 export function getStoredRoomId(): string | null {
-  return sessionStorage.getItem(ROOM_ID_KEY)
+  const current = sessionStorage.getItem(ROOM_ID_KEY)
+  if (current) {
+    return current
+  }
+
+  const legacy = sessionStorage.getItem(LEGACY_ROOM_ID_KEY)
+  if (legacy) {
+    sessionStorage.setItem(ROOM_ID_KEY, legacy)
+    return legacy
+  }
+
+  return null
 }
 
 export function setStoredRoomId(roomId: string): void {

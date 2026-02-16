@@ -1,4 +1,4 @@
-# PartyFlow Monorepo
+# Поясни Monorepo
 
 ## Unified Docker Compose (root)
 
@@ -21,13 +21,7 @@ docker compose -f docker-compose.dev.yml down
 
 ### Production-like run (frontend + backend + redis)
 
-1. Prepare backend env file:
-
-```bash
-cp backend/.env.prod.example backend/.env.prod
-```
-
-2. Start stack:
+Start stack:
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d --build
@@ -45,4 +39,4 @@ docker compose -f docker-compose.prod.yml down
 
 Notes:
 - `REDIS_URL` in prod compose defaults to `redis://redis:6379`, but can be overridden from shell env.
-- `CORS_ORIGIN` in prod compose defaults to `http://localhost:8080`, but can be overridden from shell env.
+- `CORS_ORIGIN` in prod compose defaults to `https://poyasni.ru`, but can be overridden from shell env.

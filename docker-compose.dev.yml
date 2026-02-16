@@ -1,4 +1,4 @@
-name: partyflow-dev
+name: poyasni-dev
 
 services:
   redis:
@@ -15,11 +15,15 @@ services:
     restart: unless-stopped
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
-    env_file:
-      - ./backend/.env.dev
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    environment:
+      NODE_ENV: development
+      PORT: "3001"
+      REDIS_URL: redis://redis:6379
+      CORS_ORIGIN: http://localhost:5173
+      STARTER_PACK_PATH: /app/docs/MVP_Starter_pack.json
     ports:
       - "3001:3001"
     volumes:
@@ -31,16 +35,16 @@ services:
     restart: unless-stopped
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
     ports:
       - "5173:5173"
     environment:
-      - API_PROXY_TARGET=http://backend:3001
-      - WS_PROXY_TARGET=http://backend:3001
-      - VITE_API_URL=/api
-      - VITE_WS_URL=
+      API_PROXY_TARGET: http://backend:3001
+      WS_PROXY_TARGET: http://backend:3001
+      VITE_API_URL: /api
+      VITE_WS_URL: ""
     volumes:
       - ./frontend:/app
       - frontend-node-modules:/app/node_modules

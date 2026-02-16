@@ -23,7 +23,7 @@ export function HomeScreen() {
       return ''
     }
 
-    return `https://partyflow.ru/join/${createdRoomId}`
+    return `https://poyasni.ru/join/${createdRoomId}`
   }, [createdRoomId])
 
   useEffect(() => {
@@ -101,7 +101,7 @@ export function HomeScreen() {
         transition={{ duration: 0.25 }}
         className="space-y-2"
       >
-        <h1 className="text-3xl font-bold text-accent">PartyFlow</h1>
+        <h1 className="text-3xl font-bold text-accent">Поясни</h1>
         <p className="text-slate-200">Создайте комнату или присоединитесь по 6-символьному коду.</p>
       </motion.div>
 

@@ -1,11 +1,11 @@
-# PartyFlow Backend + Frontend Compose
+# Поясни Backend + Frontend Compose
 
 ## Environment matrix
 
 | Environment | Services | Redis source | Command |
 | --- | --- | --- | --- |
 | Development | frontend + backend + redis | Internal compose service (`redis`) | `docker compose -f docker-compose.dev.yml up --build` |
-| Production | frontend + backend | External Redis (`REDIS_URL`) | `docker compose -f docker-compose.prod.yml up -d --build` |
+| Production | frontend + backend + redis | Internal compose service (`redis`) | `docker compose -f docker-compose.prod.yml up -d --build` |
 
 ## Docker-based development (isolated frontend + backend)
 
@@ -31,25 +31,20 @@ Notes:
 - Frontend proxies `/api` and `/socket.io` to backend container.
 - Backend runs with hot-reload (`npm run dev`).
 
-## Production runtime (frontend + backend)
+## Production runtime (frontend + backend + redis)
 
-1. Prepare backend env file:
-   ```bash
-   cp .env.prod.example .env.prod
-   ```
-2. Set real production values in `.env.prod` (especially `REDIS_URL`).
-3. Start stack:
+1. Start stack:
    ```bash
    docker compose -f docker-compose.prod.yml up -d --build
    ```
-4. Access services:
+2. Access services:
    - Frontend: `http://localhost:8080`
    - Backend: `http://localhost:3001`
-5. Logs:
+3. Logs:
    ```bash
    docker compose -f docker-compose.prod.yml logs -f backend frontend
    ```
-6. Stop:
+4. Stop:
    ```bash
    docker compose -f docker-compose.prod.yml down
    ```
