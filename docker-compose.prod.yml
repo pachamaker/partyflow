@@ -13,7 +13,7 @@ services:
   backend:
     image: node:20-alpine
     working_dir: /app
-    command: sh -c "if [ -f package-lock.json ]; then npm ci; else npm install; fi && npm run build && npm run start"
+    command: sh -c "if [ -f package-lock.json ]; then npm ci --include=dev; else npm install --include=dev; fi && npm run build && npm run start"
     environment:
       NODE_ENV: production
       PORT: "3001"
@@ -33,7 +33,7 @@ services:
   frontend-builder:
     image: node:20-alpine
     working_dir: /app
-    command: sh -c "if [ -f package-lock.json ]; then npm ci; else npm install; fi && npm run build && rm -rf /dist/* && cp -r dist/* /dist/"
+    command: sh -c "if [ -f package-lock.json ]; then npm ci --include=dev; else npm install --include=dev; fi && npm run build"
     profiles: ["build"]
     environment:
       VITE_API_URL: /api
@@ -41,7 +41,6 @@ services:
     volumes:
       - ./frontend:/app
       - frontend-node-modules:/app/node_modules
-      - ./frontend/dist:/dist
     restart: "no"
 
 volumes:
