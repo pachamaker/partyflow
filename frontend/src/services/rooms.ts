@@ -21,6 +21,7 @@ export interface RoomGameState {
   activeTeam: 'A' | 'B'
   roundDurationSeconds: number
   remainingSeconds: number
+  maxRounds: number
   score: {
     A: number
     B: number

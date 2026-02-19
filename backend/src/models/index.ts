@@ -89,6 +89,7 @@ export type LeaveRoomPayload = {
 export type StartGamePayload = {
   roomId?: string;
   roundDurationSeconds?: number;
+  maxRounds?: number;
 };
 
 export type StartRoundPayload = {

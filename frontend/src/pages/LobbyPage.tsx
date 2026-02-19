@@ -16,6 +16,7 @@ export function LobbyPage() {
   const [game, setGame] = useState<RoomGameState | null>(null)
   const [hostId, setHostId] = useState<string | null>(null)
   const [roundDurationSeconds, setRoundDurationSeconds] = useState(60)
+  const [maxRounds, setMaxRounds] = useState(12)
   const [error, setError] = useState<string | null>(null)
   const [isJoining, setIsJoining] = useState(true)
 
@@ -55,6 +56,7 @@ export function LobbyPage() {
         setGame(room.game)
         setHostId(room.hostId)
         setRoundDurationSeconds(room.game.roundDurationSeconds ?? 60)
+        setMaxRounds(room.game.maxRounds ?? 12)
 
         socket.emit(
           'join_room',
@@ -89,6 +91,7 @@ export function LobbyPage() {
         setGame(payload.game)
         if (payload.game.phase === 'LOBBY') {
           setRoundDurationSeconds(payload.game.roundDurationSeconds ?? 60)
+          setMaxRounds(payload.game.maxRounds ?? 12)
         }
       }
       if (payload.hostId) setHostId(payload.hostId)
@@ -128,7 +131,7 @@ export function LobbyPage() {
   const startGame = () => {
     socket.emit(
       'start_game',
-      { roomId, roundDurationSeconds },
+      { roomId, roundDurationSeconds, maxRounds },
       (response: { ok: boolean; error?: { message?: string } }) => {
         if (!response.ok) {
           setError(response.error?.message ?? 'Не удалось начать игру')
@@ -145,6 +148,16 @@ export function LobbyPage() {
 
     const safe = Math.max(10, Math.min(300, Math.floor(parsed)))
     setRoundDurationSeconds(safe)
+  }
+
+  const handleMaxRoundsChange = (value: string) => {
+    const parsed = Number(value)
+    if (!Number.isFinite(parsed)) {
+      return
+    }
+
+    const safe = Math.max(1, Math.min(100, Math.floor(parsed)))
+    setMaxRounds(safe)
   }
 
   return (
@@ -198,21 +211,35 @@ export function LobbyPage() {
         </div>
       ) : null}
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap items-end gap-3">
         {isHost && game?.phase === 'LOBBY' ? (
           <>
-            <label className="flex items-center gap-2 text-sm text-slate-200">
-              Таймер (сек):
-              <input
-                type="number"
-                min={10}
-                max={300}
-                step={5}
-                value={roundDurationSeconds}
-                onChange={(event) => handleRoundDurationChange(event.target.value)}
-                className="w-24 rounded-lg border border-white/20 bg-secondary px-2 py-1 text-white outline-none focus:border-accent"
-              />
-            </label>
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm text-slate-200">
+                Таймер (сек):
+                <input
+                  type="number"
+                  min={10}
+                  max={300}
+                  step={5}
+                  value={roundDurationSeconds}
+                  onChange={(event) => handleRoundDurationChange(event.target.value)}
+                  className="w-24 rounded-lg border border-white/20 bg-secondary px-2 py-1 text-white outline-none focus:border-accent"
+                />
+              </label>
+              <label className="flex items-center gap-2 text-sm text-slate-200">
+                Макс. раундов:
+                <input
+                  type="number"
+                  min={1}
+                  max={100}
+                  step={1}
+                  value={maxRounds}
+                  onChange={(event) => handleMaxRoundsChange(event.target.value)}
+                  className="w-24 rounded-lg border border-white/20 bg-secondary px-2 py-1 text-white outline-none focus:border-accent"
+                />
+              </label>
+            </div>
             <button
               type="button"
               onClick={startGame}

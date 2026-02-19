@@ -9,6 +9,7 @@ import { healthCheck } from './controllers/health.controller';
 import {
   ApiErrorBody,
   EndRoundPayload,
+  GAME_MAX_ROUNDS,
   JoinRoomPayload,
   LeaveRoomPayload,
   ROUND_DURATION_SECONDS,
@@ -543,6 +544,7 @@ io.on('connection', (socket) => {
     const roomId = String(payload?.roomId ?? socket.data.roomId ?? '').trim();
     const playerId = String(socket.data.playerId ?? '').trim();
     const requestedRoundDuration = Number(payload?.roundDurationSeconds);
+    const requestedMaxRounds = Number(payload?.maxRounds);
 
     if (!roomId) {
       const error = toErrorBody('VALIDATION_ERROR', 'roomId is required');
@@ -565,6 +567,11 @@ io.on('connection', (socket) => {
         room = gameService.setRoundDuration(room, requestedRoundDuration);
       } else if (!Number.isFinite(room.game.roundDurationSeconds)) {
         room = gameService.setRoundDuration(room, ROUND_DURATION_SECONDS);
+      }
+      if (Number.isFinite(requestedMaxRounds)) {
+        room = gameService.setMaxRounds(room, requestedMaxRounds);
+      } else if (!Number.isFinite(room.game.maxRounds)) {
+        room = gameService.setMaxRounds(room, GAME_MAX_ROUNDS);
       }
       room = gameService.startGame(room);
       try {

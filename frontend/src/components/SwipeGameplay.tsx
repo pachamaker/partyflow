@@ -38,6 +38,12 @@ interface ScoreUpdatedPayload {
   }
 }
 
+type PlayerSnapshot = {
+  id: string
+  name?: string
+  team: Team
+}
+
 export function SwipeGameplay({ roomId }: SwipeGameplayProps) {
   const navigate = useNavigate()
   const [word, setWord] = useState<WordPayload | null>(null)
@@ -50,6 +56,7 @@ export function SwipeGameplay({ roomId }: SwipeGameplayProps) {
   const [activeExplainerId, setActiveExplainerId] = useState<string | undefined>()
   const [myTeam, setMyTeam] = useState<Team | null>(null)
   const [myName, setMyName] = useState<string | null>(getStoredPlayerName())
+  const [players, setPlayers] = useState<PlayerSnapshot[]>([])
   const [error, setError] = useState<string | null>(null)
 
   const myPlayerId = getStoredPlayerId()
@@ -83,6 +90,13 @@ export function SwipeGameplay({ roomId }: SwipeGameplayProps) {
   }, [isExplainer, isGuesser])
 
   const scoreLabel = useMemo(() => `A: ${teamA} | B: ${teamB}`, [teamA, teamB])
+  const nextExplainer = useMemo(() => {
+    if (!activeExplainerId) {
+      return null
+    }
+
+    return players.find((player) => player.id === activeExplainerId) ?? null
+  }, [activeExplainerId, players])
 
   useEffect(() => {
     let active = true
@@ -102,6 +116,7 @@ export function SwipeGameplay({ roomId }: SwipeGameplayProps) {
         setRemaining(room.game.remainingSeconds ?? 60)
         setActiveTeam(room.game.activeTeam)
         setActiveExplainerId(room.game.activeExplainerId)
+        setPlayers(room.players)
         setWord(room.game.currentWord ? { id: room.game.currentWord.id, word: room.game.currentWord.word } : null)
         setHint(null)
 
@@ -166,12 +181,15 @@ export function SwipeGameplay({ roomId }: SwipeGameplayProps) {
 
     const onPlayerState = (payload: {
       roomId?: string
-      players?: Array<{ id: string; team: Team; name?: string }>
+      players?: PlayerSnapshot[]
       game?: { activeExplainerId?: string }
     }) => {
       if (!roomId || payload.roomId !== roomId) return
       if (payload.game?.activeExplainerId) {
         setActiveExplainerId(payload.game.activeExplainerId)
+      }
+      if (payload.players) {
+        setPlayers(payload.players)
       }
       if (myPlayerId && payload.players) {
         const me = payload.players.find((player) => player.id === myPlayerId)
@@ -293,23 +311,35 @@ export function SwipeGameplay({ roomId }: SwipeGameplayProps) {
       </div>
 
       <div className="rounded-2xl border border-accent/30 bg-black/20 p-8 text-center">
-        <p className="text-sm uppercase tracking-[0.2em] text-slate-400">Текущая карточка</p>
+        {gamePhase !== 'ROUND_END' ? (
+          <>
+          <p className="text-sm uppercase tracking-[0.2em] text-slate-400">Текущая карточка</p>
+          </>        
+        ) : null}
+        {gamePhase === 'ROUND_END' ? (
+          <>
+            <p className="mt-3 text-base text-slate-300">Раунд завершен</p>
+            <p className="mt-2 text-2xl font-bold text-white">
+              Новый раунд начинает {nextExplainer?.name ?? 'следующий игрок'} ({nextExplainer?.team ? `Team ${nextExplainer.team}` : 'Team —'})
+            </p>
+          </>
+        ) : null}
 
-        {isGuesser ? (
+        {gamePhase !== 'ROUND_END' && isGuesser ? (
           <>
             <p className="mt-3 text-base text-amber-200">Вы должны отгадывать.</p>
             <p className="mt-2 text-4xl font-black text-slate-300">СЛОВО СКРЫТО</p>
           </>
         ) : null}
 
-        {isExplainer ? (
+        {gamePhase !== 'ROUND_END' && isExplainer ? (
           <>
             <p className="mt-3 text-5xl font-black text-white">{word?.word ?? 'Ожидание слова...'}</p>
             {hint ? <p className="mt-3 text-base text-slate-200">Подсказка: {hint}</p> : null}
           </>
         ) : null}
 
-        {isSpectator ? (
+        {gamePhase !== 'ROUND_END' && isSpectator ? (
           <>
             <p className="mt-3 text-base text-slate-300">Вы наблюдаете за раундом.</p>
             <p className="mt-3 text-5xl font-black text-slate-200 opacity-40 blur-[1px]">{word?.word ?? 'Ожидание слова...'}</p>

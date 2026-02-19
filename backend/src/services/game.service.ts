@@ -11,6 +11,12 @@ export class GameService {
     return room;
   }
 
+  setMaxRounds(room: RoomState, maxRounds: number): RoomState {
+    const safeMaxRounds = Math.max(1, Math.min(100, Math.floor(maxRounds)));
+    room.game.maxRounds = safeMaxRounds;
+    return room;
+  }
+
   resetGame(room: RoomState): RoomState {
     room.game.phase = 'LOBBY';
     room.game.currentRound = 0;
