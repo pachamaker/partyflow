@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { QRCodeSVG } from 'qrcode.react'
 import { useSocketStatus } from '../hooks/useSocketStatus'
 import { getRoomState, type RoomGameState, type RoomPlayer } from '../services/rooms'
 import { ensurePlayerId, ensurePlayerName, getStoredPlayerId, setStoredPlayerId, setStoredRoomId } from '../services/session'
@@ -23,6 +24,15 @@ export function LobbyPage() {
     return players.find((player) => player.id === myId) ?? null
   }, [players])
   const isHost = !!me && !!hostId && me.id === hostId
+  const inviteLink = useMemo(() => {
+    if (!roomId) {
+      return ''
+    }
+
+    return `${window.location.origin}${routes.lobbyById(roomId)}`
+  }, [roomId])
+  const teamAPlayers = useMemo(() => players.filter((player) => player.team === 'A'), [players])
+  const teamBPlayers = useMemo(() => players.filter((player) => player.team === 'B'), [players])
 
   useEffect(() => {
     let active = true
@@ -153,14 +163,40 @@ export function LobbyPage() {
 
       <div className="rounded-lg bg-black/20 p-4">
         <h2 className="mb-2 text-lg font-semibold">Участники ({players.length})</h2>
-        <ul className="space-y-1 text-sm text-slate-200">
-          {players.map((player) => (
-            <li key={player.id}>
-              {player.name} | Team {player.team} | {player.connected ? 'online' : 'offline'}
-            </li>
-          ))}
-        </ul>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+            <h3 className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-accent">Team A ({teamAPlayers.length})</h3>
+            <ul className="space-y-1 text-sm text-slate-200">
+              {teamAPlayers.map((player) => (
+                <li key={player.id}>
+                  {player.name} | {player.connected ? 'online' : 'offline'}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+            <h3 className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-accent">Team B ({teamBPlayers.length})</h3>
+            <ul className="space-y-1 text-sm text-slate-200">
+              {teamBPlayers.map((player) => (
+                <li key={player.id}>
+                  {player.name} | {player.connected ? 'online' : 'offline'}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
+
+      {isHost ? (
+        <div className="rounded-xl border border-accent/30 bg-black/20 p-4">
+          <p className="text-sm text-slate-300">Приглашение в комнату</p>
+          <div className="mt-3 inline-flex rounded-xl bg-white p-3">
+            <QRCodeSVG value={inviteLink} size={144} />
+          </div>
+          <p className="mt-3 break-all text-xs text-slate-400">{inviteLink}</p>
+        </div>
+      ) : null}
 
       <div className="flex gap-3">
         {isHost && game?.phase === 'LOBBY' ? (

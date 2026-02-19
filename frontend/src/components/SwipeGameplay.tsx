@@ -58,16 +58,29 @@ export function SwipeGameplay({ roomId }: SwipeGameplayProps) {
     gamePhase === 'PLAYING' &&
     (myPlayerId === activeExplainerId || (!activeExplainerId && !!myTeam && myTeam === activeTeam))
   const canStartNextRound = !!myPlayerId && gamePhase === 'ROUND_END' && myPlayerId === activeExplainerId
+  const isExplainer = !!myPlayerId && myPlayerId === activeExplainerId
+  const isGuesser = !isExplainer && !!myTeam && myTeam === activeTeam
+  const isSpectator = !isExplainer && !isGuesser
 
   const myStatus = useMemo(() => {
-    if (myPlayerId && myPlayerId === activeExplainerId) {
-      return 'Объясняет'
+    if (isExplainer) {
+      return 'ОБЪЯСНЯЕТ'
     }
-    if (myTeam && myTeam === activeTeam) {
-      return 'Угадывает'
+    if (isGuesser) {
+      return 'УГАДЫВАЕТЕ'
     }
-    return 'Зритель'
-  }, [activeExplainerId, activeTeam, myPlayerId, myTeam])
+    return 'ЗРИТЕЛЬ'
+  }, [isExplainer, isGuesser])
+
+  const roleBadgeClassName = useMemo(() => {
+    if (isExplainer) {
+      return 'border-emerald-300/50 bg-emerald-500/15 text-emerald-200'
+    }
+    if (isGuesser) {
+      return 'border-amber-300/50 bg-amber-400/20 text-amber-100'
+    }
+    return 'border-slate-300/20 bg-slate-500/10 text-slate-200'
+  }, [isExplainer, isGuesser])
 
   const scoreLabel = useMemo(() => `A: ${teamA} | B: ${teamB}`, [teamA, teamB])
 
@@ -268,16 +281,40 @@ export function SwipeGameplay({ roomId }: SwipeGameplayProps) {
   return (
     <section className="space-y-6 rounded-2xl border border-white/10 bg-secondary/70 p-6">
       <h1 className="text-3xl font-bold">Game</h1>
-      <p className="text-slate-200">Комната: {roomId ?? '—'}</p>
-      <p className="text-slate-200">Вы: {myName ?? '—'} ({myTeam ? `Team ${myTeam}` : '—'})</p>
-      <p className="text-slate-200">Таймер: {remaining}s</p>
-      <p className="text-slate-200">Счёт: {scoreLabel}</p>
-      <p className="text-slate-200">Ваш статус: {myStatus}</p>
+
+      <div className="space-y-2 rounded-xl border border-white/10 bg-black/20 p-4">
+        <p className="text-slate-100">Комната: <span className="font-semibold tracking-[0.2em] text-accent">{roomId ?? '—'}</span> <span className="text-slate-400">(Счёт: {scoreLabel})</span></p>
+        <p className="text-slate-100">
+          Вы: {myName ?? '—'} ({myTeam ? `Team ${myTeam}` : '—'})
+          {' '}
+          <span className={`rounded-full border px-2 py-1 text-xs font-bold ${roleBadgeClassName}`}>{myStatus}</span>
+        </p>
+        <p className="text-slate-100">Таймер: <span className="font-semibold text-white">{remaining}s</span></p>
+      </div>
 
       <div className="rounded-2xl border border-accent/30 bg-black/20 p-8 text-center">
-        <p className="text-sm text-slate-400">Текущее слово</p>
-        <p className="text-5xl font-black text-white">{word?.word ?? 'Ожидание слова...'}</p>
-        {myStatus === 'Объясняет' && hint ? <p className="mt-3 text-base text-slate-200">Подсказка: {hint}</p> : null}
+        <p className="text-sm uppercase tracking-[0.2em] text-slate-400">Текущая карточка</p>
+
+        {isGuesser ? (
+          <>
+            <p className="mt-3 text-base text-amber-200">Вы должны отгадывать.</p>
+            <p className="mt-2 text-4xl font-black text-slate-300">СЛОВО СКРЫТО</p>
+          </>
+        ) : null}
+
+        {isExplainer ? (
+          <>
+            <p className="mt-3 text-5xl font-black text-white">{word?.word ?? 'Ожидание слова...'}</p>
+            {hint ? <p className="mt-3 text-base text-slate-200">Подсказка: {hint}</p> : null}
+          </>
+        ) : null}
+
+        {isSpectator ? (
+          <>
+            <p className="mt-3 text-base text-slate-300">Вы наблюдаете за раундом.</p>
+            <p className="mt-3 text-5xl font-black text-slate-200 opacity-40 blur-[1px]">{word?.word ?? 'Ожидание слова...'}</p>
+          </>
+        ) : null}
       </div>
 
       <div className="flex gap-3">
