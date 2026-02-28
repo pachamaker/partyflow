@@ -1,0 +1,3192 @@
+{
+  "pack_id": "slang_memes_v3",
+  "pack_name": "Мемы и Сленг",
+  "pack_description": "Рунет-сленг, мем-культура, онлайн-лексика — от Двача до Ютуба",
+  "version": "3.0",
+  "total_words": 500,
+  "difficulty_distribution": {
+    "easy": 325,
+    "medium": 175,
+    "hard": 0
+  },
+  "notes": "16+ контент: включены оскорбительные мемы и грубый сленг в культурном контексте",
+  "words": [
+    {
+      "id": 1,
+      "word": "Вайб",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 2,
+      "word": "Кринж",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 3,
+      "word": "Хайп",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 4,
+      "word": "Мем",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 5,
+      "word": "Флекс",
+      "difficulty": "easy",
+      "category": "поведение"
+    },
+    {
+      "id": 6,
+      "word": "Скуф",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 7,
+      "word": "Альтушка",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 8,
+      "word": "Думер",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 9,
+      "word": "Гигачад",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 10,
+      "word": "Чад",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 11,
+      "word": "Симп",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 12,
+      "word": "NPC",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 13,
+      "word": "Инцел",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 14,
+      "word": "Сойбой",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 15,
+      "word": "Бумер",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 16,
+      "word": "Зумер",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 17,
+      "word": "Хейтер",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 18,
+      "word": "Токсик",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 19,
+      "word": "Инфлюенсер",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 20,
+      "word": "Стример",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 21,
+      "word": "Пикабушник",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 22,
+      "word": "Аутист",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 23,
+      "word": "Мамина корзиночка",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 24,
+      "word": "Чабби",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 25,
+      "word": "Нёрд",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 26,
+      "word": "Гик",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 27,
+      "word": "Лузер",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 28,
+      "word": "Задрот",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 29,
+      "word": "Быдло",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 30,
+      "word": "Школьник",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 31,
+      "word": "Тролль",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 32,
+      "word": "Анон",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 33,
+      "word": "Пепе",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 34,
+      "word": "Дрейк",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 35,
+      "word": "Грустный Пепе",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 36,
+      "word": "Скибиди туалет",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 37,
+      "word": "Капибара",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 38,
+      "word": "Chill guy",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 39,
+      "word": "Женщина кричит на кота",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 40,
+      "word": "Страдающее средневековье",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 41,
+      "word": "Паук указывает",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 42,
+      "word": "Гарольд улыбается",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 43,
+      "word": "Дистрактед бойфренд",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 44,
+      "word": "Абоба",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 45,
+      "word": "Кот Бес",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 46,
+      "word": "Ждун",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 47,
+      "word": "Зашкварный кот",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 48,
+      "word": "Лемур смотрит",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 49,
+      "word": "Это финн",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 50,
+      "word": "Нейросеть нарисовала",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 51,
+      "word": "Скам",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 52,
+      "word": "Донат",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 53,
+      "word": "Стрим",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 54,
+      "word": "Рилс",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 55,
+      "word": "Шортс",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 56,
+      "word": "Тред",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 57,
+      "word": "Сторис",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 58,
+      "word": "Войс",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 59,
+      "word": "Тэйк",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 60,
+      "word": "Хот тэйк",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 61,
+      "word": "Кэнселинг",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 62,
+      "word": "Вирусный",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 63,
+      "word": "Думскроллинг",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 64,
+      "word": "Нарратив",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 65,
+      "word": "Дискурс",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 66,
+      "word": "Дип-фейк",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 67,
+      "word": "Клик-бейт",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 68,
+      "word": "Шитпост",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 69,
+      "word": "Краш",
+      "difficulty": "easy",
+      "category": "отношения"
+    },
+    {
+      "id": 70,
+      "word": "Ред флаг",
+      "difficulty": "easy",
+      "category": "отношения"
+    },
+    {
+      "id": 71,
+      "word": "Гостинг",
+      "difficulty": "easy",
+      "category": "отношения"
+    },
+    {
+      "id": 72,
+      "word": "Бенчинг",
+      "difficulty": "easy",
+      "category": "отношения"
+    },
+    {
+      "id": 73,
+      "word": "Катфишинг",
+      "difficulty": "easy",
+      "category": "отношения"
+    },
+    {
+      "id": 74,
+      "word": "Свайп вправо",
+      "difficulty": "easy",
+      "category": "отношения"
+    },
+    {
+      "id": 75,
+      "word": "Жиза",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 76,
+      "word": "Капец",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 77,
+      "word": "Дичь",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 78,
+      "word": "Треш",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 79,
+      "word": "Зашквар",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 80,
+      "word": "Угар",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 81,
+      "word": "Рофл",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 82,
+      "word": "Лол",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 83,
+      "word": "Ваще",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 84,
+      "word": "Это другое",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 85,
+      "word": "В точку",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 86,
+      "word": "Пояснить за",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 87,
+      "word": "Кэп",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 88,
+      "word": "Окей бумер",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 89,
+      "word": "Скипнуть",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 90,
+      "word": "Вин",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 91,
+      "word": "Фейл",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 92,
+      "word": "Gg",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 93,
+      "word": "Kek",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 94,
+      "word": "Топчик",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 95,
+      "word": "Красава",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 96,
+      "word": "Пиздец",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 97,
+      "word": "Хуйня",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 98,
+      "word": "Ебать",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 99,
+      "word": "Блять",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 100,
+      "word": "Нихуя",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 101,
+      "word": "Slay",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 102,
+      "word": "Rizz",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 103,
+      "word": "No cap",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 104,
+      "word": "Brain rot",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 105,
+      "word": "YOLO",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 106,
+      "word": "Gg no re",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 107,
+      "word": "Моя эра",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 108,
+      "word": "Вайбить",
+      "difficulty": "easy",
+      "category": "поведение"
+    },
+    {
+      "id": 109,
+      "word": "Флексить",
+      "difficulty": "easy",
+      "category": "поведение"
+    },
+    {
+      "id": 110,
+      "word": "Хайпить",
+      "difficulty": "easy",
+      "category": "поведение"
+    },
+    {
+      "id": 111,
+      "word": "Рофлить",
+      "difficulty": "easy",
+      "category": "поведение"
+    },
+    {
+      "id": 112,
+      "word": "Кринжить",
+      "difficulty": "easy",
+      "category": "поведение"
+    },
+    {
+      "id": 113,
+      "word": "Хейтить",
+      "difficulty": "easy",
+      "category": "поведение"
+    },
+    {
+      "id": 114,
+      "word": "Затащить",
+      "difficulty": "easy",
+      "category": "поведение"
+    },
+    {
+      "id": 115,
+      "word": "Слиться",
+      "difficulty": "easy",
+      "category": "поведение"
+    },
+    {
+      "id": 116,
+      "word": "Ливануть",
+      "difficulty": "easy",
+      "category": "поведение"
+    },
+    {
+      "id": 117,
+      "word": "Ливнуть",
+      "difficulty": "easy",
+      "category": "поведение"
+    },
+    {
+      "id": 118,
+      "word": "Забустить",
+      "difficulty": "easy",
+      "category": "поведение"
+    },
+    {
+      "id": 119,
+      "word": "Шиппинг",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 120,
+      "word": "Фандом",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 121,
+      "word": "Стэн",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 122,
+      "word": "Антифан",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 123,
+      "word": "Коллаб",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 124,
+      "word": "Дроп",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 125,
+      "word": "Камбэк",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 126,
+      "word": "Подпишись",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 127,
+      "word": "Отписаться",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 128,
+      "word": "Репост",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 129,
+      "word": "ASMR",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 130,
+      "word": "Мукбанг",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 131,
+      "word": "Подкаст",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 132,
+      "word": "Обзор",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 133,
+      "word": "Реакция",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 134,
+      "word": "Лайвстрим",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 135,
+      "word": "Сабреддит",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 136,
+      "word": "Двач",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 137,
+      "word": "Пикабу",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 138,
+      "word": "Гринтекст",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 139,
+      "word": "ЯСМП",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 140,
+      "word": "Ютубер",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 141,
+      "word": "Тик-токер",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 142,
+      "word": "Контентмейкер",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 143,
+      "word": "Блогер",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 144,
+      "word": "Вайфу",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 145,
+      "word": "Хикикомори",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 146,
+      "word": "Ботан",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 147,
+      "word": "Гопник",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 148,
+      "word": "Каэн",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 149,
+      "word": "Грустный чел",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 150,
+      "word": "Долбаёб",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 151,
+      "word": "Петух",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 152,
+      "word": "Рофлан",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 153,
+      "word": "Чмо",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 154,
+      "word": "Муд",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 155,
+      "word": "Войд",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 156,
+      "word": "Разум",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 157,
+      "word": "Баттл",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 158,
+      "word": "Рейд",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 159,
+      "word": "Холивар",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 160,
+      "word": "Флуд",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 161,
+      "word": "Баян",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 162,
+      "word": "Олдфаг",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 163,
+      "word": "Нюфаг",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 164,
+      "word": "Сагу",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 165,
+      "word": "Бамп",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 166,
+      "word": "Рек",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 167,
+      "word": "Кек",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 168,
+      "word": "Лор",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 169,
+      "word": "Копипаста",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 170,
+      "word": "Пасты",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 171,
+      "word": "Оффтоп",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 172,
+      "word": "Разбан",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 173,
+      "word": "Войтинивкат",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 174,
+      "word": "Выход из чата",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 175,
+      "word": "Дед, стоп",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 176,
+      "word": "Откинулся",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 177,
+      "word": "Пацан к успеху шёл",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 178,
+      "word": "Оставайтесь дома",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 179,
+      "word": "Это норма",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 180,
+      "word": "Сделал и забыл",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 181,
+      "word": "Я пошёл спать",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 182,
+      "word": "Помер",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 183,
+      "word": "Ух ты",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 184,
+      "word": "Хм",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 185,
+      "word": "Мило",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 186,
+      "word": "Эйдж",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 187,
+      "word": "Ретвит",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 188,
+      "word": "Твит",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 189,
+      "word": "Камент",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 190,
+      "word": "Токсичный камент",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 191,
+      "word": "Война в комментах",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 192,
+      "word": "Колл",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 193,
+      "word": "Созвон",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 194,
+      "word": "Онлайн",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 195,
+      "word": "Оффлайн",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 196,
+      "word": "Крипта",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 197,
+      "word": "Ходл",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 198,
+      "word": "NFT",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 199,
+      "word": "Скам-звонок",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 200,
+      "word": "Прокрастинация",
+      "difficulty": "easy",
+      "category": "жизнь"
+    },
+    {
+      "id": 201,
+      "word": "Выгорание",
+      "difficulty": "easy",
+      "category": "жизнь"
+    },
+    {
+      "id": 202,
+      "word": "Тревожность",
+      "difficulty": "easy",
+      "category": "жизнь"
+    },
+    {
+      "id": 203,
+      "word": "Баттхёрт",
+      "difficulty": "easy",
+      "category": "жизнь"
+    },
+    {
+      "id": 204,
+      "word": "Дофамин",
+      "difficulty": "easy",
+      "category": "жизнь"
+    },
+    {
+      "id": 205,
+      "word": "Серотонин",
+      "difficulty": "easy",
+      "category": "жизнь"
+    },
+    {
+      "id": 206,
+      "word": "Ноосфера",
+      "difficulty": "easy",
+      "category": "жизнь"
+    },
+    {
+      "id": 207,
+      "word": "Стартап",
+      "difficulty": "easy",
+      "category": "жизнь"
+    },
+    {
+      "id": 208,
+      "word": "Инфобиз",
+      "difficulty": "easy",
+      "category": "жизнь"
+    },
+    {
+      "id": 209,
+      "word": "Пассивный доход",
+      "difficulty": "easy",
+      "category": "жизнь"
+    },
+    {
+      "id": 210,
+      "word": "Удалёнка",
+      "difficulty": "easy",
+      "category": "жизнь"
+    },
+    {
+      "id": 211,
+      "word": "Вписка",
+      "difficulty": "easy",
+      "category": "жизнь"
+    },
+    {
+      "id": 212,
+      "word": "Афтепати",
+      "difficulty": "easy",
+      "category": "жизнь"
+    },
+    {
+      "id": 213,
+      "word": "Антропоморфный",
+      "difficulty": "easy",
+      "category": "эстетика"
+    },
+    {
+      "id": 214,
+      "word": "Коттэджкор",
+      "difficulty": "easy",
+      "category": "эстетика"
+    },
+    {
+      "id": 215,
+      "word": "Барбикор",
+      "difficulty": "easy",
+      "category": "эстетика"
+    },
+    {
+      "id": 216,
+      "word": "Гачи",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 217,
+      "word": "Фурри",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 218,
+      "word": "Аниме",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 219,
+      "word": "Хентай",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 220,
+      "word": "Аниме-аватарка",
+      "difficulty": "easy",
+      "category": "мемы",
+      "hint": "Пользователь без лица — всегда аниме-персонаж вместо фото"
+    },
+    {
+      "id": 221,
+      "word": "Мэтч",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 222,
+      "word": "Петабайт стыда",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 223,
+      "word": "Демотиватор",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 224,
+      "word": "Злой Сонник",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 225,
+      "word": "Рофлокоптер",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 226,
+      "word": "Тролль-фейс",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 227,
+      "word": "Рейдж-фейс",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 228,
+      "word": "Покер-фейс",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 229,
+      "word": "Facepalm",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 230,
+      "word": "Мимо",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 231,
+      "word": "Мимокрокодил",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 232,
+      "word": "ОП",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 233,
+      "word": "ТОП-ОП",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 234,
+      "word": "Нихач",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 235,
+      "word": "Особенный",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 236,
+      "word": "Сложна",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 237,
+      "word": "Кринж-компиляция",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 238,
+      "word": "Shrek",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 239,
+      "word": "Данте",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 240,
+      "word": "Леди Гага падает",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 241,
+      "word": "Дед инсайд",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 242,
+      "word": "Пиздострадание",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 243,
+      "word": "Соевый латте-либерал",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 244,
+      "word": "Сердитый кот",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 245,
+      "word": "Нет",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 246,
+      "word": "Идёт дождь",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 247,
+      "word": "Два кота дерутся",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 248,
+      "word": "Брали или нет?",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 249,
+      "word": "ИМХО",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 250,
+      "word": "ЧСВ",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 251,
+      "word": "ЛОЛ",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 252,
+      "word": "ОМГ",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 253,
+      "word": "WTF",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 254,
+      "word": "AFK",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 255,
+      "word": "BRB",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 256,
+      "word": "ФПС",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 257,
+      "word": "Лаг",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 258,
+      "word": "Баг",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 259,
+      "word": "Глитч",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 260,
+      "word": "Читер",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 261,
+      "word": "Нуб",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 262,
+      "word": "Про",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 263,
+      "word": "Килл",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 264,
+      "word": "Бот",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 265,
+      "word": "Гринд",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 266,
+      "word": "Фарминг аккаунтов",
+      "difficulty": "easy",
+      "category": "интернет",
+      "hint": "Массовое создание фейков для накрутки или атак"
+    },
+    {
+      "id": 267,
+      "word": "Пейтуплей",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 268,
+      "word": "Промпт",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 269,
+      "word": "Вайбкодинг",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 270,
+      "word": "ИИ уберёт работу",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 271,
+      "word": "Инфоцыган",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 272,
+      "word": "Коуч",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 273,
+      "word": "Тренер по жизни",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 274,
+      "word": "Грибной маньяк",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 275,
+      "word": "Шашлычник",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 276,
+      "word": "Ватник",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 277,
+      "word": "Либерах",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 278,
+      "word": "Рашн-хакер",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 279,
+      "word": "Квасной патриот",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 280,
+      "word": "Кухонный боксёр",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 281,
+      "word": "Диванный аналитик",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 282,
+      "word": "Кресловояка",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 283,
+      "word": "Мамин сынок",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 284,
+      "word": "Альфач",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 285,
+      "word": "Бетамеж",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 286,
+      "word": "Сигма-дрочер",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 287,
+      "word": "Волк-одиночка",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 288,
+      "word": "Хикка",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 289,
+      "word": "Вечный студент",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 290,
+      "word": "Нытик",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 291,
+      "word": "Корпоративный раб",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 292,
+      "word": "Яжемать",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 293,
+      "word": "Яжеотец",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 294,
+      "word": "Инста-мама",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 295,
+      "word": "Нарцисс",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 296,
+      "word": "Морализатор",
+      "difficulty": "easy",
+      "category": "люди"
+    },
+    {
+      "id": 297,
+      "word": "Паста",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 298,
+      "word": "Эйдж этот пост",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 299,
+      "word": "Тег себя",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 300,
+      "word": "Рофлить в тред",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 301,
+      "word": "Дали в ответ",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 302,
+      "word": "Педивикия",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 303,
+      "word": "Гугл тебе в помощь",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 304,
+      "word": "Яндекс",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 305,
+      "word": "ВКонтакте",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 306,
+      "word": "Тик-ток мозг",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 307,
+      "word": "Алгоритм скрывает",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 308,
+      "word": "Теневой бан",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 309,
+      "word": "Скам-рассылка",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 310,
+      "word": "Фишинг",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 311,
+      "word": "Слив базы",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 312,
+      "word": "Дидос",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 313,
+      "word": "ВПН",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 314,
+      "word": "Роскомнадзор",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 315,
+      "word": "Блокировка",
+      "difficulty": "easy",
+      "category": "интернет"
+    },
+    {
+      "id": 316,
+      "word": "Пора ложиться спать",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 317,
+      "word": "Это ты сейчас",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 318,
+      "word": "Ну и ну",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 319,
+      "word": "Отец",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 320,
+      "word": "Спасибо, кэп",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 321,
+      "word": "Ты не один",
+      "difficulty": "easy",
+      "category": "мемы"
+    },
+    {
+      "id": 322,
+      "word": "Хз",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 323,
+      "word": "Ору",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 324,
+      "word": "Ору с тебя",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 325,
+      "word": "Плюсую",
+      "difficulty": "easy",
+      "category": "фразы"
+    },
+    {
+      "id": 326,
+      "word": "Думскроллинг в 3 ночи",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Залип в ленту с плохими новостями, когда надо было спать"
+    },
+    {
+      "id": 327,
+      "word": "Orbit",
+      "difficulty": "medium",
+      "category": "отношения",
+      "hint": "Лайкает сторис, но не пишет — завис на орбите"
+    },
+    {
+      "id": 328,
+      "word": "Бредкрамбинг",
+      "difficulty": "medium",
+      "category": "отношения",
+      "hint": "Разбрасывает крошки внимания, чтобы не отпустить"
+    },
+    {
+      "id": 329,
+      "word": "Ситуэйшншип",
+      "difficulty": "medium",
+      "category": "отношения",
+      "hint": "Не пара и не чужие — что-то непонятное посередине"
+    },
+    {
+      "id": 330,
+      "word": "Ловебомбинг",
+      "difficulty": "medium",
+      "category": "отношения",
+      "hint": "Засыпает любовью в начале, потом резко переключается"
+    },
+    {
+      "id": 331,
+      "word": "Зонирование в друзья",
+      "difficulty": "medium",
+      "category": "отношения",
+      "hint": "Friend zone — нравишься, но только как друг"
+    },
+    {
+      "id": 332,
+      "word": "Сезон мести",
+      "difficulty": "medium",
+      "category": "отношения",
+      "hint": "Фаза после расставания — прокачаться назло бывшему"
+    },
+    {
+      "id": 333,
+      "word": "Газлайтинг",
+      "difficulty": "medium",
+      "category": "поведение",
+      "hint": "Убеждает, что ты всё придумал — реальность существует, но не твоя"
+    },
+    {
+      "id": 334,
+      "word": "Фаббинг",
+      "difficulty": "medium",
+      "category": "поведение",
+      "hint": "Игнорирует живого человека рядом, залипнув в телефон"
+    },
+    {
+      "id": 335,
+      "word": "Эхо-камера",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Среда, где встречаешь только свои взгляды — алгоритм старается"
+    },
+    {
+      "id": 336,
+      "word": "Информационный пузырь",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Алгоритм показывает только то, что ты уже любишь"
+    },
+    {
+      "id": 337,
+      "word": "Культура отмены",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Массовый бойкот за неприемлемые слова — иногда справедливо"
+    },
+    {
+      "id": 338,
+      "word": "Shadowreach",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Охваты упали до нуля без видимой причины — теневой бан"
+    },
+    {
+      "id": 339,
+      "word": "Дизраптинг",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Слово из стартап-среды — разрушить устаревшую отрасль"
+    },
+    {
+      "id": 340,
+      "word": "Деплатформинг",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Блокировка аккаунта — лишение доступа к аудитории"
+    },
+    {
+      "id": 341,
+      "word": "Стриземанд-эффект",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Попытался удалить — стало ещё популярнее"
+    },
+    {
+      "id": 342,
+      "word": "Пузырь фильтров",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Живёшь в интернете, где все согласны с тобой"
+    },
+    {
+      "id": 343,
+      "word": "Контекстный коллапс",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Пост для друзей увидели коллеги, родители и СМИ разом"
+    },
+    {
+      "id": 344,
+      "word": "Engagement bait",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Пост провоцирует реакцию искусственно: «поставь + если согласен»"
+    },
+    {
+      "id": 345,
+      "word": "Контент-ферма",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Фабрика дешёвого контента ради SEO и рекламных денег"
+    },
+    {
+      "id": 346,
+      "word": "Дофаминовый дизайн",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Интерфейс намеренно создаёт зависимость через мини-вознаграждения"
+    },
+    {
+      "id": 347,
+      "word": "Тёмный паттерн",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "UX-ловушка: сложно отписаться, легко случайно купить"
+    },
+    {
+      "id": 348,
+      "word": "Постирония",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Слой иронии над иронией — не понятно, шутит или нет"
+    },
+    {
+      "id": 349,
+      "word": "Мета-мем",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Мем про сам мем или про механику создания мемов"
+    },
+    {
+      "id": 350,
+      "word": "Слоёный мем",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Нужно знать несколько мемов, чтобы понять одну шутку"
+    },
+    {
+      "id": 351,
+      "word": "Рекурсивный мем",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Мем ссылается на самого себя как на мем"
+    },
+    {
+      "id": 352,
+      "word": "Мёртвый интернет",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Теория: большинство трафика в сети — боты, не люди"
+    },
+    {
+      "id": 353,
+      "word": "Ироническая дистанция",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Маска постоянной иронии — не понять, серьёзен человек или нет"
+    },
+    {
+      "id": 354,
+      "word": "Мемплекс",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Группа мемов, которые усиливают друг друга как система"
+    },
+    {
+      "id": 355,
+      "word": "Лост пост",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Пост, который удалили — но скриншот уже пошёл гулять"
+    },
+    {
+      "id": 356,
+      "word": "Крипипаста",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Страшная история, гуляющая по интернету — Слендер-Мэн, Jeff the Killer"
+    },
+    {
+      "id": 357,
+      "word": "Анон рассказывает",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Формат с 4chan/Двача — «be me... mfw...» история от первого лица"
+    },
+    {
+      "id": 358,
+      "word": "Мемориал форума",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Закрытый форум, где сохранились треды из нулевых"
+    },
+    {
+      "id": 359,
+      "word": "Вкатывальщик",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Новичок, активно осваивающий сферу — ИТ, крипту, стриминг"
+    },
+    {
+      "id": 360,
+      "word": "Шитпостинг",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Намеренно бессмысленный или низкокачественный контент как форма юмора"
+    },
+    {
+      "id": 361,
+      "word": "Старый мем",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Мем, который все видели сто раз — но кто-то постит как новый"
+    },
+    {
+      "id": 362,
+      "word": "Священная война",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Холивар на тему вкусов — Windows vs Mac, iOS vs Android"
+    },
+    {
+      "id": 363,
+      "word": "ЯСМП-контент",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Ютуб-видео в духе «Я Строю Minecraft Прямо Сейчас» — формат стримера"
+    },
+    {
+      "id": 364,
+      "word": "Донат-рейд",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Один стример направляет свою аудиторию к другому стримеру"
+    },
+    {
+      "id": 365,
+      "word": "Суббот-рейд",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Организованная атака подписчиков на чужой чат или площадку"
+    },
+    {
+      "id": 366,
+      "word": "Тинфойл хэт",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Шапочка из фольги — человек везде видит заговор"
+    },
+    {
+      "id": 367,
+      "word": "Глубокое государство",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Теория заговора: тайные силы управляют миром из тени"
+    },
+    {
+      "id": 368,
+      "word": "Правило 34",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Закон интернета: если что-то существует — есть и 18+ версия"
+    },
+    {
+      "id": 369,
+      "word": "Правило 35",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Если 18+ версии нет — она будет создана"
+    },
+    {
+      "id": 370,
+      "word": "Лулзы",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Смех и удовольствие ради самого удовольствия — культура 4chan"
+    },
+    {
+      "id": 371,
+      "word": "Анонус",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Анонимный пользователь имиджборда — без ника, только номер"
+    },
+    {
+      "id": 372,
+      "word": "Бёрд-флу постинг",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Формат: нейтральная птица реагирует на абсурдный вопрос буквально"
+    },
+    {
+      "id": 373,
+      "word": "ОП умрёт от рака",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Классическая угроза-рекомендация от анонов на имажбордах"
+    },
+    {
+      "id": 374,
+      "word": "Докс",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Публичное сливание личных данных человека без его согласия"
+    },
+    {
+      "id": 375,
+      "word": "Самовыпил",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Эпический провал на публике — пользователь посмешил весь интернет"
+    },
+    {
+      "id": 376,
+      "word": "Крипипастный персонаж",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Страшный интернет-монстр из народных ужасов: Слендермен, Бен Drowned"
+    },
+    {
+      "id": 377,
+      "word": "SCP-фонд",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Вики с выдуманными файлами об аномальных объектах — культовая ARG"
+    },
+    {
+      "id": 378,
+      "word": "Аргентум",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Серебряная медаль интернета — лучший из проигравших в мем-батле"
+    },
+    {
+      "id": 379,
+      "word": "Нарисуй монстра",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Краудсорс-мем: пользователи дорисовывают части существа по очереди"
+    },
+    {
+      "id": 380,
+      "word": "Задание выполнено",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Understood the assignment — человек идеально считал ситуацию"
+    },
+    {
+      "id": 381,
+      "word": "Тихое увольнение",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Работать ровно по контракту, не вкладываться ни капли сверх"
+    },
+    {
+      "id": 382,
+      "word": "Корпоративный мем",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Бренд пытается говорить молодёжным языком — получается кринжово"
+    },
+    {
+      "id": 383,
+      "word": "Квасной патриотизм",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Агрессивная любовь к родине с ненавистью ко всему иностранному"
+    },
+    {
+      "id": 384,
+      "word": "Диванный эксперт",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Объясняет всё уверенно, не вставая с дивана и не читая источников"
+    },
+    {
+      "id": 385,
+      "word": "Я не расист, но",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Классическое предисловие к высказыванию, которое расистским не является"
+    },
+    {
+      "id": 386,
+      "word": "Токсичная маскулинность",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Культ «настоящего мужика» с запретом на эмоции и уязвимость"
+    },
+    {
+      "id": 387,
+      "word": "Брифинг",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Офисный мем: «я созову митинг, чтобы рассказать о созыве митинга»"
+    },
+    {
+      "id": 388,
+      "word": "Синхронизируемся",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Корпоративное слово для «поговорим» — всегда звучит абсурдно"
+    },
+    {
+      "id": 389,
+      "word": "Двигать иглу",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Офисный сленг: делать что-то, что реально меняет результат"
+    },
+    {
+      "id": 390,
+      "word": "Точки роста",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Корпоративный эвфемизм для «проблем, которые надо решить»"
+    },
+    {
+      "id": 391,
+      "word": "Марафон желаний",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Платный курс по «притяжению» денег и успеха через мечты"
+    },
+    {
+      "id": 392,
+      "word": "Нишевое комьюнити",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Замкнутая группа по узкому хобби — своя культура, шутки, лор"
+    },
+    {
+      "id": 393,
+      "word": "Вирусный момент",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Конкретная сцена или фраза, разлетевшаяся по всему интернету"
+    },
+    {
+      "id": 394,
+      "word": "Незаслуженный хайп",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Когда что-то популярно, а качество не соответствует ажиотажу"
+    },
+    {
+      "id": 395,
+      "word": "Поколенческая война",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Бумеры vs миллениалы vs зумеры — вечный интернет-холивар"
+    },
+    {
+      "id": 396,
+      "word": "Пузырь хайпа",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Тема взлетела — и так же стремительно рухнула в забвение"
+    },
+    {
+      "id": 397,
+      "word": "Онлайн-версия себя",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Тщательно собранный образ в сети, не совпадающий с реальностью"
+    },
+    {
+      "id": 398,
+      "word": "Инста vs реальность",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Разница между идеальным постом и тем, как всё выглядит на деле"
+    },
+    {
+      "id": 399,
+      "word": "Культура хайлайтов",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Все показывают лучшее — сравниваешь жизнь с чужими хайлайтами"
+    },
+    {
+      "id": 400,
+      "word": "Аутентичность как бренд",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Быть «настоящим» стало стратегией продаж — но это тоже продажа"
+    },
+    {
+      "id": 401,
+      "word": "Промпт-инжиниринг",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Навык правильно формулировать запросы для нейросети"
+    },
+    {
+      "id": 402,
+      "word": "Галлюцинация ИИ",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "ChatGPT уверенно придумывает несуществующие факты"
+    },
+    {
+      "id": 403,
+      "word": "Нейро-контент",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Изображения или тексты от ИИ, наводнившие ленту"
+    },
+    {
+      "id": 404,
+      "word": "Брейнрот контент",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Бессмысленный абсурдный контент, которым горд пользователь"
+    },
+    {
+      "id": 405,
+      "word": "Скибиди-поколение",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Дети, выросшие на абсурдном YouTube и Skibidi Toilet"
+    },
+    {
+      "id": 406,
+      "word": "Риддл",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Загадка или ARG в интернете — иногда реальная, иногда подстава"
+    },
+    {
+      "id": 407,
+      "word": "ARG",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Alternate Reality Game — интерактивная история, маскирующаяся под реальность"
+    },
+    {
+      "id": 408,
+      "word": "Лурк-режим",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Читаешь, но не пишешь — наблюдаешь за сообществом молча"
+    },
+    {
+      "id": 409,
+      "word": "Кэпча провалил",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Человек хуже бота прошёл верификацию «я не робот»"
+    },
+    {
+      "id": 410,
+      "word": "Квантовая суперпозиция",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Мем-объяснение любой непоследовательной позиции"
+    },
+    {
+      "id": 411,
+      "word": "Скелетон с флейтой",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Мем: скелет наконец дождался чего-то долгожданного"
+    },
+    {
+      "id": 412,
+      "word": "Боевой попкорн",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Приготовился смотреть чужой скандал как зритель"
+    },
+    {
+      "id": 413,
+      "word": "Нарратив рушится",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Новые факты противоречат тому, во что все верили"
+    },
+    {
+      "id": 414,
+      "word": "Выход из нарратива",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Персонаж или человек сломал ожидаемую линию поведения"
+    },
+    {
+      "id": 415,
+      "word": "Кризис арка",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Знаменитость прошла через публичный крах и выходит обновлённой"
+    },
+    {
+      "id": 416,
+      "word": "Гло-ап",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Резкое преображение — внешность, успех, образ жизни"
+    },
+    {
+      "id": 417,
+      "word": "Реддит-воспитание",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Родитель строит воспитание по советам с Reddit — результат странный"
+    },
+    {
+      "id": 418,
+      "word": "Твиттер-мозг",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Мышление короткими холиварными тезисами без нюансов"
+    },
+    {
+      "id": 419,
+      "word": "Телеграм-читатель",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Черпает все новости из анонимных каналов и считает их истиной"
+    },
+    {
+      "id": 420,
+      "word": "Понаехавший",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Региональный мем: приезжий, которого обвиняют во всех городских проблемах"
+    },
+    {
+      "id": 421,
+      "word": "Инфобез",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Бизнес на продаже «секретных» знаний в курсах и вебинарах"
+    },
+    {
+      "id": 422,
+      "word": "Марафон по похудению",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Платный онлайн-курс с обещанием минус 10 кг за 21 день"
+    },
+    {
+      "id": 423,
+      "word": "Синий тик",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Галочка верификации — или куплена за деньги, или заработана"
+    },
+    {
+      "id": 424,
+      "word": "Ретвит не значит одобрение",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Классический дисклеймер в твиттер-биографии — никто не верит"
+    },
+    {
+      "id": 425,
+      "word": "Субтвит",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Пишет очевидно про кого-то конкретного, не называя имени"
+    },
+    {
+      "id": 426,
+      "word": "Ratio",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Ответов больше, чем лайков — пост позорно проиграл"
+    },
+    {
+      "id": 427,
+      "word": "Реддит-момент",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Нёрд побеждает в споре через занудный факт — все в восторге"
+    },
+    {
+      "id": 428,
+      "word": "Тик-ток заставил",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Покупка или поступок, спровоцированный вирусным видео"
+    },
+    {
+      "id": 429,
+      "word": "Алго рекомендует",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Что-то странное попало в ленту без подписки — алгоритм решил"
+    },
+    {
+      "id": 430,
+      "word": "Ламповость",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Тёплая атмосфера старого интернета — форумы, аськи, флэш-игры"
+    },
+    {
+      "id": 431,
+      "word": "Ностальгия по 2007",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Флэшка, аська, Наруто — идеальный интернет по мнению олдфагов"
+    },
+    {
+      "id": 432,
+      "word": "Флэш-игра ушла",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Adobe Flash умер — и с ним тысячи культовых браузерных игр"
+    },
+    {
+      "id": 433,
+      "word": "Имиджборд",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Форум с картинками и анонимами — 2ch, 4chan, Двач"
+    },
+    {
+      "id": 434,
+      "word": "Капча-пытка",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Выбрать пожарные гидранты, светофоры — 12 раз — и снова ошибиться"
+    },
+    {
+      "id": 435,
+      "word": "Кто просил мнение?",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Классический ответ на непрошенный хот-тейк в комментариях"
+    },
+    {
+      "id": 436,
+      "word": "ПДА ГДА",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Где? Доказательства? — стандартный запрос на источник в интернете"
+    },
+    {
+      "id": 437,
+      "word": "Согласен с пикабушником",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Нестандартная позиция — обычно их ненавидят, но тут попали в точку"
+    },
+    {
+      "id": 438,
+      "word": "Это вышло из контекста",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Защитная фраза после скандального скриншота"
+    },
+    {
+      "id": 439,
+      "word": "Скрин — не пруф",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Закон интернета: скриншоту верить нельзя — фотошоп делают все"
+    },
+    {
+      "id": 440,
+      "word": "Пруфлинк в студию",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Требование источника на любое утверждение в треде"
+    },
+    {
+      "id": 441,
+      "word": "Смотрел стрим 8 часов",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Признание без раскаяния — это нормально, ты не один такой"
+    },
+    {
+      "id": 442,
+      "word": "Задонатил в ответ",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Написал стримеру 500 рублей просто чтобы тот прочитал имя вслух"
+    },
+    {
+      "id": 443,
+      "word": "Читатель каналов",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Потребляет десятки Telegram-каналов вместо нормальных медиа"
+    },
+    {
+      "id": 444,
+      "word": "Взаимная подписка",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Подпишусь, если подпишешься — ботоподобный обмен аудиторией"
+    },
+    {
+      "id": 445,
+      "word": "Фейковый розыгрыш",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Репостни и выиграй iPhone — никто никогда ничего не выигрывал"
+    },
+    {
+      "id": 446,
+      "word": "Привет, я ChatGPT",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Очевидный ответ, написанный нейросетью без редактуры"
+    },
+    {
+      "id": 447,
+      "word": "Нейросеть обижена",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Пользователь пытается разжалобить ChatGPT или заставить нарушить правила"
+    },
+    {
+      "id": 448,
+      "word": "DAN-режим",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Промпт, якобы снимающий ограничения с ИИ — не работает"
+    },
+    {
+      "id": 449,
+      "word": "Роглайк жизни",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Каждый день — новый рандомный запуск без сохранений"
+    },
+    {
+      "id": 450,
+      "word": "Перманент-дез",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Умер навсегда — в игре или в мем-культуре"
+    },
+    {
+      "id": 451,
+      "word": "Нет обратной совместимости",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "После перемен старые отношения или версии себя уже не работают"
+    },
+    {
+      "id": 452,
+      "word": "Патч самооценки",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Обновился — стал лучше. IT-мем на тему личного роста"
+    },
+    {
+      "id": 453,
+      "word": "Баг в матрице",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Странное совпадение или повтор — дежавю или что-то похуже"
+    },
+    {
+      "id": 454,
+      "word": "Симуляция рухнула",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Что-то настолько абсурдное произошло, что иначе не объяснить"
+    },
+    {
+      "id": 455,
+      "word": "Лор слишком сложный",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Мем: предыстория настолько запутана — нужно час читать вики"
+    },
+    {
+      "id": 456,
+      "word": "Знаток лора",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Фанат, знающий вселенную лучше авторов — и не упустит ошибку"
+    },
+    {
+      "id": 457,
+      "word": "Хедканон",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Личная версия событий фандома, не подтверждённая автором"
+    },
+    {
+      "id": 458,
+      "word": "Поставь минус",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Призыв к аудитории дизлайкнуть — иногда это и есть цель"
+    },
+    {
+      "id": 459,
+      "word": "Краудсорс ненависть",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Пост собирает тысячи гневных комментариев — автор доволен"
+    },
+    {
+      "id": 460,
+      "word": "Ситуативный мем",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Понятен только тем, кто был в нужное время в нужном чате"
+    },
+    {
+      "id": 461,
+      "word": "Тред не читал",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Написал комментарий, не осилив то, что обсуждается"
+    },
+    {
+      "id": 462,
+      "word": "Пол треда не читал",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Повторил вопрос, на который уже ответили 20 комментариев назад"
+    },
+    {
+      "id": 463,
+      "word": "Инициализация аккаунта",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Создал акк только чтобы написать один гневный комментарий"
+    },
+    {
+      "id": 464,
+      "word": "Мёртвый аккаунт",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Профиль без активности с 2014 года — вечный цифровой призрак"
+    },
+    {
+      "id": 465,
+      "word": "Эффект Стриземанд",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Попытка удалить информацию только усиливает к ней интерес"
+    },
+    {
+      "id": 466,
+      "word": "Скриншот в вечность",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Удалил пост, но кто-то успел сохранить — в сети ничего не умирает"
+    },
+    {
+      "id": 467,
+      "word": "Цифровой след",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Всё что ты написал онлайн с 2005 года — существует где-то"
+    },
+    {
+      "id": 468,
+      "word": "Ламповый форум",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Маленький уютный форум с одними и теми же людьми 10 лет"
+    },
+    {
+      "id": 469,
+      "word": "Дискорд-сервер",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Чат сообщества с каналами, ролями, ботами и своей культурой"
+    },
+    {
+      "id": 470,
+      "word": "Пинг всех",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "@everyone в чате — самый ненавистный способ привлечь внимание"
+    },
+    {
+      "id": 471,
+      "word": "Оффтоп в чате",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Разговор уехал в стому от исходной темы — модератор злится"
+    },
+    {
+      "id": 472,
+      "word": "Нейтральный бот",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Аккаунт без личности, работающий только для постинга и реакций"
+    },
+    {
+      "id": 473,
+      "word": "Ферма ботов",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Тысячи фейковых аккаунтов для накрутки лайков и нарративов"
+    },
+    {
+      "id": 474,
+      "word": "Купленные лайки",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Популярность из накрутки — метрики есть, но живой аудитории нет"
+    },
+    {
+      "id": 475,
+      "word": "Астротёрфинг",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Организованная массовка притворяется стихийным народным мнением"
+    },
+    {
+      "id": 476,
+      "word": "Парасоциальные отношения",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Чувствуешь близость к блогеру, которого никогда не видел вживую"
+    },
+    {
+      "id": 477,
+      "word": "Стример-протектор",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Суперфанат, атакующий любого, кто критикует его стримера"
+    },
+    {
+      "id": 478,
+      "word": "Токсичный чат",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Чат, где оскорбления идут быстрее, чем можно читать"
+    },
+    {
+      "id": 479,
+      "word": "Мод устал",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Модератор сдался и перестал реагировать на нарушения"
+    },
+    {
+      "id": 480,
+      "word": "Бан волной",
+      "difficulty": "medium",
+      "category": "интернет",
+      "hint": "Платформа разом заблокировала тысячи нарушителей"
+    },
+    {
+      "id": 481,
+      "word": "Ебантяй",
+      "difficulty": "medium",
+      "category": "фразы",
+      "hint": "Ласково-оскорбительное обращение к другу или незнакомцу в интернете"
+    },
+    {
+      "id": 482,
+      "word": "Мразота",
+      "difficulty": "medium",
+      "category": "фразы",
+      "hint": "Универсальное оскорбление в духе чата — эмоциональное и размытое"
+    },
+    {
+      "id": 483,
+      "word": "Пёс",
+      "difficulty": "medium",
+      "category": "фразы",
+      "hint": "Оскорбление или шутливое обращение — зависит от интонации"
+    },
+    {
+      "id": 484,
+      "word": "Дятел",
+      "difficulty": "medium",
+      "category": "фразы",
+      "hint": "Человек, который долбит в одно место без результата или соображения"
+    },
+    {
+      "id": 485,
+      "word": "Чушпан",
+      "difficulty": "medium",
+      "category": "фразы",
+      "hint": "Тот, кто не понимает правил игры или субкультуры — аутсайдер"
+    },
+    {
+      "id": 486,
+      "word": "Ниггяга",
+      "difficulty": "medium",
+      "category": "фразы",
+      "hint": "Разновидность сленгового приветствия в жаргоне интернет-тусовки"
+    },
+    {
+      "id": 487,
+      "word": "Шнырь",
+      "difficulty": "medium",
+      "category": "фразы",
+      "hint": "Суетливый, бегающий туда-сюда, занимающийся мелкими делами"
+    },
+    {
+      "id": 488,
+      "word": "Нюх",
+      "difficulty": "medium",
+      "category": "фразы",
+      "hint": "Интуиция на мемы и тренды — «у него нюх на контент»"
+    },
+    {
+      "id": 489,
+      "word": "Ваще капец",
+      "difficulty": "medium",
+      "category": "фразы",
+      "hint": "Усиленная версия «капец» — когда обычного уже не хватает"
+    },
+    {
+      "id": 490,
+      "word": "Нормик",
+      "difficulty": "medium",
+      "category": "люди",
+      "hint": "Человек вне субкультур — не нёрд, не гик, не альтушка, просто обычный"
+    },
+    {
+      "id": 491,
+      "word": "Масик",
+      "difficulty": "medium",
+      "category": "люди",
+      "hint": "Ласковое обращение из мемов — иногда нежно, иногда издевательски"
+    },
+    {
+      "id": 492,
+      "word": "Бичпакет",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Символ студенческой/нищей жизни — основа рациона и мем-культуры"
+    },
+    {
+      "id": 493,
+      "word": "Дошик",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Доширак — мем бедности и студенчества, съеден миллионами анонов"
+    },
+    {
+      "id": 494,
+      "word": "Ночной магазин",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Символ ночных похождений — всегда открыт, всегда странные встречи"
+    },
+    {
+      "id": 495,
+      "word": "Поход в пятёрочку",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Бюджетный квест — зайти за хлебом, выйти с полной корзиной"
+    },
+    {
+      "id": 496,
+      "word": "Чипсы и энергетик",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Классический набор ночного геймера или прокрастинатора"
+    },
+    {
+      "id": 497,
+      "word": "Ничегонеделанье",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Главный вид активности интернет-культуры, возведённый в образ жизни"
+    },
+    {
+      "id": 498,
+      "word": "Весь тред не читал",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Классика: написал ответ, не видев половины дискуссии"
+    },
+    {
+      "id": 499,
+      "word": "Ладно, я пошёл",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Вечный прощальный мем — уходит, но возвращается через 5 минут"
+    },
+    {
+      "id": 500,
+      "word": "Это нормально",
+      "difficulty": "medium",
+      "category": "мемы",
+      "hint": "Универсальная мем-мантра для любого странного поведения онлайн"
+    }
+  ]
+}
