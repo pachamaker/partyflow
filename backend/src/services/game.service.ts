@@ -17,6 +17,12 @@ export class GameService {
     return room;
   }
 
+  setTargetScore(room: RoomState, targetScore: number): RoomState {
+    const safeTargetScore = Math.max(1, Math.min(500, Math.floor(targetScore)));
+    room.game.targetScore = safeTargetScore;
+    return room;
+  }
+
   resetGame(room: RoomState): RoomState {
     room.game.phase = 'LOBBY';
     room.game.currentRound = 0;
@@ -30,6 +36,8 @@ export class GameService {
     room.game.roundEndedAt = undefined;
     room.game.currentWord = undefined;
     room.game.activeExplainerId = undefined;
+    room.game.playerGuessedScores = {};
+    room.game.wordsExhausted = false;
 
     return room;
   }
@@ -56,6 +64,8 @@ export class GameService {
     room.game.roundStartedAt = now;
     room.game.roundEndedAt = undefined;
     room.game.winnerTeam = undefined;
+    room.game.playerGuessedScores = room.game.playerGuessedScores || {};
+    room.game.wordsExhausted = false;
 
     return room;
   }
@@ -81,6 +91,7 @@ export class GameService {
     room.game.remainingSeconds = room.game.roundDurationSeconds;
     room.game.roundStartedAt = now;
     room.game.roundEndedAt = undefined;
+    room.game.wordsExhausted = false;
 
     return room;
   }

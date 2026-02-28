@@ -44,6 +44,24 @@ const toPublicRoom = (room) => ({
     }
 });
 const toPublicGame = (room) => toPublicRoom(room).game;
+const toRoundStatsSummary = (stats) => {
+    const guessedWords = [];
+    const skippedWords = [];
+    for (const item of stats) {
+        const word = item.word?.word?.trim();
+        if (!word) {
+            continue;
+        }
+        if (item.direction === 'up') {
+            guessedWords.push(word);
+            continue;
+        }
+        if (item.direction === 'down') {
+            skippedWords.push(word);
+        }
+    }
+    return { guessedWords, skippedWords };
+};
 const resolveHostId = (room) => {
     if (room.hostId) {
         return room.hostId;
@@ -118,11 +136,16 @@ const prepareRoundWord = async (room, options) => {
     }
     return roomService.updateRoom(room);
 };
-const resetWordsForGame = async (roomId) => {
+const resetWordsForFreshGame = async (roomId) => {
     await wordService.resetUsedWords(roomId);
+};
+const resetWordsForRestartedGame = async (roomId) => {
+    await wordService.markPreserveUsedWordsOnNextStart(roomId);
+    await wordService.resetWordQueue(roomId);
 };
 const endGameNoWords = async (io, room) => {
     room = gameService.endGame(room);
+    room.game.wordsExhausted = true;
     room = await roomService.updateRoom(room);
     io.to(room.roomId).emit('GAME_ENDED', {
         roomId: room.roomId,
@@ -188,11 +211,13 @@ const startRoundTimer = (io, roomId) => {
                 updatedRoom.game.activeExplainerId = selectActiveExplainerId(updatedRoom, updatedRoom.game.nextTeam);
             }
             updatedRoom = await roomService.updateRoom(updatedRoom);
+            const roundStats = toRoundStatsSummary(await wordService.getRoundStats(roomId, updatedRoom.game.currentRound));
             io.to(roomId).emit('ROUND_ENDED', {
                 roomId,
                 game: updatedRoom.game,
                 score: updatedRoom.game.score,
-                reason: 'timer'
+                reason: 'timer',
+                roundStats
             });
             if (ended.gameEnded) {
                 io.to(roomId).emit('GAME_ENDED', {
@@ -434,6 +459,7 @@ io.on('connection', (socket) => {
         const playerId = String(socket.data.playerId ?? '').trim();
         const requestedRoundDuration = Number(payload?.roundDurationSeconds);
         const requestedMaxRounds = Number(payload?.maxRounds);
+        const requestedTargetScore = Number(payload?.targetScore);
         if (!roomId) {
             const error = toErrorBody('VALIDATION_ERROR', 'roomId is required');
             if (ack)
@@ -449,7 +475,13 @@ io.on('connection', (socket) => {
             if (!playerId || playerId !== hostId) {
                 throw new services_1.RoomServiceError('FORBIDDEN', 'Only host can start the game', 403);
             }
-            await resetWordsForGame(roomId);
+            const preserveUsedWords = await wordService.consumePreserveUsedWordsOnNextStart(roomId);
+            if (preserveUsedWords) {
+                await wordService.resetWordQueue(roomId);
+            }
+            else {
+                await resetWordsForFreshGame(roomId);
+            }
             if (Number.isFinite(requestedRoundDuration)) {
                 room = gameService.setRoundDuration(room, requestedRoundDuration);
             }
@@ -461,6 +493,12 @@ io.on('connection', (socket) => {
             }
             else if (!Number.isFinite(room.game.maxRounds)) {
                 room = gameService.setMaxRounds(room, models_1.GAME_MAX_ROUNDS);
+            }
+            if (Number.isFinite(requestedTargetScore)) {
+                room = gameService.setTargetScore(room, requestedTargetScore);
+            }
+            else if (!Number.isFinite(room.game.targetScore)) {
+                room = gameService.setTargetScore(room, models_1.GAME_TARGET_SCORE);
             }
             room = gameService.startGame(room);
             try {
@@ -620,7 +658,11 @@ io.on('connection', (socket) => {
             const timestamp = new Date().toISOString();
             const awardedPoints = direction === 'up' ? 1 : -1;
             room.game.score[room.game.activeTeam] += awardedPoints;
-            await wordService.markWordUsed(roomId, currentWord.id);
+            room.game.playerGuessedScores = room.game.playerGuessedScores || {};
+            if (direction === 'up') {
+                room.game.playerGuessedScores[playerId] =
+                    (room.game.playerGuessedScores[playerId] ?? 0) + 1;
+            }
             await wordService.appendRoundStat(roomId, room.game.currentRound, {
                 round: room.game.currentRound,
                 playerId,
@@ -721,12 +763,14 @@ io.on('connection', (socket) => {
                 room.game.activeExplainerId = selectActiveExplainerId(room, room.game.nextTeam);
             }
             room = await roomService.updateRoom(room);
+            const roundStats = toRoundStatsSummary(await wordService.getRoundStats(roomId, room.game.currentRound));
             io.to(roomId).emit('ROUND_ENDED', {
                 roomId,
                 game: room.game,
                 score: room.game.score,
                 winnerTeam,
-                points
+                points,
+                roundStats
             });
             if (ended.gameEnded) {
                 io.to(roomId).emit('GAME_ENDED', {
@@ -804,6 +848,35 @@ io.on('connection', (socket) => {
             socket.emit('error', body);
         }
     });
+    socket.on('get_round_stats', async (payload, ack) => {
+        const roomId = String(payload?.roomId ?? socket.data.roomId ?? '').trim();
+        if (!roomId) {
+            const error = toErrorBody('VALIDATION_ERROR', 'roomId is required');
+            if (ack)
+                ack({ ok: false, error });
+            return;
+        }
+        try {
+            const room = await roomService.getRoomState(roomId);
+            const resolvedRound = Number.isFinite(Number(payload?.round))
+                ? Math.max(1, Math.floor(Number(payload?.round)))
+                : Math.max(1, room.game.currentRound);
+            const roundStats = toRoundStatsSummary(await wordService.getRoundStats(roomId, resolvedRound));
+            if (ack) {
+                ack({ ok: true, round: resolvedRound, roundStats });
+            }
+        }
+        catch (error) {
+            if (error instanceof services_1.RoomServiceError) {
+                const body = toErrorBody(error.code, error.message);
+                if (ack)
+                    ack({ ok: false, error: body });
+                return;
+            }
+            if (ack)
+                ack({ ok: false, error: toErrorBody('INTERNAL_ERROR', 'Failed to get round stats') });
+        }
+    });
     socket.on('restart_game', async (payload, ack) => {
         const roomId = String(payload?.roomId ?? socket.data.roomId ?? '').trim();
         const playerId = String(socket.data.playerId ?? '').trim();
@@ -825,8 +898,11 @@ io.on('connection', (socket) => {
             }
             clearRoundTimer(roomId);
             resetExplainerRotation(roomId);
-            await resetWordsForGame(roomId);
+            await resetWordsForRestartedGame(roomId);
+            const wordsExhausted = Boolean(room.game.wordsExhausted);
+            room.players = playerService.shuffleTeams(room.players);
             room = gameService.resetGame(room);
+            room.game.wordsExhausted = wordsExhausted;
             room = await roomService.updateRoom(room);
             io.to(roomId).emit('GAME_RESET', {
                 roomId,

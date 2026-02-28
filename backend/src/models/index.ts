@@ -36,6 +36,8 @@ export type GameState = {
   roundEndedAt?: string;
   currentWord?: WordItem;
   activeExplainerId?: string;
+  playerGuessedScores: Record<string, number>;
+  wordsExhausted?: boolean;
 };
 
 export type Player = {
@@ -90,6 +92,7 @@ export type StartGamePayload = {
   roomId?: string;
   roundDurationSeconds?: number;
   maxRounds?: number;
+  targetScore?: number;
 };
 
 export type StartRoundPayload = {

@@ -43,7 +43,9 @@ const createInitialGameState = () => ({
     B: 0
   },
   maxRounds: GAME_MAX_ROUNDS,
-  targetScore: GAME_TARGET_SCORE
+  targetScore: GAME_TARGET_SCORE,
+  playerGuessedScores: {},
+  wordsExhausted: false
 });
 
 export class RoomService {
@@ -81,6 +83,16 @@ export class RoomService {
 
     if (!room.game) {
       room.game = createInitialGameState();
+      await this.saveRoomState(room);
+    }
+
+    if (!room.game.playerGuessedScores) {
+      room.game.playerGuessedScores = {};
+      await this.saveRoomState(room);
+    }
+
+    if (typeof room.game.wordsExhausted !== 'boolean') {
+      room.game.wordsExhausted = false;
       await this.saveRoomState(room);
     }
 

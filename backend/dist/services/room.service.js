@@ -32,7 +32,9 @@ const createInitialGameState = () => ({
         B: 0
     },
     maxRounds: models_1.GAME_MAX_ROUNDS,
-    targetScore: models_1.GAME_TARGET_SCORE
+    targetScore: models_1.GAME_TARGET_SCORE,
+    playerGuessedScores: {},
+    wordsExhausted: false
 });
 class RoomService {
     async createRoom(input) {
@@ -64,6 +66,14 @@ class RoomService {
         }
         if (!room.game) {
             room.game = createInitialGameState();
+            await this.saveRoomState(room);
+        }
+        if (!room.game.playerGuessedScores) {
+            room.game.playerGuessedScores = {};
+            await this.saveRoomState(room);
+        }
+        if (typeof room.game.wordsExhausted !== 'boolean') {
+            room.game.wordsExhausted = false;
             await this.saveRoomState(room);
         }
         if (!room.hostId && room.players.length > 0) {

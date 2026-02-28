@@ -1,5 +1,5 @@
-import { HomeScreen } from '../components/HomeScreen'
+import LandingContainer from '../components/LandingContainer'
 
 export function HomePage() {
-  return <HomeScreen />
+  return <LandingContainer />
 }

@@ -11,12 +11,15 @@ type StarterPackPayload = {
 const ROOM_USED_WORDS_PREFIX = 'room:';
 const ROUND_STATS_PREFIX = 'room:';
 const WORD_QUEUE_PREFIX = 'room:';
+const RESTART_POLICY_PREFIX = 'room:';
 const WORD_DATA_TTL_SECONDS = 24 * 60 * 60;
 
 const usedWordsKey = (roomId: string): string => `${ROOM_USED_WORDS_PREFIX}${roomId}:used_words`;
 const roundStatsKey = (roomId: string, round: number): string =>
   `${ROUND_STATS_PREFIX}${roomId}:round:${round}:stats`;
 const wordQueueKey = (roomId: string): string => `${WORD_QUEUE_PREFIX}${roomId}:word_queue`;
+const preserveUsedWordsOnStartKey = (roomId: string): string =>
+  `${RESTART_POLICY_PREFIX}${roomId}:preserve_used_words_on_start`;
 
 const STARTER_PACK_PATH_CANDIDATES = [
   process.env.STARTER_PACK_PATH,
@@ -101,7 +104,9 @@ export class WordService {
 
     if (queueSize <= 0) {
       const words = await this.loadStarterPack();
-      const shuffled = this.shuffleWords(words);
+      const usedWordIds = new Set(await redisClient.smembers(usedWordsKey(roomId)));
+      const availableWords = words.filter((word) => !usedWordIds.has(String(word.id)));
+      const shuffled = this.shuffleWords(availableWords);
       const payload = shuffled.map((word) => JSON.stringify(word));
 
       if (payload.length === 0) {
@@ -117,7 +122,9 @@ export class WordService {
       throw new RoomServiceError('NO_WORDS_AVAILABLE', 'No words available for this round', 409);
     }
 
-    return JSON.parse(nextWordRaw) as WordItem;
+    const nextWord = JSON.parse(nextWordRaw) as WordItem;
+    await this.markWordUsed(roomId, nextWord.id);
+    return nextWord;
   }
 
   async markWordUsed(roomId: string, wordId: number): Promise<void> {
@@ -129,6 +136,23 @@ export class WordService {
     await redisClient.del(usedWordsKey(roomId), wordQueueKey(roomId));
   }
 
+  async resetWordQueue(roomId: string): Promise<void> {
+    await redisClient.del(wordQueueKey(roomId));
+  }
+
+  async markPreserveUsedWordsOnNextStart(roomId: string): Promise<void> {
+    await redisClient.set(preserveUsedWordsOnStartKey(roomId), '1', 'EX', WORD_DATA_TTL_SECONDS);
+  }
+
+  async consumePreserveUsedWordsOnNextStart(roomId: string): Promise<boolean> {
+    const key = preserveUsedWordsOnStartKey(roomId);
+    const shouldPreserve = (await redisClient.get(key)) === '1';
+    if (shouldPreserve) {
+      await redisClient.del(key);
+    }
+    return shouldPreserve;
+  }
+
   async resetRoundStats(roomId: string, round: number): Promise<void> {
     await redisClient.del(roundStatsKey(roomId, round));
   }
@@ -137,5 +161,24 @@ export class WordService {
     const key = roundStatsKey(roomId, round);
     await redisClient.rpush(key, JSON.stringify(stat));
     await redisClient.expire(key, WORD_DATA_TTL_SECONDS);
+  }
+
+  async getRoundStats(roomId: string, round: number): Promise<RoundSwipeStat[]> {
+    const key = roundStatsKey(roomId, round);
+    const raw = await redisClient.lrange(key, 0, -1);
+
+    if (!raw.length) {
+      return [];
+    }
+
+    return raw
+      .map((item) => {
+        try {
+          return JSON.parse(item) as RoundSwipeStat;
+        } catch {
+          return null;
+        }
+      })
+      .filter((item): item is RoundSwipeStat => item !== null);
   }
 }

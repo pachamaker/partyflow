@@ -67,6 +67,22 @@ export class PlayerService {
     return { players: next, changed };
   }
 
+  shuffleTeams(players: Player[]): Player[] {
+    const shuffled = [...players];
+
+    for (let i = shuffled.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    const teamACount = Math.ceil(shuffled.length / 2);
+
+    return shuffled.map((player, index) => ({
+      ...player,
+      team: index < teamACount ? 'A' : 'B'
+    }));
+  }
+
   async setSocketPlayerMapping(socketId: string, mapping: SocketPlayerMapping): Promise<void> {
     await redisClient.set(socketPlayerKey(socketId), JSON.stringify(mapping), 'EX', RECONNECT_TTL_SECONDS);
   }

@@ -22,10 +22,13 @@ export interface RoomGameState {
   roundDurationSeconds: number
   remainingSeconds: number
   maxRounds: number
+  targetScore: number
   score: {
     A: number
     B: number
   }
+  playerGuessedScores: Record<string, number>
+  wordsExhausted?: boolean
   currentWord?: {
     id: number
     word: string
