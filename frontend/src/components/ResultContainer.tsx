@@ -10,6 +10,13 @@ import {
   getStoredRoomId,
 } from '../services/session'
 import { connectSocket, socket } from '../services/socket'
+import {
+  dismissInstallPrompt,
+  getInstallPromptState,
+  markFirstGameCompleted,
+  subscribeInstallPrompt,
+  triggerInstallPrompt,
+} from '../services/pwaInstallPrompt'
 import { routes } from '../utils/routes'
 
 type TeamCode = 'A' | 'B'
@@ -55,6 +62,7 @@ export default function ResultContainer() {
   const currentPlayerId = getStoredPlayerId()
 
   const [roomState, setRoomState] = useState<RoomStateResponse['room'] | null>(null)
+  const [installState, setInstallState] = useState(() => getInstallPromptState())
 
   const isHost = useMemo(() => {
     if (!currentPlayerId || !roomState?.hostId) {
@@ -63,6 +71,14 @@ export default function ResultContainer() {
 
     return currentPlayerId === roomState.hostId
   }, [currentPlayerId, roomState?.hostId])
+
+  useEffect(() => {
+    markFirstGameCompleted()
+    setInstallState(getInstallPromptState())
+    return subscribeInstallPrompt(() => {
+      setInstallState(getInstallPromptState())
+    })
+  }, [])
 
   useEffect(() => {
     let active = true
@@ -191,14 +207,99 @@ export default function ResultContainer() {
     navigate(routes.home)
   }, [navigate])
 
+  const handleInstallClick = useCallback(async () => {
+    if (!installState.canTriggerNativePrompt) {
+      return
+    }
+
+    const outcome = await triggerInstallPrompt()
+    if (outcome === 'accepted') {
+      dismissInstallPrompt()
+    }
+
+    setInstallState(getInstallPromptState())
+  }, [installState.canTriggerNativePrompt])
+
+  const handleDismissInstallPrompt = useCallback(() => {
+    dismissInstallPrompt()
+    setInstallState(getInstallPromptState())
+  }, [])
+
   return (
-    <GameResultScreen
-      winnerTeam={winnerTeam}
-      teamA={teamA}
-      teamB={teamB}
-      canPlayAgain={isHost}
-      onPlayAgain={handlePlayAgain}
-      onHome={handleHostNewGame}
-    />
+    <div style={{ position: 'relative' }}>
+      <GameResultScreen
+        winnerTeam={winnerTeam}
+        teamA={teamA}
+        teamB={teamB}
+        canPlayAgain={isHost}
+        onPlayAgain={handlePlayAgain}
+        onHome={handleHostNewGame}
+      />
+
+      {installState.shouldShowPrompt ? (
+        <div
+          role="dialog"
+          aria-label="Добавить на домашний экран"
+          style={{
+            position: 'fixed',
+            left: 16,
+            right: 16,
+            bottom: 16,
+            zIndex: 1000,
+            maxWidth: 520,
+            margin: '0 auto',
+            borderRadius: 16,
+            background: 'rgba(26, 29, 41, 0.95)',
+            border: '1px solid rgba(255, 255, 255, 0.14)',
+            backdropFilter: 'blur(10px)',
+            padding: 14,
+            boxShadow: '0 12px 30px rgba(0, 0, 0, 0.35)',
+          }}
+        >
+          <p style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#F8FAFC' }}>Добавить на домашний экран</p>
+          <p style={{ margin: '6px 0 12px', fontSize: 13, lineHeight: 1.4, color: 'rgba(248, 250, 252, 0.8)' }}>
+            {installState.shouldShowIosHint
+              ? 'На iPhone: Поделиться → На экран Домой.'
+              : 'Установите игру как приложение для быстрого доступа и офлайн-работы.'}
+          </p>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {installState.canTriggerNativePrompt ? (
+              <button
+                type="button"
+                onClick={() => void handleInstallClick()}
+                style={{
+                  flex: 1,
+                  borderRadius: 10,
+                  border: 'none',
+                  padding: '10px 12px',
+                  background: '#FF6B00',
+                  color: '#FFFFFF',
+                  fontSize: 13,
+                  fontWeight: 700,
+                }}
+              >
+                Добавить
+              </button>
+            ) : null}
+            <button
+              type="button"
+              onClick={handleDismissInstallPrompt}
+              style={{
+                flex: 1,
+                borderRadius: 10,
+                border: '1px solid rgba(248, 250, 252, 0.25)',
+                padding: '10px 12px',
+                background: 'transparent',
+                color: '#F8FAFC',
+                fontSize: 13,
+                fontWeight: 600,
+              }}
+            >
+              Позже
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </div>
   )
 }
