@@ -138,7 +138,7 @@ function SpectatorScreenMobile({
 
   if (isRoundActive) {
     return (
-      <div style={{ position: 'relative', height: 'calc(100vh - 108px)', minHeight: '640px', width: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column', fontFamily: "'Arial Black', 'Impact', system-ui, sans-serif", maxWidth: '430px', margin: '0 auto', borderRadius: '36px', border: '1px solid rgba(255,255,255,0.1)' }}>
+      <div style={{ position: 'relative', height: '100dvh', minHeight: '100dvh', width: '100vw', overflow: 'hidden', display: 'flex', flexDirection: 'column', fontFamily: "'Arial Black', 'Impact', system-ui, sans-serif", maxWidth: '100vw', margin: '0', borderRadius: '0', border: 'none' }}>
         <BlurredBg />
         <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 16px 14px', gap: '8px' }}>
           <ScorePill label="Команда А" score={teamAScore} color={C.blue} compact />
@@ -199,7 +199,7 @@ function SpectatorScreenMobile({
   }
 
   return (
-    <div style={{ position: 'relative', height: 'calc(100vh - 108px)', minHeight: '640px', width: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column', fontFamily: "'Arial Black', 'Impact', system-ui, sans-serif", maxWidth: '430px', margin: '0 auto', borderRadius: '36px', border: '1px solid rgba(255,255,255,0.1)' }}>
+    <div style={{ position: 'relative', height: '100dvh', minHeight: '100dvh', width: '100vw', overflow: 'hidden', display: 'flex', flexDirection: 'column', fontFamily: "'Arial Black', 'Impact', system-ui, sans-serif", maxWidth: '100vw', margin: '0', borderRadius: '0', border: 'none' }}>
       <BlurredBg />
 
       <div style={{ position: 'relative', zIndex: 10, flex: 1, overflowY: 'auto', scrollbarWidth: 'none', padding: '24px 16px 16px' }}>

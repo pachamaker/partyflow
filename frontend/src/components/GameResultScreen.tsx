@@ -151,7 +151,7 @@ function GameResultScreenMobile({ winnerTeam = 'A', teamA = DEFAULT_TEAM_A, team
   }, [teamA.score, teamB.score])
 
   return (
-    <div style={{ position: 'relative', height: 'calc(100vh - 108px)', minHeight: '640px', width: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column', fontFamily: "'Arial Black', 'Impact', system-ui, sans-serif", maxWidth: '430px', margin: '0 auto', borderRadius: '36px', border: '1px solid rgba(255,255,255,0.1)' }}>
+    <div style={{ position: 'relative', height: '100dvh', minHeight: '100dvh', width: '100vw', overflow: 'hidden', display: 'flex', flexDirection: 'column', fontFamily: "'Arial Black', 'Impact', system-ui, sans-serif", maxWidth: '100vw', margin: '0', borderRadius: '0', border: 'none' }}>
       <BlurredBg accentColor={winnerColor} />
       <Confetti active />
 

@@ -8,7 +8,7 @@ export function AppShell() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-secondary via-slate-900 to-secondary text-white">
-      <main className={isDesktop ? '' : 'mx-auto max-w-5xl p-4'}>
+      <main className={isDesktop ? '' : 'min-h-screen'}>
         <motion.div
           key={location.pathname}
           initial={isDesktop ? { opacity: 0 } : { opacity: 0, y: 12 }}

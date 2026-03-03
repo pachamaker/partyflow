@@ -36,7 +36,6 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2}'],
-        navigateFallback: '/offline.html',
         runtimeCaching: [
           {
             urlPattern: ({ request }: { request: Request }) =>
