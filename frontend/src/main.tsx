@@ -7,7 +7,16 @@ import './index.css'
 import { initInstallPromptCapture } from './services/pwaInstallPrompt'
 
 initInstallPromptCapture()
-registerSW({ immediate: true })
+
+if (import.meta.env.PROD) {
+  registerSW({ immediate: true })
+} else if ('serviceWorker' in navigator) {
+  void navigator.serviceWorker.getRegistrations().then((registrations) => {
+    for (const registration of registrations) {
+      void registration.unregister()
+    }
+  })
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

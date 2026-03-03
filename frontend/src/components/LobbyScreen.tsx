@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react'
+import { useMemo, useState, type FC } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import useBreakpoint from '../hooks/useBreakpoint'
 import C from '../constants/colors'
@@ -30,44 +30,6 @@ function BlurredBg() {
       <div style={{ position: 'absolute', bottom: '10%', right: '-15%', width: '60%', height: '50%', borderRadius: '50%', background: `radial-gradient(circle, ${C.purple}32 0%, transparent 68%)`, filter: 'blur(55px)', opacity: 0.65 }} />
       <div style={{ position: 'absolute', inset: 0, opacity: 0.038, backgroundImage: 'linear-gradient(rgba(140,170,255,0.9) 1px, transparent 1px), linear-gradient(90deg, rgba(140,170,255,0.9) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
     </div>
-  )
-}
-
-function QRCode({ size = 96 }: { size?: number }) {
-  const cell = size / 21
-  const modules = [
-    [1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1],
-    [1,0,0,0,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0,0,1],
-    [1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,0,1],
-    [1,0,1,1,1,0,1,0,0,1,0,1,0,0,1,0,1,1,1,0,1],
-    [1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,0,1],
-    [1,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,1],
-    [1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1],
-    [0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0],
-    [1,0,1,1,0,1,1,1,0,0,1,0,1,1,0,1,1,0,1,0,1],
-    [0,1,0,0,1,0,0,0,1,0,0,1,0,0,1,0,0,1,0,1,0],
-    [1,0,1,0,1,1,1,1,0,1,1,0,1,1,0,1,1,0,1,0,1],
-    [0,1,0,1,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,1,0],
-    [1,0,1,0,1,1,1,1,0,1,1,0,1,1,0,1,1,0,1,0,1],
-    [0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0],
-    [1,1,1,1,1,1,1,0,0,1,1,0,1,0,1,1,0,1,1,0,1],
-    [1,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,0,0,1,0],
-    [1,0,1,1,1,0,1,0,0,1,1,0,1,1,1,1,0,1,1,0,1],
-    [1,0,1,1,1,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0],
-    [1,0,1,1,1,0,1,0,0,1,1,0,1,1,0,1,0,1,1,0,1],
-    [1,0,0,0,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0],
-    [1,1,1,1,1,1,1,0,0,1,1,0,1,1,0,1,0,1,1,0,1],
-  ]
-
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ display: 'block' }}>
-      <rect width={size} height={size} rx="6" fill="rgba(255,255,255,0.96)" />
-      {modules.map((row, r) =>
-        row.map((on, c) =>
-          on ? <rect key={`${r}-${c}`} x={c * cell + 0.5} y={r * cell + 0.5} width={cell - 0.5} height={cell - 0.5} fill="#0a0620" /> : null,
-        ),
-      )}
-    </svg>
   )
 }
 
@@ -187,43 +149,24 @@ function RoomCodeBadge({ code }: { code: string }) {
 
 const StartButton: FC<{ onClick?: () => void; canStart: boolean; wordsExhausted?: boolean }> = ({ onClick, canStart, wordsExhausted = false }) => (
   <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
-    {canStart ? (
-      <>
-        <motion.div
-          animate={{ scale: [1, 1.18, 1], opacity: [0.5, 0, 0.5] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
-          style={{ position: 'absolute', inset: '-6px', borderRadius: '18px', border: `2px solid ${C.green}`, pointerEvents: 'none' }}
-        />
-        <motion.div
-          animate={{ scale: [1, 1.32, 1], opacity: [0.3, 0, 0.3] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut', delay: 0.3 }}
-          style={{ position: 'absolute', inset: '-6px', borderRadius: '18px', border: `2px solid ${C.green}`, pointerEvents: 'none' }}
-        />
-      </>
-    ) : null}
-
-    <motion.button
+    <button
       type="button"
       onClick={canStart ? onClick : undefined}
-      whileTap={canStart ? { scale: 0.96, y: 3 } : {}}
-      whileHover={canStart ? { scale: 1.02 } : {}}
-      transition={{ type: 'spring', stiffness: 460, damping: 22 }}
-      style={{ width: '100%', padding: '18px 0', borderRadius: '16px', border: canStart ? `2px solid ${C.green}70` : '2px solid rgba(255,255,255,0.1)', background: canStart ? `linear-gradient(135deg, ${C.green}dd 0%, #22c55e 50%, #16a34a 100%)` : 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)', boxShadow: canStart ? `0 6px 0 #15803d, 0 8px 30px ${C.green}55, 0 0 60px ${C.green}30, inset 0 1px 0 rgba(255,255,255,0.35)` : '0 4px 0 rgba(0,0,0,0.3)', cursor: canStart ? 'pointer' : 'not-allowed', position: 'relative', overflow: 'hidden' }}
+      style={{ width: '100%', padding: '18px 0', borderRadius: '16px', border: canStart ? `2px solid ${C.green}70` : '2px solid rgba(255,255,255,0.1)', background: canStart ? `linear-gradient(135deg, ${C.green}dd 0%, #22c55e 50%, #16a34a 100%)` : 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)', boxShadow: 'none', cursor: canStart ? 'pointer' : 'not-allowed', position: 'relative', overflow: 'hidden', transition: 'none' }}
     >
-      {canStart ? <div style={{ position: 'absolute', top: '6px', left: '15%', right: '15%', height: '10px', borderRadius: '9999px', background: 'linear-gradient(180deg, rgba(255,255,255,0.45) 0%, transparent 100%)', opacity: 0.5, pointerEvents: 'none' }} /> : null}
       <span style={{ fontSize: '17px', fontWeight: 900, letterSpacing: '0.18em', textTransform: 'uppercase', color: canStart ? '#fff' : 'rgba(255,255,255,0.25)', textShadow: canStart ? '0 1px 8px rgba(0,0,0,0.3)' : 'none', position: 'relative' }}>
         {wordsExhausted ? 'Все слова разыграны. На главную' : canStart ? 'НАЧАТЬ ИГРУ' : 'ОЖИДАНИЕ НАЧАЛА ИГРЫ...'}
       </span>
-    </motion.button>
+    </button>
   </div>
 )
 
-function QRPanel({ roomCode }: { roomCode: string }) {
+function QRPanel({ roomCode, lobbyUrl }: { roomCode: string; lobbyUrl: string }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', padding: '14px 12px', borderRadius: '16px', background: 'linear-gradient(160deg, rgba(167,139,250,0.08) 0%, rgba(4,6,26,0.7) 100%)', border: `1px solid ${C.purple}35`, backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', boxShadow: `0 0 0 1px ${C.purple}12, 0 4px 20px rgba(0,0,0,0.45), 0 0 30px ${C.purple}15` }}>
       <span style={{ fontSize: '8px', fontWeight: 900, letterSpacing: '0.22em', textTransform: 'uppercase', color: `${C.purple}80` }}>СКАНИРУЙ</span>
       <div style={{ padding: '6px', borderRadius: '10px', background: 'rgba(255,255,255,0.96)', boxShadow: `0 0 0 1px ${C.purple}40, 0 0 20px ${C.purple}50` }}>
-        <QRCode size={88} />
+        <QRCodeUi size={88} value={lobbyUrl} />
       </div>
       <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase' }}>или введи код</span>
       <div style={{ padding: '4px 10px', borderRadius: '8px', background: `${C.purple}18`, border: `1px solid ${C.purple}35` }}>
@@ -246,6 +189,10 @@ const DEMO_B: LobbyPlayer[] = [
 
 function LobbyScreenMobile({ roomCode = 'XPVVK4', teamA = DEMO_A, teamB = DEMO_B, maxPlayers = 5, isHost = true, wordsExhausted = false, onStart }: LobbyScreenProps) {
   const canStart = isHost && teamA.length >= 2 && teamB.length >= 2
+  const lobbyUrl = useMemo(() => {
+    const base = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
+    return `${base}/lobby/${roomCode}`
+  }, [roomCode])
 
   return (
     <div style={{ position: 'relative', height: 'calc(100vh - 108px)', minHeight: '640px', width: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column', fontFamily: "'Arial Black', 'Impact', system-ui, sans-serif", maxWidth: '430px', margin: '0 auto', borderRadius: '36px', border: '1px solid rgba(255,255,255,0.1)' }}>
@@ -272,7 +219,7 @@ function LobbyScreenMobile({ roomCode = 'XPVVK4', teamA = DEMO_A, teamB = DEMO_B
       <div style={{ position: 'relative', zIndex: 10, height: '1px', opacity: 0.18, marginBottom: '2px', background: `linear-gradient(90deg, transparent, ${C.blue}88, ${C.purple}, ${C.orange}88, transparent)` }} />
 
       <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 14px 0' }}>
-        <QRPanel roomCode={roomCode} />
+        <QRPanel roomCode={roomCode} lobbyUrl={lobbyUrl} />
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px', alignSelf: 'stretch', justifyContent: 'center' }}>
           <div style={{ padding: '12px 14px', borderRadius: '14px', background: 'linear-gradient(135deg, rgba(8,8,28,0.88) 0%, rgba(16,8,40,0.92) 100%)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -317,6 +264,10 @@ export type { LobbyPlayer, LobbyScreenProps }
 function LobbyScreenDesktop({ roomCode = 'XPVVK4', teamA = DEMO_A, teamB = DEMO_B, maxPlayers = 5, isHost = true, wordsExhausted = false, onStart }: LobbyScreenProps) {
   const totalPlayers = teamA.length + teamB.length
   const canStart = isHost && totalPlayers >= 4
+  const lobbyUrl = useMemo(() => {
+    const base = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
+    return `${base}/lobby/${roomCode}`
+  }, [roomCode])
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', minHeight: '640px', marginLeft: 'calc(50% - 50vw)', display: 'flex', flexDirection: 'column', overflow: 'hidden', fontFamily: "'Arial Black',system-ui,sans-serif" }}>
@@ -344,7 +295,7 @@ function LobbyScreenDesktop({ roomCode = 'XPVVK4', teamA = DEMO_A, teamB = DEMO_
           <GlassPanel color={`${C.purple}0a`} border={`${C.purple}30`} style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
             <div style={{ fontSize: '9px', fontWeight: 900, letterSpacing: '0.22em', textTransform: 'uppercase', color: `${C.purple}99`, marginBottom: '2px' }}>Пригласить</div>
             <div style={{ padding: '8px', borderRadius: '12px', background: 'rgba(255,255,255,0.96)', boxShadow: `0 0 0 1px ${C.purple}40,0 0 24px ${C.purple}50` }}>
-              <QRCodeUi size={120} />
+              <QRCodeUi size={120} value={lobbyUrl} />
             </div>
             <span style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase' }}>или введи код</span>
             <div style={{ padding: '4px 14px', borderRadius: '8px', background: `${C.purple}18`, border: `1px solid ${C.purple}35` }}>
@@ -392,12 +343,11 @@ function LobbyScreenDesktop({ roomCode = 'XPVVK4', teamA = DEMO_A, teamB = DEMO_
 
       <div style={{ position: 'relative', zIndex: 10, padding: '16px 40px 28px' }}>
         <div style={{ position: 'relative' }}>
-          {canStart ? <motion.div animate={{ scale: [1, 1.04, 1], opacity: [0.4, 0, 0.4] }} transition={{ duration: 2, repeat: Infinity }} style={{ position: 'absolute', inset: '-4px', borderRadius: '18px', border: `2px solid ${C.green}`, pointerEvents: 'none' }} /> : null}
-          <motion.button whileTap={canStart ? { scale: 0.98, y: 3 } : {}} whileHover={canStart ? { scale: 1.01 } : {}} type="button" onClick={canStart ? onStart : undefined} style={{ width: '100%', padding: '18px', borderRadius: '16px', border: canStart ? `2px solid ${C.green}60` : '2px solid rgba(255,255,255,0.08)', background: canStart ? `linear-gradient(135deg,#22c55e,${C.green},#16a34a)` : 'rgba(255,255,255,0.04)', boxShadow: canStart ? `0 7px 0 #15803d,0 10px 35px ${C.green}45,inset 0 1px 0 rgba(255,255,255,0.3)` : 'none', cursor: canStart ? 'pointer' : 'not-allowed' }}>
+          <button type="button" onClick={canStart ? onStart : undefined} style={{ width: '100%', padding: '18px', borderRadius: '16px', border: canStart ? `2px solid ${C.green}60` : '2px solid rgba(255,255,255,0.08)', background: canStart ? `linear-gradient(135deg,#22c55e,${C.green},#16a34a)` : 'rgba(255,255,255,0.04)', boxShadow: 'none', cursor: canStart ? 'pointer' : 'not-allowed', transition: 'none' }}>
             <span style={{ fontSize: '17px', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase', color: canStart ? '#fff' : 'rgba(255,255,255,0.2)', textShadow: canStart ? '0 1px 8px rgba(0,0,0,0.25)' : 'none' }}>
               {wordsExhausted ? 'Все слова разыграны. На главную' : canStart ? '✦ НАЧАТЬ ИГРУ ✦' : 'ОЖИДАНИЕ НАЧАЛА ИГРЫ...'}
             </span>
-          </motion.button>
+          </button>
         </div>
       </div>
     </div>

@@ -327,82 +327,79 @@ function JoinCodeModal({
             onClick={onClose}
             style={{ position: 'fixed', inset: 0, zIndex: 52, background: 'rgba(2,8,23,0.82)', backdropFilter: 'blur(12px)' }}
           />
-          <motion.form
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: 20 }}
-            onSubmit={handleSubmit}
-            style={{
-              position: 'fixed',
-              zIndex: 53,
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 'min(360px, calc(100vw - 32px))',
-              borderRadius: '20px',
-              border: `1px solid ${C.blue}40`,
-              background: 'linear-gradient(160deg, rgba(12,8,36,0.98), rgba(6,4,22,0.99))',
-              padding: '20px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px',
-            }}
-          >
-            <h3 style={{ margin: 0, color: '#fff', fontSize: '20px', fontWeight: 900 }}>Код комнаты</h3>
-            <p style={{ margin: 0, color: 'rgba(255,255,255,0.65)', fontSize: '13px' }}>Введите 6 символов (например, ABC123)</p>
-            <input
-              value={code}
-              onChange={handleChange}
-              maxLength={6}
-              placeholder="ABC123"
+          <div style={{ position: 'fixed', inset: 0, zIndex: 53, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+            <motion.form
+              initial={{ opacity: 0, scale: 0.92, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 20 }}
+              onSubmit={handleSubmit}
               style={{
-                width: '100%',
-                borderRadius: '14px',
-                border: `1px solid ${C.blue}50`,
-                background: 'rgba(3,8,25,0.7)',
-                color: '#fff',
-                fontSize: '22px',
-                fontWeight: 800,
-                letterSpacing: '0.24em',
-                textTransform: 'uppercase',
-                padding: '12px 14px',
-                outline: 'none',
+                width: 'min(360px, calc(100vw - 32px))',
+                borderRadius: '20px',
+                border: `1px solid ${C.blue}40`,
+                background: 'linear-gradient(160deg, rgba(12,8,36,0.98), rgba(6,4,22,0.99))',
+                padding: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
               }}
-            />
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button
-                type="button"
-                onClick={onClose}
+            >
+              <h3 style={{ margin: 0, color: '#fff', fontSize: '20px', fontWeight: 900 }}>Код комнаты</h3>
+              <p style={{ margin: 0, color: 'rgba(255,255,255,0.65)', fontSize: '13px' }}>Введите 6 символов (например, ABC123)</p>
+              <input
+                value={code}
+                onChange={handleChange}
+                maxLength={6}
+                placeholder="ABC123"
                 style={{
-                  flex: 1,
-                  borderRadius: '12px',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  background: 'rgba(255,255,255,0.08)',
+                  width: '100%',
+                  borderRadius: '14px',
+                  border: `1px solid ${C.blue}50`,
+                  background: 'rgba(3,8,25,0.7)',
                   color: '#fff',
-                  fontWeight: 700,
-                  padding: '11px',
-                  cursor: 'pointer',
-                }}
-              >
-                Отмена
-              </button>
-              <button
-                type="submit"
-                style={{
-                  flex: 1,
-                  borderRadius: '12px',
-                  border: `1px solid ${C.blue}60`,
-                  background: `linear-gradient(135deg, ${C.blue}cc, #0ea5e9)`,
-                  color: '#fff',
+                  fontSize: '22px',
                   fontWeight: 800,
-                  padding: '11px',
-                  cursor: 'pointer',
+                  letterSpacing: '0.24em',
+                  textTransform: 'uppercase',
+                  padding: '12px 14px',
+                  outline: 'none',
                 }}
-              >
-                Войти
-              </button>
-            </div>
-          </motion.form>
+              />
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  style={{
+                    flex: 1,
+                    borderRadius: '12px',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    background: 'rgba(255,255,255,0.08)',
+                    color: '#fff',
+                    fontWeight: 700,
+                    padding: '11px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Отмена
+                </button>
+                <button
+                  type="submit"
+                  style={{
+                    flex: 1,
+                    borderRadius: '12px',
+                    border: `1px solid ${C.blue}60`,
+                    background: `linear-gradient(135deg, ${C.blue}cc, #0ea5e9)`,
+                    color: '#fff',
+                    fontWeight: 800,
+                    padding: '11px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Войти
+                </button>
+              </div>
+            </motion.form>
+          </div>
         </>
       ) : null}
     </AnimatePresence>
@@ -565,12 +562,14 @@ function LandingScreenMobile({
               borderRadius: '18px',
               border: !hasName || isCreating ? '2px solid rgba(255,255,255,0.08)' : `2px solid ${C.orange}70`,
               background: !hasName || isCreating ? 'rgba(255,255,255,0.04)' : `linear-gradient(135deg, #f97316 0%, ${C.orange} 45%, #ea580c 100%)`,
+              boxShadow: 'none',
               color: !hasName || isCreating ? 'rgba(255,255,255,0.3)' : '#fff',
               fontSize: '22px',
               fontWeight: 900,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
               cursor: !hasName || isCreating ? 'not-allowed' : 'pointer',
+              transition: 'none',
             }}
           >
             {isCreating ? 'СОЗДАНИЕ...' : 'НОВАЯ ИГРА'}
@@ -668,7 +667,7 @@ function LandingScreenDesktop({
 
         <div style={{ position: 'relative' }}>
           <motion.div animate={{ opacity: focused ? 1 : 0, scale: focused ? 1.03 : 0.97 }} style={{ position: 'absolute', inset: '-3px', borderRadius: '20px', background: `linear-gradient(135deg,${C.blue}35,${C.purple}25)`, filter: 'blur(8px)', pointerEvents: 'none' }} />
-          <div style={{ position: 'relative', borderRadius: '16px', border: focused ? `2px solid ${C.blue}90` : '2px solid rgba(255,255,255,0.12)', background: 'linear-gradient(135deg,rgba(14,10,40,0.92),rgba(8,6,28,0.96))', backdropFilter: 'blur(20px)', transition: 'border-color 0.22s,box-shadow 0.22s', boxShadow: focused ? `0 0 0 1px ${C.blue}30,0 8px 32px rgba(0,0,0,0.5),0 0 40px ${C.blue}20` : '0 4px 24px rgba(0,0,0,0.4)', overflow: 'hidden' }}>
+          <div style={{ position: 'relative', borderRadius: '16px', border: focused ? `2px solid ${C.blue}90` : '2px solid rgba(255,255,255,0.12)', background: 'linear-gradient(135deg,rgba(14,10,40,0.92),rgba(8,6,28,0.96))', backdropFilter: 'blur(20px)', transition: 'border-color 0.22s', boxShadow: focused ? `0 0 0 1px ${C.blue}30,0 8px 32px rgba(0,0,0,0.5),0 0 40px ${C.blue}20` : '0 4px 24px rgba(0,0,0,0.4)', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', padding: '16px 20px', gap: '14px' }}>
               <div style={{ width: '40px', height: '40px', borderRadius: '12px', flexShrink: 0, background: playerName ? `linear-gradient(135deg,${C.blue}cc,${C.purple}99)` : 'rgba(255,255,255,0.06)', border: playerName ? `1px solid ${C.blue}50` : '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s', boxShadow: playerName ? `0 0 12px ${C.blue}40` : 'none' }}>
                 <span style={{ fontSize: playerName ? '18px' : '15px', fontWeight: 900, color: playerName ? '#fff' : 'rgba(255,255,255,0.2)' }}>{playerName ? playerName[0]?.toUpperCase() : '?'}</span>
@@ -681,21 +680,51 @@ function LandingScreenDesktop({
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {!hasName ? <p style={{ margin: 0, fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.28)', textAlign: 'center', letterSpacing: '0.04em' }}>Введи имя чтобы начать</p> : null}
-          <div style={{ position: 'relative' }}>
-            {hasName ? (
-              <>
-                <motion.div animate={{ scale: [1, 1.08, 1], opacity: [0.4, 0, 0.4] }} transition={{ duration: 2, repeat: Infinity }} style={{ position: 'absolute', inset: '-4px', borderRadius: '20px', border: `2px solid ${C.orange}`, pointerEvents: 'none' }} />
-                <motion.div animate={{ scale: [1, 1.16, 1], opacity: [0.22, 0, 0.22] }} transition={{ duration: 2, repeat: Infinity, delay: 0.4 }} style={{ position: 'absolute', inset: '-4px', borderRadius: '20px', border: `2px solid ${C.orange}`, pointerEvents: 'none' }} />
-              </>
-            ) : null}
-            <motion.button whileTap={hasName ? { scale: 0.97, y: 4 } : {}} whileHover={hasName ? { scale: 1.01 } : {}} type="button" disabled={!hasName || isCreating} onClick={() => void onCreateGame()} style={{ width: '100%', padding: '20px', borderRadius: '18px', border: hasName ? `2px solid ${C.orange}70` : '2px solid rgba(255,255,255,0.08)', background: hasName ? `linear-gradient(135deg,#f97316,${C.orange},#ea580c)` : 'rgba(255,255,255,0.04)', boxShadow: hasName ? `0 8px 0 #c2410c,0 12px 40px ${C.orange}45,inset 0 1px 0 rgba(255,255,255,0.35)` : '0 4px 0 rgba(0,0,0,0.3)', cursor: hasName ? 'pointer' : 'not-allowed', position: 'relative', overflow: 'hidden' }}>
-              {hasName ? <div style={{ position: 'absolute', top: '6px', left: '15%', right: '15%', height: '10px', borderRadius: '9999px', background: 'linear-gradient(180deg,rgba(255,255,255,0.4) 0%,transparent 100%)', opacity: 0.4 }} /> : null}
+          <div style={{ position: 'relative', isolation: 'isolate' }}>
+            <button
+              type="button"
+              disabled={!hasName || isCreating}
+              onClick={() => void onCreateGame()}
+              style={{
+                display: 'block',
+                width: '100%',
+                padding: '20px',
+                borderRadius: '18px',
+                border: hasName ? `2px solid ${C.orange}70` : '2px solid rgba(255,255,255,0.08)',
+                background: hasName ? `linear-gradient(135deg,#f97316,${C.orange},#ea580c)` : 'rgba(255,255,255,0.04)',
+                boxShadow: 'none',
+                cursor: hasName ? 'pointer' : 'not-allowed',
+                position: 'relative',
+                overflow: 'hidden',
+                zIndex: 2,
+                pointerEvents: 'auto',
+                touchAction: 'manipulation',
+                WebkitTapHighlightColor: 'transparent',
+                userSelect: 'none',
+                transition: 'none',
+              }}
+            >
+              {hasName ? (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '6px',
+                    left: '15%',
+                    right: '15%',
+                    height: '10px',
+                    borderRadius: '9999px',
+                    background: 'linear-gradient(180deg,rgba(255,255,255,0.4) 0%,transparent 100%)',
+                    opacity: 0.4,
+                    pointerEvents: 'none',
+                  }}
+                />
+              ) : null}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', position: 'relative' }}>
                 <span style={{ fontSize: '18px', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase', color: hasName ? '#fff' : 'rgba(255,255,255,0.2)' }}>{isCreating ? 'Создание...' : 'Новая игра'}</span>
               </div>
-            </motion.button>
+            </button>
           </div>
-          <motion.button whileTap={hasName ? { scale: 0.97 } : {}} type="button" disabled={!hasName} onClick={() => setJoinOpen(true)} style={{ width: '100%', padding: '16px', borderRadius: '16px', border: hasName ? `1.5px solid ${C.blue}45` : '1.5px solid rgba(255,255,255,0.08)', background: hasName ? `linear-gradient(135deg,${C.blue}18,${C.purple}12)` : 'transparent', backdropFilter: 'blur(12px)', boxShadow: hasName ? `0 0 30px ${C.blue}12` : 'none', cursor: hasName ? 'pointer' : 'not-allowed' }}>
+          <motion.button whileTap={hasName ? { scale: 0.97 } : {}} type="button" disabled={!hasName} onClick={() => setJoinOpen(true)} style={{ width: '100%', padding: '16px', borderRadius: '16px', border: hasName ? `1.5px solid ${C.blue}45` : '1.5px solid rgba(255,255,255,0.08)', background: hasName ? `linear-gradient(135deg,${C.blue}18,${C.purple}12)` : 'transparent', backdropFilter: 'blur(12px)', boxShadow: 'none', cursor: hasName ? 'pointer' : 'not-allowed' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
               <span style={{ fontSize: '15px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: hasName ? `${C.blue}ee` : 'rgba(255,255,255,0.15)', textShadow: hasName ? `0 0 16px ${C.blue}70` : 'none' }}>Присоединиться</span>
             </div>

@@ -105,8 +105,7 @@ function ActionButton({ type, onClick }: { type: 'skip' | 'correct'; onClick?: (
   const color = isCorrect ? C.green : C.red
 
   return (
-    <motion.button type="button" whileTap={{ scale: 0.86, y: 5 }} whileHover={{ scale: 1.07 }} onClick={onClick} style={{ width: '90px', height: '90px', borderRadius: '50%', border: `2px solid ${color}`, background: `radial-gradient(circle at 38% 32%,${color} 0%,${color}bb 55%,${color}80 100%)`, boxShadow: `0 7px 0 ${color}44,0 10px 28px ${color}65,0 0 55px ${color}35`, cursor: 'pointer', fontSize: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: '9px', left: '14px', width: '28px', height: '13px', borderRadius: '9999px', background: 'linear-gradient(180deg,rgba(255,255,255,0.65) 0%,transparent 100%)', opacity: 0.4 }} />
+    <motion.button type="button" whileTap={{ scale: 0.86, y: 5 }} whileHover={{ scale: 1.07 }} onClick={onClick} style={{ width: '90px', height: '90px', borderRadius: '50%', border: `2px solid ${color}`, background: `radial-gradient(circle at 38% 32%,${color} 0%,${color}bb 55%,${color}80 100%)`, boxShadow: 'none', cursor: 'pointer', fontSize: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
       {isCorrect ? '✓' : '✗'}
     </motion.button>
   )

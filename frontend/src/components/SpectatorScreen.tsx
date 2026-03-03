@@ -185,7 +185,7 @@ function SpectatorScreenMobile({
               <div style={{ position: 'relative', borderRadius: '28px', overflow: 'hidden', background: 'linear-gradient(148deg, #5b3dd4 0%, #341ea0 45%, #1d1570 100%)', boxShadow: `0 0 0 1px rgba(255,255,255,0.13), 0 8px 32px rgba(0,0,0,0.62)`, height: '310px' }}>
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(180deg, rgba(255,255,255,0.13) 0%, transparent 100%)', borderRadius: '28px 28px 0 0', pointerEvents: 'none' }} />
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <h1 style={{ margin: 0, fontSize: 'clamp(1.8rem, 11vw, 3.2rem)', fontWeight: 900, lineHeight: 1.1, textAlign: 'center', color: '#fff', width: '100%', padding: '0 20px' }}>{word || 'Ожидание слова...'}</h1>
+                  <h1 style={{ margin: 0, fontSize: 'clamp(1.8rem, 11vw, 3.2rem)', fontWeight: 900, lineHeight: 1.1, textAlign: 'center', color: '#fff', width: '100%', padding: '0 20px', overflowWrap: 'anywhere', wordBreak: 'break-word', hyphens: 'auto' }}>{word || 'Ожидание слова...'}</h1>
                 </div>
               </div>
               <div style={{ height: '22px' }} />
@@ -232,21 +232,6 @@ function SpectatorScreenMobile({
           </div>
         </GlassPanel>
 
-        <GlassPanel style={{ padding: '14px 14px', marginBottom: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-            <span style={{ fontSize: '9px', fontWeight: 900, letterSpacing: '0.2em', textTransform: 'uppercase', color: `${C.yellow}88` }}>Разбор слов</span>
-            <div style={{ display: 'flex', gap: '6px' }}>
-              <div style={{ padding: '2px 8px', borderRadius: '6px', background: `${C.green}20`, border: `1px solid ${C.green}35` }}>
-                <span style={{ fontSize: '10px', fontWeight: 900, color: C.green }}>{guessedCount} ✓</span>
-              </div>
-              <div style={{ padding: '2px 8px', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}>
-                <span style={{ fontSize: '10px', fontWeight: 900, color: 'rgba(255,255,255,0.35)' }}>{skippedCount} —</span>
-              </div>
-            </div>
-          </div>
-          <WordResultList guessed={guessedWords} missed={skippedWords} />
-        </GlassPanel>
-
         <div style={{ marginBottom: '6px', textAlign: 'center' }}>
           <span style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>Следующий ведущий</span>
         </div>
@@ -263,11 +248,26 @@ function SpectatorScreenMobile({
             whileTap={{ scale: 0.97, y: 3 }}
             whileHover={{ scale: 1.01 }}
             onClick={onStartRound}
-            style={{ width: '100%', padding: '16px', borderRadius: '16px', border: `2px solid ${C.green}60`, background: `linear-gradient(135deg,#22c55e,${C.green},#16a34a)`, boxShadow: `0 7px 0 #15803d,0 10px 35px ${C.green}45,inset 0 1px 0 rgba(255,255,255,0.3)`, cursor: 'pointer', color: '#fff', fontSize: '15px', fontWeight: 900, letterSpacing: '0.08em', textTransform: 'uppercase' }}
+            style={{ width: '100%', padding: '16px', borderRadius: '16px', border: `2px solid ${C.green}60`, background: `linear-gradient(135deg,#22c55e,${C.green},#16a34a)`, boxShadow: 'none', cursor: 'pointer', color: '#fff', fontSize: '15px', fontWeight: 900, letterSpacing: '0.08em', textTransform: 'uppercase' }}
           >
             Начать новый раунд
           </motion.button>
         ) : null}
+
+        <GlassPanel style={{ padding: '14px 14px', marginTop: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+            <span style={{ fontSize: '9px', fontWeight: 900, letterSpacing: '0.2em', textTransform: 'uppercase', color: `${C.yellow}88` }}>Разбор слов</span>
+            <div style={{ display: 'flex', gap: '6px' }}>
+              <div style={{ padding: '2px 8px', borderRadius: '6px', background: `${C.green}20`, border: `1px solid ${C.green}35` }}>
+                <span style={{ fontSize: '10px', fontWeight: 900, color: C.green }}>{guessedCount} ✓</span>
+              </div>
+              <div style={{ padding: '2px 8px', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                <span style={{ fontSize: '10px', fontWeight: 900, color: 'rgba(255,255,255,0.35)' }}>{skippedCount} —</span>
+              </div>
+            </div>
+          </div>
+          <WordResultList guessed={guessedWords} missed={skippedWords} />
+        </GlassPanel>
       </div>
     </div>
   )
@@ -333,7 +333,7 @@ function SpectatorScreenDesktop({
                 <div style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', background: 'linear-gradient(148deg,#5b3dd4 0%,#341ea0 45%,#1d1570 100%)', boxShadow: `0 0 0 1px rgba(255,255,255,0.13),0 8px 32px rgba(0,0,0,0.62),0 0 70px ${C.purple}30`, height: '220px' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(180deg,rgba(255,255,255,0.13) 0%,transparent 100%)', pointerEvents: 'none' }} />
                   <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: '34px', fontWeight: 900, color: '#fff', textAlign: 'center', lineHeight: 1.1 }}>{safeWord}</span>
+                    <span style={{ fontSize: '34px', fontWeight: 900, color: '#fff', textAlign: 'center', lineHeight: 1.1, maxWidth: '100%', padding: '0 12px', overflowWrap: 'anywhere', wordBreak: 'break-word', hyphens: 'auto' }}>{safeWord}</span>
                   </div>
                 </div>
               </div>
@@ -358,7 +358,7 @@ function SpectatorScreenDesktop({
               </GlassPanel>
 
               {canStartRound ? (
-                <motion.button type="button" whileTap={{ scale: 0.97, y: 3 }} whileHover={{ scale: 1.01 }} onClick={onStartRound} style={{ width: '100%', padding: '14px', borderRadius: '14px', border: `2px solid ${C.green}60`, background: `linear-gradient(135deg,#22c55e,${C.green},#16a34a)`, boxShadow: `0 6px 0 #15803d,0 10px 30px ${C.green}45,inset 0 1px 0 rgba(255,255,255,0.3)`, cursor: 'pointer', color: '#fff', fontSize: '13px', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                <motion.button type="button" whileTap={{ scale: 0.97, y: 3 }} whileHover={{ scale: 1.01 }} onClick={onStartRound} style={{ width: '100%', padding: '14px', borderRadius: '14px', border: `2px solid ${C.green}60`, background: `linear-gradient(135deg,#22c55e,${C.green},#16a34a)`, boxShadow: 'none', cursor: 'pointer', color: '#fff', fontSize: '13px', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                   Начать новый раунд
                 </motion.button>
               ) : null}

@@ -53,7 +53,7 @@ export default defineConfig({
         ],
       },
       devOptions: {
-        enabled: true,
+        enabled: false,
       },
     }),
   ],
@@ -61,6 +61,9 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     strictPort: true,
+    fs: {
+      allow: ['..'],
+    },
     proxy: {
       '/api': {
         target: apiProxyTarget,

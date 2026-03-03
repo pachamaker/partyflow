@@ -130,7 +130,10 @@ function GameResultScreenMobile({ winnerTeam = 'A', teamA = DEFAULT_TEAM_A, team
   const [dispB, setDispB] = useState(0)
   const rankedA = useMemo(() => [...teamA.players].sort((left, right) => right.guessed - left.guessed), [teamA.players])
   const rankedB = useMemo(() => [...teamB.players].sort((left, right) => right.guessed - left.guessed), [teamB.players])
-  const bestA = rankedA.length > 0 ? Math.max(...rankedA.map((player) => player.guessed)) : 0
+  const maxGuessed = useMemo(
+    () => Math.max(0, ...teamA.players.map((player) => player.guessed), ...teamB.players.map((player) => player.guessed)),
+    [teamA.players, teamB.players],
+  )
 
   useEffect(() => {
     let frame = 0
@@ -180,13 +183,12 @@ function GameResultScreenMobile({ winnerTeam = 'A', teamA = DEFAULT_TEAM_A, team
 
         <GlassPanel color={`${C.blue}10`} border={`${C.blue}40`} style={{ padding: '12px 12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <span style={{ fontSize: '12px' }}>👑</span>
             <span style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.blue }}>{teamA.label}</span>
             {winnerTeam === 'A' ? <span style={{ marginLeft: 'auto', fontSize: '9px', fontWeight: 900, padding: '2px 8px', borderRadius: '6px', background: `${C.yellow}22`, border: `1px solid ${C.yellow}40`, color: C.yellow }}>ПОБЕДА</span> : null}
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {rankedA.map((player, index) => {
-              const isBest = player.guessed === bestA
+              const isBest = player.guessed === maxGuessed && maxGuessed > 0
               return (
                 <motion.div key={player.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.45 + index * 0.08 }} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '12px', background: isBest ? `${C.yellow}10` : `${C.blue}0c`, border: isBest ? `1px solid ${C.yellow}33` : `1px solid ${C.blue}18` }}>
                   <div style={{ width: '30px', height: '30px', borderRadius: '10px', background: `linear-gradient(135deg,${C.blue}cc,${C.blue}55)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 900, color: '#fff', flexShrink: 0 }}>{player.name[0]?.toUpperCase() ?? '?'}</div>
@@ -205,13 +207,17 @@ function GameResultScreenMobile({ winnerTeam = 'A', teamA = DEFAULT_TEAM_A, team
             {winnerTeam === 'B' ? <span style={{ marginLeft: 'auto', fontSize: '9px', fontWeight: 900, padding: '2px 8px', borderRadius: '6px', background: `${C.yellow}22`, border: `1px solid ${C.yellow}40`, color: C.yellow }}>ПОБЕДА</span> : null}
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {rankedB.map((player, index) => (
-              <motion.div key={player.id} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 + index * 0.08 }} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '12px', background: `${C.orange}0c`, border: `1px solid ${C.orange}18` }}>
-                <div style={{ width: '30px', height: '30px', borderRadius: '10px', background: `linear-gradient(135deg,${C.orange}cc,${C.orange}55)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 900, color: '#fff', flexShrink: 0 }}>{player.name[0]?.toUpperCase() ?? '?'}</div>
-                <span style={{ fontSize: '15px', fontWeight: 800, color: 'rgba(255,255,255,0.86)', flex: 1 }}>{player.name}</span>
-                <span style={{ fontSize: '14px', fontWeight: 900, color: 'rgba(255,255,255,0.45)' }}>{player.guessed} сл.</span>
-              </motion.div>
-            ))}
+            {rankedB.map((player, index) => {
+              const isBest = player.guessed === maxGuessed && maxGuessed > 0
+              return (
+                <motion.div key={player.id} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 + index * 0.08 }} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '12px', background: isBest ? `${C.yellow}10` : `${C.orange}0c`, border: isBest ? `1px solid ${C.yellow}33` : `1px solid ${C.orange}18` }}>
+                  <div style={{ width: '30px', height: '30px', borderRadius: '10px', background: `linear-gradient(135deg,${C.orange}cc,${C.orange}55)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 900, color: '#fff', flexShrink: 0 }}>{player.name[0]?.toUpperCase() ?? '?'}</div>
+                  <span style={{ fontSize: '15px', fontWeight: 800, color: 'rgba(255,255,255,0.86)', flex: 1 }}>{player.name}</span>
+                  <span style={{ fontSize: '14px', fontWeight: 900, color: isBest ? C.yellow : 'rgba(255,255,255,0.45)' }}>{player.guessed} сл.</span>
+                  {isBest ? <span style={{ fontSize: '14px', color: C.yellow }}>🏆</span> : null}
+                </motion.div>
+              )
+            })}
           </div>
         </GlassPanel>
       </div>
@@ -301,7 +307,7 @@ function GameResultScreenDesktop({ winnerTeam = 'A', teamA = DEFAULT_TEAM_A, tea
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
             {canPlayAgain ? (
-              <motion.button whileTap={{ scale: 0.97, y: 3 }} whileHover={{ scale: 1.01 }} type="button" onClick={onPlayAgain} style={{ width: '100%', padding: '15px', borderRadius: '16px', border: `2px solid ${C.green}60`, background: `linear-gradient(135deg,#22c55e,${C.green},#16a34a)`, boxShadow: `0 7px 0 #15803d,0 10px 35px ${C.green}45,inset 0 1px 0 rgba(255,255,255,0.3)`, cursor: 'pointer' }}>
+              <motion.button whileTap={{ scale: 0.97, y: 3 }} whileHover={{ scale: 1.01 }} type="button" onClick={onPlayAgain} style={{ width: '100%', padding: '15px', borderRadius: '16px', border: `2px solid ${C.green}60`, background: `linear-gradient(135deg,#22c55e,${C.green},#16a34a)`, boxShadow: 'none', cursor: 'pointer' }}>
                 <span style={{ fontSize: '15px', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff' }}>Сыграть еще раз</span>
               </motion.button>
             ) : (

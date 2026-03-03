@@ -1,13 +1,6 @@
 import { motion } from 'framer-motion'
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import useBreakpoint from '../hooks/useBreakpoint'
-import { routes } from '../utils/routes'
-
-const navItems = [
-  { to: routes.home, label: 'Главная' },
-  { to: routes.game, label: 'Игра' },
-  { to: routes.results, label: 'Результаты игры' },
-]
 
 export function AppShell() {
   const location = useLocation()
