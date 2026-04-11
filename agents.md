@@ -157,6 +157,13 @@ Role-based screen polish
    - Cover reconnect and stale-session behavior
    - Run lint/build/test commands available in each package
 
+5. **Run tests after implementation** (mandatory):
+   - Backend: `cd backend && npm test` — unit tests (Vitest) for GameService, PlayerService
+   - Frontend: `cd frontend && npm run test:screenshots` — visual regression (Playwright)
+   - Build check: `cd backend && npm run build` and `cd frontend && npm run build`
+   - If a test fails — fix the code, or if the failure is due to intentional behavior change, update the test and explain the reason to the operator for approval
+   - Never mark a task as complete with failing tests
+
 ---
 
 ## Agent Handoff Protocol
@@ -165,7 +172,12 @@ When completing a task:
 
 1. ✅ Mark checklist items complete
 2. ✅ Document changed event contracts and impacted screens/services
-3. ✅ Run available validation commands (`build`/`lint`/tests if present)
+3. ✅ Run tests and build:
+   - `cd backend && npm test` — all unit tests must pass
+   - `cd frontend && npm run test:screenshots` — all screenshot tests must pass
+   - `cd backend && npm run build && cd ../frontend && npm run build` — TypeScript must compile
+   - If a test fails due to intentional changes: update the test (`npm run test:screenshots:update` for screenshots), explain the visual/behavioral change, and flag it for operator review
+   - If a test fails unexpectedly: fix the regression before completing the task
 4. ✅ Update relevant `AGENTS.md`/docs sections if architecture changed
 5. ✅ Record assumptions, known gaps, and follow-up tasks
 6. ✅ Tag next agent with impacted files and risk notes

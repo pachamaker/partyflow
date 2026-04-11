@@ -75,10 +75,6 @@ export class GameService {
       throw new RoomServiceError('INVALID_GAME_STATE', 'Round can only start after previous round ended', 409);
     }
 
-    if (room.game.currentRound >= room.game.maxRounds) {
-      throw new RoomServiceError('MAX_ROUNDS_REACHED', 'No more rounds available', 409);
-    }
-
     const now = new Date().toISOString();
     const nextRound = room.game.currentRound + 1;
     const activeTeam = room.game.nextTeam;
@@ -122,9 +118,8 @@ export class GameService {
 
     const shouldEndByScore =
       room.game.score.A >= room.game.targetScore || room.game.score.B >= room.game.targetScore;
-    const shouldEndByRounds = room.game.currentRound >= room.game.maxRounds;
 
-    if (shouldEndByScore || shouldEndByRounds) {
+    if (shouldEndByScore) {
       this.endGame(room);
       return { room, gameEnded: true };
     }

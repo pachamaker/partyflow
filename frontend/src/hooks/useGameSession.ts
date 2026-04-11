@@ -82,6 +82,7 @@ export function useGameSession() {
 
   useEffect(() => {
     let active = true
+    let initialConnectDone = false
 
     if (!roomId) {
       setError('Код комнаты не найден')
@@ -324,6 +325,71 @@ export function useGameSession() {
       setExplainerHint(normalizedHint.length > 0 ? normalizedHint : null)
     }
 
+    const onReconnect = () => {
+      if (!active || !roomId) return
+      if (!initialConnectDone) {
+        initialConnectDone = true
+        return
+      }
+      const playerId = ensurePlayerId()
+      const playerName = ensurePlayerName()
+      socket.emit(
+        'join_room',
+        { roomId, playerId, playerName },
+        (response: { ok: boolean; playerId?: string }) => {
+          if (!active || !response.ok) return
+          if (response.playerId) {
+            setStoredPlayerId(response.playerId)
+          }
+          getRoomState(roomId)
+            .then((room) => {
+              if (!active) return
+              setRoomState({
+                roomId: room.roomId,
+                hostId: room.hostId,
+                players: toSessionPlayers(room.players, room.hostId),
+                game: room.game,
+              })
+            })
+            .catch(() => {})
+        },
+      )
+    }
+
+    const onGameReset = (payload: {
+      roomId?: string
+      room?: { roomId: string; hostId: string; players: RoomPlayer[]; game: RoomGameState }
+      game?: RoomGameState
+    }) => {
+      if (!active || payload.roomId !== roomId) return
+      seenRoundActionKeysRef.current.clear()
+      setRoundStats(EMPTY_ROUND_STATS)
+      setExplainerHint(null)
+
+      if (payload.room) {
+        setRoomState({
+          roomId: payload.room.roomId,
+          hostId: payload.room.hostId,
+          players: toSessionPlayers(payload.room.players, payload.room.hostId),
+          game: payload.room.game,
+        })
+      } else if (payload.game) {
+        setRoomState((prev) => (prev ? { ...prev, game: payload.game! } : prev))
+      }
+
+      navigate(routes.lobbyById(roomId))
+    }
+
+    const onVisibilityChange = () => {
+      if (!active || !roomId) return
+      if (document.hidden) {
+        socket.disconnect()
+      } else {
+        socket.connect()
+      }
+    }
+
+    socket.on('connect', onReconnect)
     socket.on('PLAYER_JOINED', onPlayersPayload)
     socket.on('PLAYER_LEFT', onPlayersPayload)
     socket.on('PLAYER_UPDATED', onPlayersPayload)
@@ -334,11 +400,16 @@ export function useGameSession() {
     socket.on('ROUND_ENDED', onRoundEnded)
     socket.on('GAME_ENDED', onGameEnded)
     socket.on('EXPLAINER_HINT', onExplainerHint)
+    socket.on('GAME_RESET', onGameReset)
+
+    document.addEventListener('visibilitychange', onVisibilityChange)
 
     init()
 
     return () => {
       active = false
+      document.removeEventListener('visibilitychange', onVisibilityChange)
+      socket.off('connect', onReconnect)
       socket.off('PLAYER_JOINED', onPlayersPayload)
       socket.off('PLAYER_LEFT', onPlayersPayload)
       socket.off('PLAYER_UPDATED', onPlayersPayload)
@@ -349,6 +420,7 @@ export function useGameSession() {
       socket.off('ROUND_ENDED', onRoundEnded)
       socket.off('GAME_ENDED', onGameEnded)
       socket.off('EXPLAINER_HINT', onExplainerHint)
+      socket.off('GAME_RESET', onGameReset)
     }
   }, [navigate, roomId])
 

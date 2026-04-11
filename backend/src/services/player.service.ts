@@ -16,8 +16,9 @@ export class PlayerService {
   }
 
   assignTeam(players: Player[]): Team {
-    const teamACount = players.filter((player) => player.team === 'A').length;
-    const teamBCount = players.filter((player) => player.team === 'B').length;
+    const connected = players.filter((player) => player.connected);
+    const teamACount = connected.filter((player) => player.team === 'A').length;
+    const teamBCount = connected.filter((player) => player.team === 'B').length;
 
     if (teamACount < teamBCount) {
       return 'A';
@@ -34,8 +35,8 @@ export class PlayerService {
     const next = [...players];
 
     const count = () => ({
-      a: next.filter((player) => player.team === 'A').length,
-      b: next.filter((player) => player.team === 'B').length
+      a: next.filter((player) => player.connected && player.team === 'A').length,
+      b: next.filter((player) => player.connected && player.team === 'B').length
     });
 
     let changed = false;
@@ -47,7 +48,7 @@ export class PlayerService {
 
       const candidates = next
         .map((player, index) => ({ player, index }))
-        .filter(({ player }) => player.team === fromTeam)
+        .filter(({ player }) => player.team === fromTeam && player.connected)
         .sort((left, right) => right.player.joinedAt.localeCompare(left.player.joinedAt));
 
       const target = candidates[0];
