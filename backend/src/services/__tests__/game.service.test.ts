@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { GameState } from '../../models';
 import { GameService } from '../game.service';
 import { RoomServiceError } from '../room.service';
 import { createPlayer, createRoom, resetPlayerCounter } from './helpers';
@@ -192,7 +193,7 @@ describe('startGame', () => {
 // startRound
 // ---------------------------------------------------------------------------
 describe('startRound', () => {
-  function roomAtRoundEnd(overrides?: { game?: Partial<typeof room.game> }) {
+  function roomAtRoundEnd(overrides?: { game?: Partial<GameState> }) {
     const room = createRoom({
       game: {
         phase: 'ROUND_END',

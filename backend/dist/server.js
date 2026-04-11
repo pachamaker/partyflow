@@ -120,6 +120,10 @@ const ensureActiveExplainer = async (room, team = room.game.activeTeam) => {
     room.game.activeExplainerId = selectActiveExplainerId(room, team);
     return roomService.updateRoom(room);
 };
+const teamHasEnoughPlayers = (room, team) => {
+    const connectedOnTeam = room.players.filter((player) => player.team === team && player.connected).length;
+    return connectedOnTeam >= 2;
+};
 const prepareRoundWord = async (room, options) => {
     await wordService.resetRoundStats(room.roomId, room.game.currentRound);
     const nextWord = await wordService.getRandomWord(room.roomId);
@@ -560,6 +564,9 @@ io.on('connection', (socket) => {
             let room = await roomService.getRoomState(roomId);
             if (room.game.phase !== 'ROUND_END') {
                 throw new services_1.RoomServiceError('INVALID_GAME_STATE', 'Round can only start after previous round ended', 409);
+            }
+            if (!teamHasEnoughPlayers(room, room.game.nextTeam)) {
+                throw new services_1.RoomServiceError('TEAM_NOT_READY', 'Active team needs at least 2 connected players to start a round', 409);
             }
             room = await ensureActiveExplainer(room, room.game.nextTeam);
             if (!playerId || playerId !== room.game.activeExplainerId) {
