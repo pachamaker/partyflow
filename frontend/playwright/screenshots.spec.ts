@@ -305,4 +305,12 @@ test.describe('LandingScreen', () => {
       errorMessage: 'Не удалось создать комнату',
     }, 'landing-error');
   });
+
+  test('single character name (sub-threshold, buttons still disabled)', async ({ page }) => {
+    await renderAndScreenshot(page, 'LandingScreen', {
+      playerName: 'П',
+      roundTime: 60,
+      scoreToWin: 50,
+    }, 'landing-single-char');
+  });
 });
