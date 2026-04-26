@@ -157,6 +157,7 @@ describe('createRoom', () => {
 
   it('throws when Redis exists returns 1 for all attempts (retry exhausted)', async () => {
     vi.mocked(redisClient.exists).mockResolvedValue(1);
+    // implementation throws a plain Error (not RoomServiceError) for internal failures
     await expect(
       roomService.createRoom({ creatorId: 'user-1', creatorName: 'Alice' })
     ).rejects.toThrow('Failed to generate unique room code');
@@ -210,8 +211,11 @@ describe('getRoomState', () => {
 
   it('backfills wordsExhausted when not a boolean and calls saveRoomState', async () => {
     const room = createRoom();
-    const roomData = { ...room, game: { ...room.game, wordsExhausted: undefined } };
-    vi.mocked(redisClient.get).mockResolvedValue(JSON.stringify(roomData));
+    // JSON.stringify silently drops undefined values, so build the JSON string manually
+    // to place null (a realistic Redis corruption value) in the wordsExhausted field
+    const json = JSON.stringify({ ...room, game: { ...room.game, wordsExhausted: false } })
+      .replace('"wordsExhausted":false', '"wordsExhausted":null');
+    vi.mocked(redisClient.get).mockResolvedValue(json);
 
     const result = await roomService.getRoomState('TEST01');
     expect(result.game.wordsExhausted).toBe(false);
@@ -309,7 +313,7 @@ describe('addPlayerToRoom', () => {
 
   it('throws RoomServiceError ROOM_FULL (409) when at max capacity', async () => {
     const players = Array.from({ length: MAX_PLAYERS_PER_ROOM }, (_, i) =>
-      createPlayer({ id: `p_${i}`, team: i % 2 === 0 ? 'A' : 'B' } as any)
+      createPlayer({ id: `p_${i}`, team: i % 2 === 0 ? 'A' : 'B' })
     );
     const room = createRoom({ players });
     mockRoomInRedis(room);
@@ -544,5 +548,16 @@ describe('updateRoom', () => {
     const saved = JSON.parse(String(valueArg));
     expect(saved.game.phase).toBe('PLAYING');
     expect(saved.game.currentRound).toBe(3);
+  });
+
+  it('sets TTL when saving room state', async () => {
+    const room = createRoom();
+
+    await roomService.updateRoom(room);
+
+    // verify TTL was set
+    const [, , exArg, ttlArg] = vi.mocked(redisClient.set).mock.calls[0];
+    expect(exArg).toBe('EX');
+    expect(ttlArg).toBe(24 * 60 * 60); // ROOM_TTL_SECONDS = 86400
   });
 });
