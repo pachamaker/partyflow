@@ -100,13 +100,12 @@ describe('loadStarterPack', () => {
     const words = makeWords(2);
     vi.mocked(readFile).mockResolvedValueOnce(makeStarterPackJson(words) as any);
 
-    await wordService.loadStarterPack();
-    const readFileCalls = vi.mocked(readFile).mock.calls.length;
+    const first = await wordService.loadStarterPack();
+    const second = await wordService.loadStarterPack();
 
-    await wordService.loadStarterPack();
-
-    // readFile should not have been called again
-    expect(vi.mocked(readFile).mock.calls.length).toBe(readFileCalls);
+    // readFile should have been called exactly once — second call used cache
+    expect(readFile).toHaveBeenCalledTimes(1);
+    expect(second).toEqual(first);
   });
 
   it('parses JSON wrapped in a markdown fence', async () => {
@@ -134,11 +133,14 @@ describe('loadStarterPack', () => {
   it('throws RoomServiceError WORDS_NOT_AVAILABLE (500) when all paths fail', async () => {
     vi.mocked(readFile).mockRejectedValue(new Error('ENOENT'));
 
-    await expect(wordService.loadStarterPack()).rejects.toMatchObject({
-      code: 'WORDS_NOT_AVAILABLE',
-      statusCode: 500,
-    });
-    await expect(wordService.loadStarterPack()).rejects.toBeInstanceOf(RoomServiceError);
+    let caught: unknown;
+    try {
+      await wordService.loadStarterPack();
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(RoomServiceError);
+    expect(caught).toMatchObject({ code: 'WORDS_NOT_AVAILABLE', statusCode: 500 });
   });
 
   it('throws RoomServiceError WORDS_NOT_AVAILABLE (500) when the file has an empty words array', async () => {
@@ -182,6 +184,13 @@ describe('shuffleWords', () => {
   it('returns an empty array unchanged', () => {
     expect(wordService.shuffleWords([])).toEqual([]);
   });
+
+  it('produces a different order for a large array', () => {
+    const words = makeWords(20);
+    const shuffled = wordService.shuffleWords(words);
+    // With 20 elements, probability of identical order is 1/20! ≈ 0
+    expect(shuffled).not.toEqual(words);
+  });
 });
 
 // ===========================================================================
@@ -200,6 +209,10 @@ describe('getRandomWord', () => {
 
     expect(result).toEqual(word);
     expect(redisClient.sadd).toHaveBeenCalledWith(`room:${roomId}:used_words`, String(word.id));
+    expect(redisClient.expire).toHaveBeenCalledWith(
+      `room:${roomId}:used_words`,
+      24 * 60 * 60,
+    );
   });
 
   it('loads pack, filters used words, and pushes to queue when the queue is empty', async () => {
@@ -223,6 +236,10 @@ describe('getRandomWord', () => {
     expect(rpushArgs[0]).toBe(`room:${roomId}:word_queue`);
     expect(rpushArgs.length - 1).toBe(4); // 4 available words pushed
 
+    expect(redisClient.expire).toHaveBeenCalledWith(
+      `room:${roomId}:word_queue`,
+      24 * 60 * 60, // WORD_DATA_TTL_SECONDS
+    );
     expect(result).toEqual(availableWord);
   });
 
@@ -302,9 +319,6 @@ describe('resetWordQueue', () => {
 
     expect(redisClient.del).toHaveBeenCalledWith(`room:${roomId}:word_queue`);
     expect(redisClient.del).toHaveBeenCalledTimes(1);
-    // Ensure only the queue key was deleted, not the used words key
-    const [firstArg] = vi.mocked(redisClient.del).mock.calls[0];
-    expect(firstArg).toBe(`room:${roomId}:word_queue`);
   });
 });
 
