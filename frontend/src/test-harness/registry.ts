@@ -7,4 +7,5 @@ export const registry: Record<string, React.LazyExoticComponent<ComponentType<an
   SpectatorScreen: lazy(() => import('../components/SpectatorScreen')),
   GameResultScreen: lazy(() => import('../components/GameResultScreen')),
   LobbyScreen: lazy(() => import('../components/LobbyScreen')),
+  LandingScreen: lazy(() => import('./LandingScreenHarness')),
 }
