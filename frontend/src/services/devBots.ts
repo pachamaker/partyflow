@@ -52,8 +52,18 @@ export class DevBotManager {
     this.bots.set(playerId, session)
 
     await new Promise<void>((resolve, reject) => {
-      socket.on('connect', () => resolve())
-      socket.on('connect_error', reject)
+      const onConnect = () => {
+        socket.off('connect_error', onConnectError)
+        resolve()
+      }
+      const onConnectError = (err: Error) => {
+        socket.off('connect', onConnect)
+        this.bots.delete(playerId)
+        socket.disconnect()
+        reject(err)
+      }
+      socket.once('connect', onConnect)
+      socket.once('connect_error', onConnectError)
       socket.connect()
     })
 
@@ -99,7 +109,7 @@ export class DevBotManager {
   }
 
   destroyAll(): void {
-    for (const [playerId] of this.bots) {
+    for (const playerId of Array.from(this.bots.keys())) {
       this.destroyBot(playerId)
     }
   }
