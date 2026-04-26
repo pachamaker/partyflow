@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LobbyScreen, { type LobbyPlayer } from './LobbyScreen'
+import DevLobbyPanel from './dev/DevLobbyPanel'
 import { useGameSession } from '../hooks/useGameSession'
 import { routes } from '../utils/routes'
 
@@ -115,14 +116,21 @@ export default function LobbyContainer() {
   const screenHostFlag = isHost && totalPlayers >= 4
 
   return (
-    <LobbyScreen
-      roomCode={roomState?.roomId ?? ''}
-      teamA={teamAPlayers}
-      teamB={teamBPlayers}
-      maxPlayers={5}
-      isHost={screenHostFlag}
-      wordsExhausted={wordsExhausted}
-      onStart={handleStartGame}
-    />
+    <>
+      <LobbyScreen
+        roomCode={roomState?.roomId ?? ''}
+        teamA={teamAPlayers}
+        teamB={teamBPlayers}
+        maxPlayers={5}
+        isHost={screenHostFlag}
+        wordsExhausted={wordsExhausted}
+        onStart={handleStartGame}
+      />
+      {import.meta.env.DEV && roomState?.roomId && (
+        <div style={{ position: 'fixed', bottom: '16px', left: '16px', zIndex: 9999, maxWidth: '260px' }}>
+          <DevLobbyPanel roomId={roomState.roomId} />
+        </div>
+      )}
+    </>
   )
 }
