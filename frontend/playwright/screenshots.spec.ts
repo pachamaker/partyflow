@@ -266,3 +266,51 @@ test.describe('LobbyScreen', () => {
     }, 'lobby-guest');
   });
 });
+
+// ---------------------------------------------------------------------------
+// LandingScreen
+// ---------------------------------------------------------------------------
+
+test.describe('LandingScreen', () => {
+  test('empty state', async ({ page }) => {
+    await renderAndScreenshot(page, 'LandingScreen', {
+      playerName: '',
+      roundTime: 60,
+      scoreToWin: 50,
+    }, 'landing-empty');
+  });
+
+  test('with name entered', async ({ page }) => {
+    await renderAndScreenshot(page, 'LandingScreen', {
+      playerName: 'Паша',
+      roundTime: 60,
+      scoreToWin: 50,
+    }, 'landing-with-name');
+  });
+
+  test('creating state', async ({ page }) => {
+    await renderAndScreenshot(page, 'LandingScreen', {
+      playerName: 'Паша',
+      roundTime: 60,
+      scoreToWin: 50,
+      isCreating: true,
+    }, 'landing-creating');
+  });
+
+  test('error message', async ({ page }) => {
+    await renderAndScreenshot(page, 'LandingScreen', {
+      playerName: 'Паша',
+      roundTime: 60,
+      scoreToWin: 50,
+      errorMessage: 'Не удалось создать комнату',
+    }, 'landing-error');
+  });
+
+  test('single character name (sub-threshold, buttons still disabled)', async ({ page }) => {
+    await renderAndScreenshot(page, 'LandingScreen', {
+      playerName: 'П',
+      roundTime: 60,
+      scoreToWin: 50,
+    }, 'landing-single-char');
+  });
+});

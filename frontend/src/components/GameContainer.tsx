@@ -1,9 +1,11 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import ExplainerScreen from './ExplainerScreen'
 import GuesserScreen from './GuesserScreen'
 import SpectatorScreen from './SpectatorScreen'
 import useBreakpoint from '../hooks/useBreakpoint'
 import { useGameSession } from '../hooks/useGameSession'
+import { useDevSession } from '../contexts/DevSessionContext'
+import DevPlayerSwitcher from './dev/DevPlayerSwitcher'
 
 type TeamCode = 'A' | 'B'
 type RoundRole = 'explainer' | 'guesser' | 'spectator'
@@ -31,7 +33,7 @@ type SessionPlayer = {
   name: string
   team: TeamCode
   connected: boolean
-  isHost?: boolean
+  isHost: boolean
 }
 
 type SessionRoomState = {
@@ -49,7 +51,7 @@ type GameSessionLike = {
     guessedWords: string[]
     skippedWords: string[]
   }
-  emit: (event: string, payload?: unknown) => void
+  emit: (event: string, payload?: unknown, ack?: (response: unknown) => void) => void
 }
 
 function getRole(
@@ -72,6 +74,56 @@ export default function GameContainer() {
   const { isDesktop } = useBreakpoint()
   const { roomState, currentPlayerId, isJoining, roundStats, explainerHint, emit } = useGameSession() as GameSessionLike
 
+  const { viewAsPlayerId, getBotSocket, getBotHint, bots, setViewAsPlayerId } = useDevSession()
+
+  const effectivePlayerId = viewAsPlayerId ?? currentPlayerId
+
+  const effectiveEmit = (event: string, payload?: unknown, ack?: (response: unknown) => void) => {
+    if (viewAsPlayerId) {
+      const botSocket = getBotSocket(viewAsPlayerId)
+      if (botSocket) {
+        if (ack) {
+          botSocket.emit(event, payload, ack)
+        } else {
+          botSocket.emit(event, payload)
+        }
+        return
+      }
+    }
+    emit(event, payload, ack)
+  }
+
+  const effectiveExplainerHint = viewAsPlayerId ? getBotHint(viewAsPlayerId) : explainerHint
+
+  // Keep a stable ref to the current bot ID set to avoid stale closures in effects below.
+  const botIdsRef = useRef<Set<string>>(new Set())
+  useEffect(() => {
+    botIdsRef.current = new Set(bots.map((b) => b.playerId))
+  }, [bots])
+
+  // Auto-switch perspective: bot turn → view as bot; human turn → return to self.
+  useEffect(() => {
+    if (!import.meta.env.DEV) return
+    const activeId = roomState?.game.activeExplainerId
+    if (!activeId) return
+    setViewAsPlayerId(botIdsRef.current.has(activeId) ? activeId : null)
+  }, [roomState?.game.activeExplainerId, setViewAsPlayerId])
+
+  // Auto-start round when the next explainer is a bot.
+  const autoStartedRoundRef = useRef<number>(0)
+  useEffect(() => {
+    if (!import.meta.env.DEV) return
+    if (roomState?.game.phase !== 'ROUND_END') return
+    if (!viewAsPlayerId || !botIdsRef.current.has(viewAsPlayerId)) return
+    if (viewAsPlayerId !== roomState.game.activeExplainerId) return
+    const round = roomState.game.currentRound ?? 0
+    if (autoStartedRoundRef.current === round) return
+    const botSocket = getBotSocket(viewAsPlayerId)
+    if (!botSocket) return
+    autoStartedRoundRef.current = round
+    botSocket.emit('start_round', { roomId: roomState.roomId })
+  }, [roomState?.game.phase, viewAsPlayerId, roomState?.game.activeExplainerId, roomState?.game.currentRound, roomState?.roomId, getBotSocket])
+
   const safeScore = roomState?.game.score ?? { A: 0, B: 0 }
   const safeRemainingSeconds = roomState?.game.remainingSeconds ?? 0
   const gamePhase = roomState?.game.phase ?? 'LOBBY'
@@ -81,8 +133,8 @@ export default function GameContainer() {
   const waitingWord = isRoundActive ? currentWord : 'Ожидаем начало нового раунда'
 
   const me = useMemo(
-    () => roomState?.players.find((player) => player.id === currentPlayerId),
-    [currentPlayerId, roomState?.players],
+    () => roomState?.players.find((player) => player.id === effectivePlayerId),
+    [effectivePlayerId, roomState?.players],
   )
 
   const activeExplainer = useMemo(
@@ -108,8 +160,8 @@ export default function GameContainer() {
       return 'spectator'
     }
 
-    return getRole(currentPlayerId, me, roomState.game)
-  }, [currentPlayerId, me, roomState?.game])
+    return getRole(effectivePlayerId, me, roomState.game)
+  }, [effectivePlayerId, me, roomState?.game])
 
   const playerRoleById = useMemo(() => {
     const map = new Map<string, RoundRole>()
@@ -158,11 +210,11 @@ export default function GameContainer() {
     navigator.vibrate?.(50)
 
     const payload = { roomId: roomState.roomId, action: 'guessed' as const }
-    emit('WORD_SWIPED', payload)
+    effectiveEmit('WORD_SWIPED', payload)
 
     // Backward-compatible transport for current backend contract.
-    emit('word_swiped', { roomId: roomState.roomId, direction: 'up' as const })
-  }, [emit, role, roomState])
+    effectiveEmit('word_swiped', { roomId: roomState.roomId, direction: 'up' as const })
+  }, [effectiveEmit, role, roomState])
 
   const handleSwipeDown = useCallback(() => {
     if (!roomState?.roomId || role !== 'explainer' || roomState.game.phase !== 'PLAYING') {
@@ -172,11 +224,11 @@ export default function GameContainer() {
     navigator.vibrate?.([30, 50, 30])
 
     const payload = { roomId: roomState.roomId, action: 'skipped' as const }
-    emit('WORD_SWIPED', payload)
+    effectiveEmit('WORD_SWIPED', payload)
 
     // Backward-compatible transport for current backend contract.
-    emit('word_swiped', { roomId: roomState.roomId, direction: 'down' as const })
-  }, [emit, role, roomState])
+    effectiveEmit('word_swiped', { roomId: roomState.roomId, direction: 'down' as const })
+  }, [effectiveEmit, role, roomState])
 
   const handleStartRound = useCallback(() => {
     if (!roomState?.roomId) {
@@ -188,24 +240,111 @@ export default function GameContainer() {
       return
     }
 
-    emit('start_round', { roomId: roomState.roomId })
-  }, [emit, role, roomState?.roomId])
+    effectiveEmit('start_round', { roomId: roomState.roomId })
+  }, [effectiveEmit, role, roomState?.roomId])
 
-  if (!roomState || isJoining) {
-    return (
+  const renderScreen = () => {
+    if (!roomState || isJoining) {
+      return (
+          <SpectatorScreen
+            teamAScore={safeScore.A}
+            teamBScore={safeScore.B}
+            timeRemaining={safeRemainingSeconds}
+          word={currentWord || 'Ожидание синхронизации...'}
+          explainerName={activeExplainer?.name ?? '—'}
+          guesserName={activeGuesser?.name ?? '—'}
+          spectatorTeam={me?.team ?? 'A'}
+        />
+      )
+    }
+
+    if (isDesktop) {
+      if (!isRoundActive) {
+        return (
+          <SpectatorScreen
+            teamAScore={safeScore.A}
+            teamBScore={safeScore.B}
+            timeRemaining={safeRemainingSeconds}
+            word={waitingWord}
+            explainerName={activeExplainer?.name ?? '—'}
+            guesserName={activeGuesser?.name ?? '—'}
+            spectatorTeam={me?.team ?? 'A'}
+            roundNumber={roundNumber}
+            activeTeam={roomState.game.activeTeam}
+            isRoundActive={isRoundActive}
+            canStartRound={role === 'explainer'}
+            onStartRound={handleStartRound}
+            teamAPlayers={teamAPlayers}
+            teamBPlayers={teamBPlayers}
+            roundStats={roundStats}
+          />
+        )
+      }
+
+      if (role === 'explainer') {
+        return (
+          <ExplainerScreen
+            teamAScore={safeScore.A}
+            teamBScore={safeScore.B}
+            timeRemaining={safeRemainingSeconds}
+            word={currentWord}
+            isRoundActive={isRoundActive}
+            canStartRound={!isRoundActive && role === 'explainer'}
+            onStartRound={handleStartRound}
+            roundNumber={roundNumber}
+            activeTeam={roomState.game.activeTeam}
+            myName={me?.name ?? '—'}
+            myTeam={me?.team ?? roomState.game.activeTeam}
+            myRole={role}
+            teamAPlayers={teamAPlayers}
+            teamBPlayers={teamBPlayers}
+            hint={effectiveExplainerHint ?? undefined}
+            onGuessed={handleSwipeUp}
+            onSkipped={handleSwipeDown}
+          />
+        )
+      }
+
+      if (role === 'guesser') {
+        return (
+          <GuesserScreen
+            teamAScore={safeScore.A}
+            teamBScore={safeScore.B}
+            timeRemaining={safeRemainingSeconds}
+            explainerName={activeExplainer?.name ?? '—'}
+            isRoundActive={isRoundActive}
+            roundNumber={roundNumber}
+            activeTeam={roomState.game.activeTeam}
+            myName={me?.name ?? '—'}
+            myTeam={me?.team ?? roomState.game.activeTeam}
+            myRole={role}
+            teamAPlayers={teamAPlayers}
+            teamBPlayers={teamBPlayers}
+          />
+        )
+      }
+
+      return (
         <SpectatorScreen
           teamAScore={safeScore.A}
           teamBScore={safeScore.B}
           timeRemaining={safeRemainingSeconds}
-        word={currentWord || 'Ожидание синхронизации...'}
-        explainerName={activeExplainer?.name ?? '—'}
-        guesserName={activeGuesser?.name ?? '—'}
-        spectatorTeam={me?.team ?? 'A'}
-      />
-    )
-  }
+          word={waitingWord}
+          explainerName={activeExplainer?.name ?? '—'}
+          guesserName={activeGuesser?.name ?? '—'}
+          spectatorTeam={me?.team ?? 'A'}
+            roundNumber={roundNumber}
+            activeTeam={roomState.game.activeTeam}
+            isRoundActive={isRoundActive}
+          canStartRound={false}
+          onStartRound={handleStartRound}
+          teamAPlayers={teamAPlayers}
+          teamBPlayers={teamBPlayers}
+          roundStats={roundStats}
+        />
+      )
+    }
 
-  if (isDesktop) {
     if (!isRoundActive) {
       return (
         <SpectatorScreen
@@ -230,7 +369,7 @@ export default function GameContainer() {
 
     if (role === 'explainer') {
       return (
-        <ExplainerScreen
+          <ExplainerScreen
           teamAScore={safeScore.A}
           teamBScore={safeScore.B}
           timeRemaining={safeRemainingSeconds}
@@ -245,7 +384,7 @@ export default function GameContainer() {
           myRole={role}
           teamAPlayers={teamAPlayers}
           teamBPlayers={teamBPlayers}
-          hint={explainerHint ?? undefined}
+          hint={effectiveExplainerHint ?? undefined}
           onGuessed={handleSwipeUp}
           onSkipped={handleSwipeDown}
         />
@@ -280,9 +419,9 @@ export default function GameContainer() {
         explainerName={activeExplainer?.name ?? '—'}
         guesserName={activeGuesser?.name ?? '—'}
         spectatorTeam={me?.team ?? 'A'}
-          roundNumber={roundNumber}
-          activeTeam={roomState.game.activeTeam}
-          isRoundActive={isRoundActive}
+        roundNumber={roundNumber}
+        activeTeam={roomState.game.activeTeam}
+        isRoundActive={isRoundActive}
         canStartRound={false}
         onStartRound={handleStartRound}
         teamAPlayers={teamAPlayers}
@@ -292,88 +431,17 @@ export default function GameContainer() {
     )
   }
 
-  if (!isRoundActive) {
-    return (
-      <SpectatorScreen
-        teamAScore={safeScore.A}
-        teamBScore={safeScore.B}
-        timeRemaining={safeRemainingSeconds}
-        word={waitingWord}
-        explainerName={activeExplainer?.name ?? '—'}
-        guesserName={activeGuesser?.name ?? '—'}
-        spectatorTeam={me?.team ?? 'A'}
-        roundNumber={roundNumber}
-        activeTeam={roomState.game.activeTeam}
-        isRoundActive={isRoundActive}
-        canStartRound={role === 'explainer'}
-        onStartRound={handleStartRound}
-        teamAPlayers={teamAPlayers}
-        teamBPlayers={teamBPlayers}
-        roundStats={roundStats}
-      />
-    )
-  }
-
-  if (role === 'explainer') {
-    return (
-        <ExplainerScreen
-        teamAScore={safeScore.A}
-        teamBScore={safeScore.B}
-        timeRemaining={safeRemainingSeconds}
-        word={currentWord}
-        isRoundActive={isRoundActive}
-        canStartRound={!isRoundActive && role === 'explainer'}
-        onStartRound={handleStartRound}
-        roundNumber={roundNumber}
-        activeTeam={roomState.game.activeTeam}
-        myName={me?.name ?? '—'}
-        myTeam={me?.team ?? roomState.game.activeTeam}
-        myRole={role}
-        teamAPlayers={teamAPlayers}
-        teamBPlayers={teamBPlayers}
-        hint={explainerHint ?? undefined}
-        onGuessed={handleSwipeUp}
-        onSkipped={handleSwipeDown}
-      />
-    )
-  }
-
-  if (role === 'guesser') {
-    return (
-      <GuesserScreen
-        teamAScore={safeScore.A}
-        teamBScore={safeScore.B}
-        timeRemaining={safeRemainingSeconds}
-        explainerName={activeExplainer?.name ?? '—'}
-        isRoundActive={isRoundActive}
-        roundNumber={roundNumber}
-        activeTeam={roomState.game.activeTeam}
-        myName={me?.name ?? '—'}
-        myTeam={me?.team ?? roomState.game.activeTeam}
-        myRole={role}
-        teamAPlayers={teamAPlayers}
-        teamBPlayers={teamBPlayers}
-      />
-    )
-  }
-
   return (
-    <SpectatorScreen
-      teamAScore={safeScore.A}
-      teamBScore={safeScore.B}
-      timeRemaining={safeRemainingSeconds}
-      word={waitingWord}
-      explainerName={activeExplainer?.name ?? '—'}
-      guesserName={activeGuesser?.name ?? '—'}
-      spectatorTeam={me?.team ?? 'A'}
-      roundNumber={roundNumber}
-      activeTeam={roomState.game.activeTeam}
-      isRoundActive={isRoundActive}
-      canStartRound={false}
-      onStartRound={handleStartRound}
-      teamAPlayers={teamAPlayers}
-      teamBPlayers={teamBPlayers}
-      roundStats={roundStats}
-    />
+    <>
+      {renderScreen()}
+      {import.meta.env.DEV && roomState?.players && (
+        <DevPlayerSwitcher
+          players={roomState.players}
+          realPlayerId={currentPlayerId}
+          activeExplainerId={roomState.game?.activeExplainerId}
+          activeTeam={roomState.game?.activeTeam}
+        />
+      )}
+    </>
   )
 }

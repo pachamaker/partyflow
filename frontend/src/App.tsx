@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
+import { DevSessionContextProvider } from './contexts/DevSessionContext'
 import { GamePage } from './pages/GamePage'
 import { HomePage } from './pages/HomePage'
 import { LobbyPage } from './pages/LobbyPage'
@@ -11,6 +12,7 @@ const HarnessPage = lazy(() => import('./test-harness/HarnessPage'))
 
 function App() {
   return (
+    <DevSessionContextProvider>
     <Routes>
       <Route element={<AppShell />}>
         <Route path={routes.home} element={<HomePage />} />
@@ -30,6 +32,7 @@ function App() {
       )}
       <Route path="*" element={<Navigate to={routes.home} replace />} />
     </Routes>
+    </DevSessionContextProvider>
   )
 }
 
