@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import ExplainerScreen from './ExplainerScreen'
 import GuesserScreen from './GuesserScreen'
 import SpectatorScreen from './SpectatorScreen'
@@ -74,7 +74,7 @@ export default function GameContainer() {
   const { isDesktop } = useBreakpoint()
   const { roomState, currentPlayerId, isJoining, roundStats, explainerHint, emit } = useGameSession() as GameSessionLike
 
-  const { viewAsPlayerId, getBotSocket, getBotHint } = useDevSession()
+  const { viewAsPlayerId, getBotSocket, getBotHint, bots, setViewAsPlayerId } = useDevSession()
 
   const effectivePlayerId = viewAsPlayerId ?? currentPlayerId
 
@@ -94,6 +94,35 @@ export default function GameContainer() {
   }
 
   const effectiveExplainerHint = viewAsPlayerId ? getBotHint(viewAsPlayerId) : explainerHint
+
+  // Keep a stable ref to the current bot ID set to avoid stale closures in effects below.
+  const botIdsRef = useRef<Set<string>>(new Set())
+  useEffect(() => {
+    botIdsRef.current = new Set(bots.map((b) => b.playerId))
+  }, [bots])
+
+  // Auto-switch perspective: bot turn → view as bot; human turn → return to self.
+  useEffect(() => {
+    if (!import.meta.env.DEV) return
+    const activeId = roomState?.game.activeExplainerId
+    if (!activeId) return
+    setViewAsPlayerId(botIdsRef.current.has(activeId) ? activeId : null)
+  }, [roomState?.game.activeExplainerId, setViewAsPlayerId])
+
+  // Auto-start round when the next explainer is a bot.
+  const autoStartedRoundRef = useRef<number>(0)
+  useEffect(() => {
+    if (!import.meta.env.DEV) return
+    if (roomState?.game.phase !== 'ROUND_END') return
+    if (!viewAsPlayerId || !botIdsRef.current.has(viewAsPlayerId)) return
+    if (viewAsPlayerId !== roomState.game.activeExplainerId) return
+    const round = roomState.game.currentRound ?? 0
+    if (autoStartedRoundRef.current === round) return
+    const botSocket = getBotSocket(viewAsPlayerId)
+    if (!botSocket) return
+    autoStartedRoundRef.current = round
+    botSocket.emit('start_round', { roomId: roomState.roomId })
+  }, [roomState?.game.phase, viewAsPlayerId, roomState?.game.activeExplainerId, roomState?.game.currentRound, roomState?.roomId, getBotSocket])
 
   const safeScore = roomState?.game.score ?? { A: 0, B: 0 }
   const safeRemainingSeconds = roomState?.game.remainingSeconds ?? 0

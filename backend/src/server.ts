@@ -599,7 +599,6 @@ io.on('connection', (socket) => {
     }
 
     try {
-      resetExplainerRotation(roomId);
       clearRoundTimer(roomId);
       let room = await roomService.getRoomState(roomId);
       const hostId = resolveHostId(room);
@@ -1068,7 +1067,6 @@ io.on('connection', (socket) => {
       }
 
       clearRoundTimer(roomId);
-      resetExplainerRotation(roomId);
       await resetWordsForRestartedGame(roomId);
 
       const wordsExhausted = Boolean(room.game.wordsExhausted);
