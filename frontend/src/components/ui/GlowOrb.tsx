@@ -14,6 +14,8 @@ export default function GlowOrb({ color, style }: GlowOrbProps) {
       style={{
         position: 'absolute',
         borderRadius: '50%',
+        // Decorative atmospheric element matching design's ambient radial gradients.
+        // `color` is caller-supplied (token-agnostic by design); `22` is a ~13% alpha hex suffix.
         background: `radial-gradient(circle, ${color}22 0%, transparent 65%)`,
         filter: 'blur(60px)',
         pointerEvents: 'none',
