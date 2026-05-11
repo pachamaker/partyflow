@@ -1,8 +1,7 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { createPortal } from 'react-dom'
 import useBreakpoint from '../hooks/useBreakpoint'
-import C from '../constants/colors'
 
 type LandingScreenProps = {
   playerName: string
@@ -17,6 +16,12 @@ type LandingScreenProps = {
   onJoinGame: (roomCode: string) => void
 }
 
+const FONT_SANS = 'var(--font-sans)'
+
+// ──────────────────────────────────────────────────────────
+// Icons
+// ──────────────────────────────────────────────────────────
+
 function IconGear() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -26,175 +31,584 @@ function IconGear() {
   )
 }
 
-function IconClock() {
+function IconPencil({ size = 16 }: { size?: number }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M12 7v5l3 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M11 2l3 3-8 8H3v-3l8-8z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
     </svg>
   )
 }
 
-function IconTrophy() {
+function IconQR() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M7 5h10v3a5 5 0 0 1-10 0V5Z" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M7 7H5a2 2 0 0 0 2 3M17 7h2a2 2 0 0 1-2 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-      <path d="M12 13v3M9 20h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <rect x="2" y="2" width="5" height="5" rx="1" stroke="#38BDF8" strokeWidth="1.4" />
+      <rect x="11" y="2" width="5" height="5" rx="1" stroke="#38BDF8" strokeWidth="1.4" />
+      <rect x="2" y="11" width="5" height="5" rx="1" stroke="#38BDF8" strokeWidth="1.4" />
+      <rect x="11" y="11" width="2" height="2" fill="#38BDF8" />
+      <rect x="14" y="14" width="2" height="2" fill="#38BDF8" />
     </svg>
   )
 }
 
-function BlurredBg() {
+// ──────────────────────────────────────────────────────────
+// Ambient background overlay — radial glows, no particles
+// ──────────────────────────────────────────────────────────
+
+function AmbientBg() {
   return (
-    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-      <div style={{ position: 'absolute', inset: 0, background: '#020817' }} />
-      <div style={{ position: 'absolute', top: '-30%', left: '-20%', width: '80%', height: '80%', borderRadius: '50%', background: 'radial-gradient(circle, #1e0d5c 0%, transparent 65%)', filter: 'blur(70px)', opacity: 0.95 }} />
-      <div style={{ position: 'absolute', top: '10%', right: '-30%', width: '85%', height: '70%', borderRadius: '50%', background: 'radial-gradient(circle, #0c2060 0%, transparent 65%)', filter: 'blur(65px)', opacity: 0.85 }} />
-      <div style={{ position: 'absolute', bottom: '-25%', left: '-10%', width: '90%', height: '75%', borderRadius: '50%', background: 'radial-gradient(circle, #16084a 0%, transparent 65%)', filter: 'blur(75px)', opacity: 1 }} />
-      <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'linear-gradient(rgba(140,170,255,0.9) 1px, transparent 1px), linear-gradient(90deg, rgba(140,170,255,0.9) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+    <div
+      aria-hidden
+      style={{
+        position: 'absolute',
+        inset: 0,
+        pointerEvents: 'none',
+        background: [
+          'radial-gradient(ellipse 60% 40% at 20% 0%, rgba(124,58,237,0.35), transparent 60%)',
+          'radial-gradient(ellipse 50% 35% at 90% 25%, rgba(56,189,248,0.18), transparent 60%)',
+          'radial-gradient(ellipse 70% 50% at 50% 100%, rgba(251,146,60,0.10), transparent 60%)',
+        ].join(', '),
+        zIndex: 0,
+      }}
+    />
+  )
+}
+
+// ──────────────────────────────────────────────────────────
+// Logo — single white wordmark with violet glow
+// ──────────────────────────────────────────────────────────
+
+function Logo({ size = 76 }: { size?: number }) {
+  return (
+    <div
+      style={{
+        fontFamily: FONT_SANS,
+        fontWeight: 900,
+        fontSize: size,
+        lineHeight: 1,
+        letterSpacing: '-0.035em',
+        color: 'var(--color-text)',
+        textShadow: '0 0 18px rgba(255,255,255,0.45), 0 0 36px rgba(124,58,237,0.4)',
+        margin: 0,
+      }}
+    >
+      ПОЯСНИ
     </div>
   )
 }
 
-function Particles() {
-  const pts = [
-    { col: C.blue, x: '8%', y: '15%', s: 3 },
-    { col: C.purple, x: '88%', y: '22%', s: 4 },
-    { col: C.orange, x: '75%', y: '65%', s: 3 },
-    { col: C.green, x: '12%', y: '70%', s: 5 },
-    { col: C.pink, x: '55%', y: '88%', s: 3 },
-  ]
+// ──────────────────────────────────────────────────────────
+// Primary / Ghost CTA buttons
+// ──────────────────────────────────────────────────────────
 
+function PrimaryButton({
+  children,
+  onClick,
+  disabled,
+  type = 'button',
+  height = 60,
+}: {
+  children: React.ReactNode
+  onClick?: () => void
+  disabled?: boolean
+  type?: 'button' | 'submit'
+  height?: number
+}) {
+  const baseStyle: CSSProperties = {
+    width: '100%',
+    height,
+    borderRadius: 22,
+    fontFamily: FONT_SANS,
+    fontSize: 17,
+    fontWeight: 700,
+    letterSpacing: '0.06em',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'opacity 0.2s, transform 0.1s',
+  }
+  if (disabled) {
+    return (
+      <button
+        type={type}
+        disabled
+        style={{
+          ...baseStyle,
+          background: 'rgba(255,255,255,0.05)',
+          color: 'var(--color-text-mute)',
+          border: '1.5px solid var(--color-border)',
+          boxShadow: 'none',
+        }}
+      >
+        {children}
+      </button>
+    )
+  }
   return (
-    <>
-      {pts.map((p, i) => (
-        <motion.div
-          key={`${p.x}-${p.y}`}
-          style={{
-            position: 'absolute',
-            zIndex: 1,
-            width: `${p.s}px`,
-            height: `${p.s}px`,
-            borderRadius: '50%',
-            left: p.x,
-            top: p.y,
-            background: p.col,
-            boxShadow: `0 0 ${p.s * 3}px ${p.col}`,
-            pointerEvents: 'none',
-          }}
-          animate={{ y: [-8, 8, -8], opacity: [0.35, 0.8, 0.35] }}
-          transition={{ duration: 2.6 + i * 0.38, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      ))}
-    </>
+    <button
+      type={type}
+      onClick={onClick}
+      style={{
+        ...baseStyle,
+        background: '#7C3AED',
+        color: '#fff',
+        border: '1.5px solid transparent',
+        boxShadow: 'var(--shadow-btn-primary)',
+      }}
+    >
+      {children}
+    </button>
   )
 }
 
-function Stepper({
-  label,
-  value,
-  min,
-  max,
-  step,
-  color,
-  onChange,
-  icon,
+function GhostButton({
+  children,
+  onClick,
+  disabled,
+  height = 60,
 }: {
-  label: string
-  value: number
-  min: number
-  max: number
-  step: number
-  color: string
-  onChange: (value: number) => void
-  icon: 'clock' | 'trophy'
+  children: React.ReactNode
+  onClick?: () => void
+  disabled?: boolean
+  height?: number
 }) {
   return (
-    <div
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
       style={{
+        width: '100%',
+        height,
+        borderRadius: 22,
+        fontFamily: FONT_SANS,
+        fontSize: 17,
+        fontWeight: 700,
+        letterSpacing: '0.06em',
+        background: 'transparent',
+        color: disabled ? 'var(--color-text-mute)' : 'var(--color-text)',
+        border: disabled ? '1.5px solid var(--color-border)' : '1.5px solid var(--color-border-hi)',
+        cursor: disabled ? 'not-allowed' : 'pointer',
         display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-        padding: '16px',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.04)',
-        border: `1px solid ${color}30`,
+        alignItems: 'center',
+        justifyContent: 'center',
+        transition: 'opacity 0.2s',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      {children}
+    </button>
+  )
+}
+
+// ──────────────────────────────────────────────────────────
+// Name input — pill row with gradient avatar
+// ──────────────────────────────────────────────────────────
+
+function NameInput({
+  playerName,
+  onPlayerNameChange,
+  inputFontSize = 17,
+  avatarSize = 32,
+}: {
+  playerName: string
+  onPlayerNameChange: (value: string) => void
+  inputFontSize?: number
+  avatarSize?: number
+}) {
+  const initial = playerName.trim().length > 0 ? playerName.trim()[0]?.toUpperCase() : '?'
+  return (
+    <div>
+      <div
+        style={{
+          fontSize: 12,
+          color: 'var(--color-text-mute)',
+          fontWeight: 600,
+          letterSpacing: '0.4px',
+          marginBottom: 8,
+          textTransform: 'uppercase',
+        }}
+      >
+        Твоё имя
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          padding: '14px 16px',
+          borderRadius: 14,
+          background: 'rgba(255,255,255,0.04)',
+          border: '1.5px solid var(--color-border)',
+        }}
+      >
         <div
           style={{
-            width: '28px',
-            height: '28px',
-            borderRadius: '8px',
-            background: `${color}20`,
-            border: `1px solid ${color}40`,
+            width: avatarSize,
+            height: avatarSize,
+            borderRadius: 10,
+            background: 'linear-gradient(135deg, #38BDF8, #0EA5E9)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color,
+            fontWeight: 700,
+            color: '#0A0E1F',
+            fontSize: Math.round(avatarSize * 0.44),
+            flexShrink: 0,
           }}
         >
-          {icon === 'clock' ? <IconClock /> : <IconTrophy />}
+          {initial}
         </div>
-        <span style={{ fontSize: '12px', fontWeight: 700, color: 'rgba(255,255,255,0.72)' }}>{label}</span>
+        <input
+          value={playerName}
+          onChange={(event) => onPlayerNameChange(event.target.value)}
+          placeholder="Введи имя"
+          maxLength={16}
+          style={{
+            flex: 1,
+            minWidth: 0,
+            background: 'transparent',
+            border: 'none',
+            outline: 'none',
+            fontFamily: FONT_SANS,
+            fontSize: inputFontSize,
+            fontWeight: 600,
+            color: 'var(--color-text)',
+            letterSpacing: 0,
+          }}
+        />
+        <span
+          aria-hidden
+          style={{
+            color: 'var(--color-text-sec)',
+            display: 'flex',
+            alignItems: 'center',
+            flexShrink: 0,
+          }}
+        >
+          <IconPencil />
+        </span>
       </div>
+    </div>
+  )
+}
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+// ──────────────────────────────────────────────────────────
+// HowToPlay tertiary button
+// ──────────────────────────────────────────────────────────
+
+function HowToPlayButton() {
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        /* demo — placeholder for "how to play" entry point */
+      }}
+      style={{
+        marginTop: 6,
+        background: 'transparent',
+        border: 'none',
+        color: 'var(--color-text-sec)',
+        fontSize: 14,
+        fontWeight: 500,
+        cursor: 'pointer',
+        padding: 12,
+        fontFamily: FONT_SANS,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 6,
+        alignSelf: 'center',
+      }}
+    >
+      <span
+        style={{
+          width: 6,
+          height: 6,
+          borderRadius: 999,
+          background: 'var(--color-success)',
+        }}
+      />
+      Как играть? · 20 секунд
+    </button>
+  )
+}
+
+// ──────────────────────────────────────────────────────────
+// Stepper (settings card)
+// ──────────────────────────────────────────────────────────
+
+function Stepper({
+  kicker,
+  hint,
+  value,
+  unit,
+  tone,
+  min,
+  max,
+  step,
+  onChange,
+}: {
+  kicker: string
+  hint: string
+  value: number
+  unit: string
+  tone: 'blue' | 'orange'
+  min: number
+  max: number
+  step: number
+  onChange: (next: number) => void
+}) {
+  const color = tone === 'blue' ? 'var(--color-blue)' : 'var(--color-orange)'
+  const colorHex = tone === 'blue' ? '#38BDF8' : '#FB923C'
+  const atMin = value <= min
+  const atMax = value >= max
+  return (
+    <div
+      style={{
+        padding: '14px 16px',
+        borderRadius: 20,
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid var(--color-border)',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 10,
+        }}
+      >
+        <span style={{ fontSize: 13, color: 'var(--color-text-sec)', fontWeight: 500 }}>{kicker}</span>
+        <span style={{ fontSize: 11, color: 'var(--color-text-mute)', fontWeight: 500 }}>{hint}</span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <button
           type="button"
           onClick={() => onChange(Math.max(min, value - step))}
+          disabled={atMin}
           style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '12px',
-            border: `1.5px solid ${color}40`,
-            background: `${color}15`,
+            width: 44,
+            height: 44,
+            borderRadius: 14,
+            background: `${colorHex}1A`,
+            border: `1px solid ${colorHex}33`,
             color,
-            fontSize: '22px',
+            fontSize: 22,
             fontWeight: 700,
-            cursor: 'pointer',
+            cursor: atMin ? 'not-allowed' : 'pointer',
+            opacity: atMin ? 0.4 : 1,
+            fontFamily: FONT_SANS,
           }}
         >
           −
         </button>
-
-        <div style={{ flex: 1, textAlign: 'center', color: '#fff', fontSize: '30px', fontWeight: 900 }}>{value}</div>
-
+        <div
+          style={{
+            flex: 1,
+            textAlign: 'center',
+            fontSize: 32,
+            fontWeight: 800,
+            color: 'var(--color-text)',
+            letterSpacing: '-1px',
+            fontFamily: FONT_SANS,
+          }}
+        >
+          {value}{' '}
+          <span style={{ fontSize: 14, color: 'var(--color-text-sec)', fontWeight: 500, letterSpacing: 0 }}>{unit}</span>
+        </div>
         <button
           type="button"
           onClick={() => onChange(Math.min(max, value + step))}
+          disabled={atMax}
           style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '12px',
-            border: `1.5px solid ${color}40`,
-            background: `${color}15`,
+            width: 44,
+            height: 44,
+            borderRadius: 14,
+            background: `${colorHex}1A`,
+            border: `1px solid ${colorHex}33`,
             color,
-            fontSize: '22px',
+            fontSize: 22,
             fontWeight: 700,
-            cursor: 'pointer',
+            cursor: atMax ? 'not-allowed' : 'pointer',
+            opacity: atMax ? 0.4 : 1,
+            fontFamily: FONT_SANS,
           }}
         >
           +
         </button>
       </div>
-
-      <div style={{ height: '4px', borderRadius: '9999px', background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
-        <div
-          style={{
-            width: `${((value - min) / (max - min)) * 100}%`,
-            height: '100%',
-            borderRadius: '9999px',
-            background: `linear-gradient(90deg, ${color}99, ${color})`,
-            transition: 'width 0.2s ease',
-          }}
-        />
-      </div>
     </div>
   )
 }
+
+// ──────────────────────────────────────────────────────────
+// Sheet/Modal wrapper — bottom-sheet on mobile, centered on desktop
+// ──────────────────────────────────────────────────────────
+
+function ModalShell({
+  open,
+  onClose,
+  variant,
+  children,
+  zIndex = 50,
+  width = 420,
+}: {
+  open: boolean
+  onClose: () => void
+  variant: 'sheet' | 'centered'
+  children: React.ReactNode
+  zIndex?: number
+  width?: number
+}) {
+  if (typeof document === 'undefined') {
+    return null
+  }
+
+  const isSheet = variant === 'sheet'
+
+  return createPortal(
+    <AnimatePresence>
+      {open ? (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex,
+              background: 'rgba(4,5,15,0.7)',
+              backdropFilter: 'blur(4px)',
+            }}
+          />
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: zIndex + 1,
+              display: 'flex',
+              alignItems: isSheet ? 'flex-end' : 'center',
+              justifyContent: 'center',
+              padding: isSheet ? 0 : 16,
+              pointerEvents: 'none',
+            }}
+          >
+            <motion.div
+              initial={isSheet ? { y: '100%' } : { opacity: 0, scale: 0.92, y: 20 }}
+              animate={isSheet ? { y: 0 } : { opacity: 1, scale: 1, y: 0 }}
+              exit={isSheet ? { y: '100%' } : { opacity: 0, scale: 0.96, y: 20 }}
+              transition={isSheet ? { type: 'spring', stiffness: 320, damping: 32 } : { type: 'spring', stiffness: 340, damping: 28 }}
+              style={{
+                width: isSheet ? '100%' : `min(${width}px, calc(100vw - 32px))`,
+                background: 'var(--color-surface-hi)',
+                borderRadius: isSheet ? '28px 28px 0 0' : 28,
+                border: '1px solid var(--color-border)',
+                borderTop: '1px solid var(--color-border)',
+                padding: '20px 20px 24px',
+                boxShadow: 'var(--shadow-bottom-sheet)',
+                pointerEvents: 'auto',
+                fontFamily: FONT_SANS,
+                color: 'var(--color-text)',
+              }}
+            >
+              {isSheet ? (
+                <div
+                  style={{
+                    width: 36,
+                    height: 4,
+                    borderRadius: 999,
+                    background: 'rgba(255,255,255,0.15)',
+                    margin: '0 auto 18px',
+                  }}
+                />
+              ) : null}
+              {children}
+            </motion.div>
+          </div>
+        </>
+      ) : null}
+    </AnimatePresence>,
+    document.body,
+  )
+}
+
+function SheetHeader({
+  kicker,
+  title,
+  onClose,
+}: {
+  kicker: string
+  title: string
+  onClose: () => void
+}) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        gap: 12,
+        marginBottom: 4,
+      }}
+    >
+      <div>
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            color: 'var(--color-text-mute)',
+            letterSpacing: '1.6px',
+            textTransform: 'uppercase',
+            marginBottom: 8,
+          }}
+        >
+          {kicker}
+        </div>
+        <h2
+          style={{
+            margin: 0,
+            fontSize: 22,
+            fontWeight: 800,
+            color: 'var(--color-text)',
+            letterSpacing: '-0.3px',
+          }}
+        >
+          {title}
+        </h2>
+      </div>
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Закрыть"
+        style={{
+          width: 36,
+          height: 36,
+          borderRadius: 999,
+          background: 'rgba(255,255,255,0.06)',
+          border: 'none',
+          color: 'var(--color-text-sec)',
+          cursor: 'pointer',
+          fontSize: 18,
+          fontFamily: FONT_SANS,
+          flexShrink: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        ×
+      </button>
+    </div>
+  )
+}
+
+// ──────────────────────────────────────────────────────────
+// Settings modal
+// ──────────────────────────────────────────────────────────
 
 function SettingsModal({
   open,
@@ -203,6 +617,7 @@ function SettingsModal({
   score,
   onTimer,
   onScore,
+  variant,
 }: {
   open: boolean
   onClose: () => void
@@ -210,203 +625,285 @@ function SettingsModal({
   score: number
   onTimer: (value: number) => void
   onScore: (value: number) => void
+  variant: 'sheet' | 'centered'
 }) {
-  if (typeof document === 'undefined') {
-    return null
-  }
-
-  return createPortal(
-    <AnimatePresence>
-      {open ? (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            style={{ position: 'fixed', inset: 0, zIndex: 50, background: 'rgba(2,8,23,0.82)', backdropFilter: 'blur(12px)' }}
-          />
-
-          <div style={{ position: 'fixed', inset: 0, zIndex: 51, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.82, y: 40 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ type: 'spring', stiffness: 340, damping: 28 }}
-              style={{
-                width: 'min(380px, calc(100vw - 32px))',
-                borderRadius: '24px',
-                background: 'linear-gradient(160deg, rgba(12,8,36,0.97) 0%, rgba(6,4,22,0.99) 100%)',
-                border: `1px solid ${C.purple}40`,
-                overflow: 'hidden',
-              }}
-            >
-              <div style={{ height: '3px', background: `linear-gradient(90deg, ${C.blue}, ${C.purple}, ${C.orange})` }} />
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 20px 16px', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-                <div>
-                  <p style={{ margin: 0, fontSize: '10px', fontWeight: 700, letterSpacing: '0.2em', color: `${C.purple}aa` }}>КОНФИГУРАЦИЯ</p>
-                  <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 900, color: '#fff' }}>Настройки игры</h2>
-                </div>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  style={{ width: '36px', height: '36px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.7)', cursor: 'pointer' }}
-                >
-                  ×
-                </button>
-              </div>
-
-              <div style={{ padding: '16px 20px 24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <Stepper label="Таймер раунда (сек)" value={timer} min={20} max={120} step={5} color={C.blue} onChange={onTimer} icon="clock" />
-                <Stepper label="Слов для победы" value={score} min={10} max={100} step={5} color={C.orange} onChange={onScore} icon="trophy" />
-              </div>
-
-              <div style={{ padding: '0 20px 20px' }}>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  style={{
-                    width: '100%',
-                    padding: '14px',
-                    borderRadius: '14px',
-                    border: `1px solid ${C.purple}50`,
-                    background: `linear-gradient(135deg, ${C.purple}cc, #7c3aed)`,
-                    color: '#fff',
-                    fontSize: '14px',
-                    fontWeight: 900,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Сохранить
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        </>
-      ) : null}
-    </AnimatePresence>
-    ,
-    document.body,
+  return (
+    <ModalShell open={open} onClose={onClose} variant={variant} zIndex={50} width={420}>
+      <SheetHeader kicker="Конфигурация" title="Настройки игры" onClose={onClose} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 22 }}>
+        <Stepper
+          kicker="Длина раунда"
+          hint="от 30 до 120 сек"
+          value={timer}
+          unit="сек"
+          tone="blue"
+          min={20}
+          max={120}
+          step={5}
+          onChange={onTimer}
+        />
+        <Stepper
+          kicker="Слов до победы"
+          hint="от 20 до 100"
+          value={score}
+          unit="слов"
+          tone="orange"
+          min={10}
+          max={100}
+          step={5}
+          onChange={onScore}
+        />
+      </div>
+      <div style={{ marginTop: 18 }}>
+        <PrimaryButton onClick={onClose} height={52}>
+          Сохранить
+        </PrimaryButton>
+      </div>
+    </ModalShell>
   )
 }
 
-function JoinCodeModal({
+// ──────────────────────────────────────────────────────────
+// Join code modal
+// ──────────────────────────────────────────────────────────
+
+function JoinCodeModal(props: {
+  open: boolean
+  onClose: () => void
+  onSubmit: (roomCode: string) => void
+  variant: 'sheet' | 'centered'
+}) {
+  // Remount inner state on every open transition so the code field always
+  // starts empty without needing a setState-in-effect.
+  return <JoinCodeModalInner key={props.open ? 'open' : 'closed'} {...props} />
+}
+
+function JoinCodeModalInner({
   open,
   onClose,
   onSubmit,
+  variant,
 }: {
   open: boolean
   onClose: () => void
   onSubmit: (roomCode: string) => void
+  variant: 'sheet' | 'centered'
 }) {
   const [code, setCode] = useState('')
+  const inputRef = useRef<HTMLInputElement | null>(null)
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    onSubmit(code)
+  useEffect(() => {
+    if (!open) return undefined
+    const t = setTimeout(() => inputRef.current?.focus(), 80)
+    return () => clearTimeout(t)
+  }, [open])
+
+  const handleInputChange = (raw: string) => {
+    const cleaned = raw
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, '')
+      .slice(0, 6)
+    setCode(cleaned)
   }
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setCode(event.target.value.toUpperCase())
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && code.length === 6) {
+      event.preventDefault()
+      onSubmit(code)
+    }
   }
 
-  if (typeof document === 'undefined') {
-    return null
-  }
+  const cells = [0, 1, 2, 3, 4, 5]
+  const filledCount = code.length
+  const remaining = 6 - filledCount
+  const submitDisabled = filledCount < 6
 
-  return createPortal(
-    <AnimatePresence>
-      {open ? (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            style={{ position: 'fixed', inset: 0, zIndex: 52, background: 'rgba(2,8,23,0.82)', backdropFilter: 'blur(12px)' }}
-          />
-          <div style={{ position: 'fixed', inset: 0, zIndex: 53, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
-            <motion.form
-              initial={{ opacity: 0, scale: 0.92, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: 20 }}
-              onSubmit={handleSubmit}
+  return (
+    <ModalShell open={open} onClose={onClose} variant={variant} zIndex={52} width={440}>
+      <SheetHeader kicker="Ввод кода" title="Войти в игру" onClose={onClose} />
+      <p
+        style={{
+          margin: '12px 0 20px',
+          fontSize: 15,
+          fontWeight: 500,
+          color: 'var(--color-text-sec)',
+          lineHeight: 1.45,
+        }}
+      >
+        Введи код комнаты, который показывает организатор
+      </p>
+
+      {/* hidden input captures keystrokes */}
+      <input
+        ref={inputRef}
+        value={code}
+        onChange={(e) => handleInputChange(e.target.value)}
+        onKeyDown={handleKeyDown}
+        autoCapitalize="characters"
+        autoComplete="off"
+        inputMode="text"
+        aria-label="Код комнаты"
+        style={{
+          position: 'absolute',
+          width: 1,
+          height: 1,
+          padding: 0,
+          margin: -1,
+          overflow: 'hidden',
+          clip: 'rect(0,0,0,0)',
+          whiteSpace: 'nowrap',
+          border: 0,
+        }}
+      />
+
+      <div
+        onClick={() => inputRef.current?.focus()}
+        style={{
+          display: 'flex',
+          gap: 8,
+          justifyContent: 'space-between',
+          marginBottom: 20,
+          cursor: 'text',
+        }}
+      >
+        {cells.map((i) => {
+          const isFilled = i < filledCount
+          const isNext = i === filledCount
+          const ch = code[i] ?? ''
+          return (
+            <div
+              key={i}
               style={{
-                width: 'min(360px, calc(100vw - 32px))',
-                borderRadius: '20px',
-                border: `1px solid ${C.blue}40`,
-                background: 'linear-gradient(160deg, rgba(12,8,36,0.98), rgba(6,4,22,0.99))',
-                padding: '20px',
+                flex: 1,
+                aspectRatio: '1 / 1.15',
+                borderRadius: 16,
+                background: isFilled ? 'rgba(124,58,237,0.10)' : 'rgba(255,255,255,0.03)',
+                border: `1.5px solid ${
+                  isNext
+                    ? 'var(--color-accent)'
+                    : isFilled
+                      ? 'rgba(124,58,237,0.30)'
+                      : 'var(--color-border)'
+                }`,
                 display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 32,
+                fontWeight: 800,
+                color: isFilled ? 'var(--color-text)' : 'var(--color-text-mute)',
+                boxShadow: isNext ? '0 0 0 4px rgba(124,58,237,0.18)' : 'none',
+                position: 'relative',
+                fontFamily: FONT_SANS,
               }}
             >
-              <h3 style={{ margin: 0, color: '#fff', fontSize: '20px', fontWeight: 900 }}>Код комнаты</h3>
-              <p style={{ margin: 0, color: 'rgba(255,255,255,0.65)', fontSize: '13px' }}>Введите 6 символов (например, ABC123)</p>
-              <input
-                value={code}
-                onChange={handleChange}
-                maxLength={6}
-                placeholder="ABC123"
-                style={{
-                  width: '100%',
-                  borderRadius: '14px',
-                  border: `1px solid ${C.blue}50`,
-                  background: 'rgba(3,8,25,0.7)',
-                  color: '#fff',
-                  fontSize: '22px',
-                  fontWeight: 800,
-                  letterSpacing: '0.24em',
-                  textTransform: 'uppercase',
-                  padding: '12px 14px',
-                  outline: 'none',
-                }}
-              />
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button
-                  type="button"
-                  onClick={onClose}
+              {ch}
+              {isNext ? (
+                <span
                   style={{
-                    flex: 1,
-                    borderRadius: '12px',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    background: 'rgba(255,255,255,0.08)',
-                    color: '#fff',
-                    fontWeight: 700,
-                    padding: '11px',
-                    cursor: 'pointer',
+                    position: 'absolute',
+                    width: 2,
+                    height: 28,
+                    background: 'var(--color-accent)',
+                    animation: 'blink 1s infinite',
                   }}
-                >
-                  Отмена
-                </button>
-                <button
-                  type="submit"
-                  style={{
-                    flex: 1,
-                    borderRadius: '12px',
-                    border: `1px solid ${C.blue}60`,
-                    background: `linear-gradient(135deg, ${C.blue}cc, #0ea5e9)`,
-                    color: '#fff',
-                    fontWeight: 800,
-                    padding: '11px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Войти
-                </button>
-              </div>
-            </motion.form>
-          </div>
-        </>
-      ) : null}
-    </AnimatePresence>
-    ,
-    document.body,
+                />
+              ) : null}
+            </div>
+          )
+        })}
+      </div>
+
+      <PrimaryButton
+        type="submit"
+        disabled={submitDisabled}
+        onClick={() => {
+          if (!submitDisabled) {
+            onSubmit(code)
+          }
+        }}
+      >
+        {submitDisabled
+          ? `Введи ещё ${remaining} ${declineCharacters(remaining)}`
+          : 'Войти в комнату'}
+      </PrimaryButton>
+
+      <div
+        style={{
+          marginTop: 18,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          padding: '14px 16px',
+          borderRadius: 14,
+          background: 'rgba(56,189,248,0.06)',
+          border: '1px solid rgba(56,189,248,0.2)',
+        }}
+      >
+        <div
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 10,
+            background: 'rgba(56,189,248,0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}
+        >
+          <IconQR />
+        </div>
+        <div style={{ flex: 1, fontSize: 14, color: 'var(--color-text)', fontWeight: 500, lineHeight: 1.4 }}>
+          Или отсканируй QR-код
+          <br />
+          <span style={{ color: 'var(--color-text-sec)', fontSize: 13 }}>у организатора игры</span>
+        </div>
+      </div>
+    </ModalShell>
   )
 }
+
+function declineCharacters(n: number): string {
+  // RU plural for "символ"
+  const abs = Math.abs(n) % 100
+  const last = abs % 10
+  if (abs >= 11 && abs <= 14) return 'символов'
+  if (last === 1) return 'символ'
+  if (last >= 2 && last <= 4) return 'символа'
+  return 'символов'
+}
+
+// ──────────────────────────────────────────────────────────
+// Top-right settings button
+// ──────────────────────────────────────────────────────────
+
+function SettingsIconButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="Настройки"
+      style={{
+        width: 40,
+        height: 40,
+        borderRadius: 12,
+        background: 'rgba(255,255,255,0.05)',
+        border: '1px solid var(--color-border)',
+        color: 'var(--color-text-sec)',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <IconGear />
+    </button>
+  )
+}
+
+// ──────────────────────────────────────────────────────────
+// Mobile layout
+// ──────────────────────────────────────────────────────────
 
 function LandingScreenMobile({
   playerName,
@@ -424,185 +921,130 @@ function LandingScreenMobile({
   const [joinOpen, setJoinOpen] = useState(false)
 
   const hasName = playerName.trim().length >= 2
+  const createDisabled = !hasName || isCreating
+  const joinDisabled = !hasName
 
   return (
     <div
       style={{
         position: 'relative',
-        height: '100dvh',
         minHeight: '100dvh',
-        width: '100vw',
+        width: '100%',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
-        fontFamily: "'Arial Black', 'Impact', system-ui, sans-serif",
-        maxWidth: '100vw',
-        margin: '0',
-        borderRadius: '0',
-        border: 'none',
+        fontFamily: FONT_SANS,
+        background: 'var(--color-bg-deep)',
+        color: 'var(--color-text)',
       }}
     >
-      <BlurredBg />
-      <Particles />
+      <AmbientBg />
 
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'flex-end', padding: '18px 16px 0' }}>
-        <button
-          type="button"
-          onClick={() => setSettingsOpen(true)}
-          style={{
-            width: '42px',
-            height: '42px',
-            borderRadius: '12px',
-            border: `1px solid ${C.purple}40`,
-            background: `linear-gradient(135deg, ${C.purple}18, rgba(255,255,255,0.04))`,
-            backdropFilter: 'blur(12px)',
-            boxShadow: `0 0 20px ${C.purple}25`,
-            cursor: 'pointer',
-            display: 'grid',
-            placeItems: 'center',
-            color: C.purple,
-          }}
-        >
-          <IconGear />
-        </button>
+      {/* top bar */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          display: 'flex',
+          justifyContent: 'flex-end',
+          padding: '24px 20px 0',
+        }}
+      >
+        <SettingsIconButton onClick={() => setSettingsOpen(true)} />
       </div>
 
-      <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 20px' }}>
-        <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ fontSize: '12px', fontWeight: 900, letterSpacing: '0.28em', textTransform: 'uppercase', color: `${C.orange}cc` }}>
-          party game
-        </motion.span>
-
-        <h1
-          style={{
-            margin: 0,
-            fontSize: 'clamp(3rem, 18vw, 5.5rem)',
-            fontWeight: 900,
-            letterSpacing: '-0.02em',
-            lineHeight: 0.9,
-            background: `linear-gradient(135deg, #fff 0%, ${C.orange} 40%, ${C.pink} 70%, ${C.purple} 100%)`,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}
-        >
-          ПОЯСНИ
-        </h1>
-
-        <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.35)', marginTop: '6px' }}>объясняй · угадывай · побеждай</span>
-
-        <div style={{ width: '100%', height: '2px', marginTop: '10px', marginBottom: '40px', background: `linear-gradient(90deg, transparent, ${C.orange}80, ${C.purple}80, transparent)` }} />
-
-        <div
-          style={{
-            width: '100%',
-            borderRadius: '16px',
-            border: '2px solid rgba(255,255,255,0.12)',
-            background: 'linear-gradient(135deg, rgba(14,10,40,0.92) 0%, rgba(8,6,28,0.96) 100%)',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
-            overflow: 'hidden',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', padding: '16px 18px', gap: '12px' }}>
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
-                background: playerName ? `linear-gradient(135deg, ${C.blue}cc, ${C.purple}99)` : 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                display: 'grid',
-                placeItems: 'center',
-                color: '#fff',
-                fontSize: '16px',
-                fontWeight: 900,
-                flexShrink: 0,
-              }}
-            >
-              {playerName ? playerName[0]?.toUpperCase() : '?'}
-            </div>
-
-            <input
-              value={playerName}
-              onChange={(event) => onPlayerNameChange(event.target.value)}
-              placeholder="Ваше имя"
-              maxLength={16}
-              style={{
-                flex: 1,
-                background: 'transparent',
-                border: 'none',
-                outline: 'none',
-                fontSize: '18px',
-                fontWeight: 800,
-                color: '#fff',
-                letterSpacing: '0.02em',
-              }}
-            />
-
-            {playerName ? (
-              <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: `${C.green}25`, border: `1px solid ${C.green}50`, display: 'grid', placeItems: 'center' }}>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                  <path d="M2 6L5 9L10 3" stroke={C.green} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-            ) : null}
+      {/* main content */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          gap: 32,
+          padding: '20px 24px 0',
+        }}
+      >
+        {/* hero */}
+        <div>
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              color: 'var(--color-accent)',
+              letterSpacing: '2px',
+              marginBottom: 12,
+              textTransform: 'uppercase',
+            }}
+          >
+            Party game · до 10 человек
           </div>
+          <Logo size={64} />
+          <p
+            style={{
+              fontSize: 17,
+              color: 'var(--color-text-sec)',
+              margin: '16px 0 0',
+              lineHeight: 1.4,
+              fontWeight: 500,
+            }}
+          >
+            Объясняй слова.
+            <br />
+            Угадывай с командой.
+            <br />
+            <span style={{ color: 'var(--color-text)', fontWeight: 600 }}>Побеждай.</span>
+          </p>
         </div>
 
-        <div style={{ height: '20px' }} />
+        {/* name input */}
+        <NameInput playerName={playerName} onPlayerNameChange={onPlayerNameChange} />
 
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <button
-            type="button"
-            disabled={!hasName || isCreating}
+        {/* CTAs */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <PrimaryButton
+            disabled={createDisabled}
             onClick={() => {
               void onCreateGame()
             }}
-            style={{
-              width: '100%',
-              padding: '20px',
-              borderRadius: '18px',
-              border: !hasName || isCreating ? '2px solid rgba(255,255,255,0.08)' : `2px solid ${C.orange}70`,
-              background: !hasName || isCreating ? 'rgba(255,255,255,0.04)' : `linear-gradient(135deg, #f97316 0%, ${C.orange} 45%, #ea580c 100%)`,
-              boxShadow: 'none',
-              color: !hasName || isCreating ? 'rgba(255,255,255,0.3)' : '#fff',
-              fontSize: '22px',
-              fontWeight: 900,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              cursor: !hasName || isCreating ? 'not-allowed' : 'pointer',
-              transition: 'none',
-            }}
           >
-            {isCreating ? 'СОЗДАНИЕ...' : 'НОВАЯ ИГРА'}
-          </button>
-
-          <button
-            type="button"
-            disabled={!hasName}
-            onClick={() => setJoinOpen(true)}
-            style={{
-              width: '100%',
-              padding: '16px',
-              borderRadius: '16px',
-              border: !hasName ? '1.5px solid rgba(255,255,255,0.08)' : `1.5px solid ${C.blue}45`,
-              background: !hasName ? 'transparent' : `linear-gradient(135deg, ${C.blue}18 0%, ${C.purple}12 100%)`,
-              color: !hasName ? 'rgba(255,255,255,0.2)' : `${C.blue}ee`,
-              fontSize: '15px',
-              fontWeight: 800,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              cursor: !hasName ? 'not-allowed' : 'pointer',
-            }}
-          >
-            ПРИСОЕДИНИТЬСЯ
-          </button>
+            {isCreating ? 'Создание…' : 'Создать игру'}
+          </PrimaryButton>
+          <GhostButton disabled={joinDisabled} onClick={() => setJoinOpen(true)}>
+            Войти по коду
+          </GhostButton>
+          <HowToPlayButton />
+          {errorMessage ? (
+            <p
+              style={{
+                margin: '4px 0 0',
+                fontSize: 13,
+                fontWeight: 600,
+                color: 'var(--color-danger)',
+                textAlign: 'center',
+              }}
+            >
+              {errorMessage}
+            </p>
+          ) : null}
         </div>
-
-        {!hasName ? <p style={{ margin: '12px 0 0', fontSize: '11px', fontWeight: 600, color: 'rgba(255,255,255,0.28)', textAlign: 'center', letterSpacing: '0.04em' }}>Введи имя чтобы начать</p> : null}
-        {errorMessage ? <p style={{ margin: '12px 0 0', fontSize: '12px', fontWeight: 700, color: '#fecaca', textAlign: 'center' }}>{errorMessage}</p> : null}
       </div>
 
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-        <span style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase' }}>v1.0 · poyasni.ru</span>
+      {/* footer */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          textAlign: 'center',
+          padding: '20px 0 24px',
+          fontSize: 11,
+          color: 'var(--color-text-mute)',
+          letterSpacing: '0.08em',
+          fontWeight: 600,
+        }}
+      >
+        v2.0 · poyasni.ru
       </div>
 
       <SettingsModal
@@ -612,6 +1054,7 @@ function LandingScreenMobile({
         score={scoreToWin}
         onTimer={onRoundTimeChange}
         onScore={onScoreToWinChange}
+        variant="sheet"
       />
 
       <JoinCodeModal
@@ -621,10 +1064,15 @@ function LandingScreenMobile({
           onJoinGame(roomCode)
           setJoinOpen(false)
         }}
+        variant="sheet"
       />
     </div>
   )
 }
+
+// ──────────────────────────────────────────────────────────
+// Desktop layout
+// ──────────────────────────────────────────────────────────
 
 function LandingScreenDesktop({
   playerName,
@@ -638,110 +1086,200 @@ function LandingScreenDesktop({
   onCreateGame,
   onJoinGame,
 }: LandingScreenProps) {
-  const [focused, setFocused] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [joinOpen, setJoinOpen] = useState(false)
+
   const hasName = playerName.trim().length >= 2
+  const createDisabled = !hasName || isCreating
+  const joinDisabled = !hasName
 
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', minHeight: '640px', marginLeft: 'calc(50% - 50vw)', overflow: 'hidden', display: 'flex', fontFamily: "'Arial Black',system-ui,sans-serif" }}>
-      <BlurredBg />
-      <Particles />
+    <div
+      style={{
+        position: 'relative',
+        width: '100vw',
+        height: '100vh',
+        minHeight: 640,
+        marginLeft: 'calc(50% - 50vw)',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        fontFamily: FONT_SANS,
+        background: 'var(--color-bg-deep)',
+        color: 'var(--color-text)',
+      }}
+    >
+      <AmbientBg />
 
-      <div style={{ position: 'absolute', top: '24px', right: '32px', zIndex: 20 }}>
-        <motion.button whileTap={{ scale: 0.88, rotate: 45 }} whileHover={{ rotate: 20 }} onClick={() => setSettingsOpen(true)} style={{ width: '44px', height: '44px', borderRadius: '14px', border: `1px solid ${C.purple}40`, background: `linear-gradient(135deg,${C.purple}18,rgba(255,255,255,0.04))`, backdropFilter: 'blur(12px)', boxShadow: `0 0 20px ${C.purple}25`, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.purple }}>
-          <IconGear />
-        </motion.button>
+      {/* settings icon */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 28,
+          right: 32,
+          zIndex: 20,
+        }}
+      >
+        <SettingsIconButton onClick={() => setSettingsOpen(true)} />
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 220, damping: 26 }} style={{ position: 'relative', zIndex: 10, width: 'min(560px, 90vw)', margin: '0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '28px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <span style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.3em', color: `${C.orange}cc`, textTransform: 'uppercase' }}>party game</span>
-          <div style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', inset: '-20px -30px', background: `radial-gradient(ellipse 80% 60% at 50% 50%,${C.orange}28 0%,${C.purple}18 50%,transparent 75%)`, filter: 'blur(20px)' }} />
-            <h1 style={{ margin: 0, fontSize: 'clamp(4rem,7vw,7rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 0.9, background: `linear-gradient(135deg,#fff 0%,${C.orange} 40%,${C.pink} 70%,${C.purple} 100%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', filter: 'drop-shadow(0 0 30px rgba(251,146,60,0.4))', position: 'relative' }}>ПОЯСНИ</h1>
-          </div>
-          <span style={{ fontSize: '13px', fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em' }}>объясняй · угадывай · побеждай</span>
-          <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.7, delay: 0.5 }} style={{ height: '2px', background: `linear-gradient(90deg,transparent,${C.orange}80,${C.purple}80,transparent)`, transformOrigin: 'left' }} />
-        </div>
-
-        <div style={{ position: 'relative' }}>
-          <motion.div animate={{ opacity: focused ? 1 : 0, scale: focused ? 1.03 : 0.97 }} style={{ position: 'absolute', inset: '-3px', borderRadius: '20px', background: `linear-gradient(135deg,${C.blue}35,${C.purple}25)`, filter: 'blur(8px)', pointerEvents: 'none' }} />
-          <div style={{ position: 'relative', borderRadius: '16px', border: focused ? `2px solid ${C.blue}90` : '2px solid rgba(255,255,255,0.12)', background: 'linear-gradient(135deg,rgba(14,10,40,0.92),rgba(8,6,28,0.96))', backdropFilter: 'blur(20px)', transition: 'border-color 0.22s', boxShadow: focused ? `0 0 0 1px ${C.blue}30,0 8px 32px rgba(0,0,0,0.5),0 0 40px ${C.blue}20` : '0 4px 24px rgba(0,0,0,0.4)', overflow: 'hidden' }}>
-            <div style={{ display: 'flex', alignItems: 'center', padding: '16px 20px', gap: '14px' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '12px', flexShrink: 0, background: playerName ? `linear-gradient(135deg,${C.blue}cc,${C.purple}99)` : 'rgba(255,255,255,0.06)', border: playerName ? `1px solid ${C.blue}50` : '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s', boxShadow: playerName ? `0 0 12px ${C.blue}40` : 'none' }}>
-                <span style={{ fontSize: playerName ? '18px' : '15px', fontWeight: 900, color: playerName ? '#fff' : 'rgba(255,255,255,0.2)' }}>{playerName ? playerName[0]?.toUpperCase() : '?'}</span>
-              </div>
-              <input value={playerName} onChange={(event) => onPlayerNameChange(event.target.value)} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} placeholder="Ваше имя" maxLength={16} style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontSize: '20px', fontWeight: 800, color: '#fff', letterSpacing: '0.02em', caretColor: C.blue }} />
-            </div>
-            <motion.div animate={{ scaleX: focused ? 1 : 0, opacity: focused ? 1 : 0 }} style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2px', background: `linear-gradient(90deg,transparent,${C.blue},${C.purple},transparent)`, transformOrigin: 'left' }} />
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {!hasName ? <p style={{ margin: 0, fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.28)', textAlign: 'center', letterSpacing: '0.04em' }}>Введи имя чтобы начать</p> : null}
-          <div style={{ position: 'relative', isolation: 'isolate' }}>
-            <button
-              type="button"
-              disabled={!hasName || isCreating}
-              onClick={() => void onCreateGame()}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          flex: 1,
+          display: 'grid',
+          gridTemplateColumns: '1.2fr 1fr',
+          alignItems: 'center',
+          padding: '0 64px 0 80px',
+          gap: 48,
+        }}
+      >
+        {/* hero */}
+        <div style={{ minWidth: 0 }}>
+          <div
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: 'var(--color-accent)',
+              letterSpacing: '3px',
+              marginBottom: 24,
+              textTransform: 'uppercase',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
+            <span
               style={{
-                display: 'block',
-                width: '100%',
-                padding: '20px',
-                borderRadius: '18px',
-                border: hasName ? `2px solid ${C.orange}70` : '2px solid rgba(255,255,255,0.08)',
-                background: hasName ? `linear-gradient(135deg,#f97316,${C.orange},#ea580c)` : 'rgba(255,255,255,0.04)',
-                boxShadow: 'none',
-                cursor: hasName ? 'pointer' : 'not-allowed',
-                position: 'relative',
-                overflow: 'hidden',
-                zIndex: 2,
-                pointerEvents: 'auto',
-                touchAction: 'manipulation',
-                WebkitTapHighlightColor: 'transparent',
-                userSelect: 'none',
-                transition: 'none',
+                width: 6,
+                height: 6,
+                borderRadius: 999,
+                background: 'var(--color-accent)',
+                boxShadow: '0 0 8px rgba(124,58,237,0.8)',
               }}
-            >
-              {hasName ? (
-                <div
+            />
+            Party game · до 10 человек
+          </div>
+          <Logo size={120} />
+          <p
+            style={{
+              fontSize: 26,
+              color: 'var(--color-text-sec)',
+              margin: '32px 0 0',
+              lineHeight: 1.3,
+              fontWeight: 500,
+              maxWidth: 520,
+            }}
+          >
+            Объясняй слова. Угадывай с командой.
+            <br />
+            <span style={{ color: 'var(--color-text)', fontWeight: 700 }}>Побеждай.</span>
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              gap: 16,
+              marginTop: 40,
+              alignItems: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
+            {[
+              { color: 'var(--color-success)', glow: '#22C55E', label: 'Без установки' },
+              { color: 'var(--color-blue)', glow: '#38BDF8', label: 'QR-код для друзей' },
+              { color: 'var(--color-orange)', glow: '#FB923C', label: '4–10 игроков' },
+            ].map((dot) => (
+              <span
+                key={dot.label}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  fontSize: 14,
+                  color: 'var(--color-text-mute)',
+                  fontWeight: 500,
+                }}
+              >
+                <span
                   style={{
-                    position: 'absolute',
-                    top: '6px',
-                    left: '15%',
-                    right: '15%',
-                    height: '10px',
-                    borderRadius: '9999px',
-                    background: 'linear-gradient(180deg,rgba(255,255,255,0.4) 0%,transparent 100%)',
-                    opacity: 0.4,
-                    pointerEvents: 'none',
+                    width: 8,
+                    height: 8,
+                    borderRadius: 999,
+                    background: dot.color,
+                    boxShadow: `0 0 8px ${dot.glow}`,
                   }}
                 />
-              ) : null}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', position: 'relative' }}>
-                <span style={{ fontSize: '18px', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase', color: hasName ? '#fff' : 'rgba(255,255,255,0.2)' }}>{isCreating ? 'Создание...' : 'Новая игра'}</span>
-              </div>
-            </button>
+                {dot.label}
+              </span>
+            ))}
           </div>
-          <motion.button whileTap={hasName ? { scale: 0.97 } : {}} type="button" disabled={!hasName} onClick={() => setJoinOpen(true)} style={{ width: '100%', padding: '16px', borderRadius: '16px', border: hasName ? `1.5px solid ${C.blue}45` : '1.5px solid rgba(255,255,255,0.08)', background: hasName ? `linear-gradient(135deg,${C.blue}18,${C.purple}12)` : 'transparent', backdropFilter: 'blur(12px)', boxShadow: 'none', cursor: hasName ? 'pointer' : 'not-allowed' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '15px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: hasName ? `${C.blue}ee` : 'rgba(255,255,255,0.15)', textShadow: hasName ? `0 0 16px ${C.blue}70` : 'none' }}>Присоединиться</span>
-            </div>
-          </motion.button>
         </div>
 
-        {errorMessage ? <p style={{ margin: 0, fontSize: '12px', fontWeight: 700, color: '#fecaca' }}>{errorMessage}</p> : null}
-      </motion.div>
+        {/* action card */}
+        <div
+          style={{
+            padding: 32,
+            borderRadius: 28,
+            background: 'rgba(16,20,38,0.7)',
+            border: '1px solid var(--color-border-hi)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            boxShadow: 'var(--shadow-lg)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 16,
+          }}
+        >
+          <NameInput
+            playerName={playerName}
+            onPlayerNameChange={onPlayerNameChange}
+            inputFontSize={18}
+            avatarSize={36}
+          />
+          <PrimaryButton
+            disabled={createDisabled}
+            onClick={() => {
+              void onCreateGame()
+            }}
+          >
+            {isCreating ? 'Создание…' : 'Создать игру'}
+          </PrimaryButton>
+          <GhostButton disabled={joinDisabled} onClick={() => setJoinOpen(true)}>
+            Войти по коду
+          </GhostButton>
+          <HowToPlayButton />
+          {errorMessage ? (
+            <p
+              style={{
+                margin: 0,
+                fontSize: 13,
+                fontWeight: 600,
+                color: 'var(--color-danger)',
+                textAlign: 'center',
+              }}
+            >
+              {errorMessage}
+            </p>
+          ) : null}
+        </div>
+      </div>
 
-      <JoinCodeModal
-        open={joinOpen}
-        onClose={() => setJoinOpen(false)}
-        onSubmit={(roomCode) => {
-          onJoinGame(roomCode)
-          setJoinOpen(false)
+      {/* footer */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          textAlign: 'center',
+          padding: '0 0 20px',
+          fontSize: 11,
+          color: 'var(--color-text-mute)',
+          letterSpacing: '0.08em',
+          fontWeight: 600,
         }}
-      />
+      >
+        v2.0 · poyasni.ru
+      </div>
 
       <SettingsModal
         open={settingsOpen}
@@ -750,10 +1288,25 @@ function LandingScreenDesktop({
         score={scoreToWin}
         onTimer={onRoundTimeChange}
         onScore={onScoreToWinChange}
+        variant="centered"
+      />
+
+      <JoinCodeModal
+        open={joinOpen}
+        onClose={() => setJoinOpen(false)}
+        onSubmit={(roomCode) => {
+          onJoinGame(roomCode)
+          setJoinOpen(false)
+        }}
+        variant="centered"
       />
     </div>
   )
 }
+
+// ──────────────────────────────────────────────────────────
+// Exported wrapper
+// ──────────────────────────────────────────────────────────
 
 export default function LandingScreen(props: LandingScreenProps) {
   const { isDesktop } = useBreakpoint()
