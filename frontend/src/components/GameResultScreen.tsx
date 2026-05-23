@@ -1,8 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { useMemo, type CSSProperties, type FC } from 'react'
 import useBreakpoint from '../hooks/useBreakpoint'
-import C from '../constants/colors'
-import GlassPanel from './ui/GlassPanel'
 
 type TeamCode = 'A' | 'B'
 
@@ -28,8 +25,10 @@ type GameResultScreenProps = {
   onHome?: () => void
 }
 
+const FONT_SANS = 'var(--font-sans)'
+
 const DEFAULT_TEAM_A: TeamResult = {
-  label: 'Команда А',
+  label: 'Синяя команда',
   score: 52,
   players: [
     { id: 'a1', name: 'Паша', guessed: 18, isHost: true },
@@ -39,7 +38,7 @@ const DEFAULT_TEAM_A: TeamResult = {
 }
 
 const DEFAULT_TEAM_B: TeamResult = {
-  label: 'Команда Б',
+  label: 'Оранжевая команда',
   score: 47,
   players: [
     { id: 'b1', name: 'Саша', guessed: 15, isHost: true },
@@ -49,292 +48,684 @@ const DEFAULT_TEAM_B: TeamResult = {
   ],
 }
 
-function Confetti({ active }: { active: boolean }) {
-  const [pieces] = useState(() =>
-    Array.from({ length: 50 }, (_, i) => ({
-      id: i,
-      color: [C.orange, C.blue, C.green, C.purple, C.pink, C.yellow][i % 6],
-      x: `${3 + ((i * 1.9) % 94)}%`,
-      delay: (i * 0.06) % 2,
-      size: 5 + (i % 4) * 3,
-      shape: i % 3 === 0 ? 'circle' : 'rect',
-    })),
-  )
-
-  return (
-    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 20, overflow: 'hidden' }}>
-      <AnimatePresence>
-        {active
-          ? pieces.map((piece) => (
-              <motion.div
-                key={piece.id}
-                initial={{ y: -40, opacity: 1 }}
-                animate={{ y: '110vh', opacity: [1, 1, 0.6, 0] }}
-                transition={{ duration: 3 + Math.random() * 1.5, delay: piece.delay, ease: 'easeIn' }}
-                style={{ position: 'absolute', left: piece.x, top: '-10px', width: `${piece.size}px`, height: piece.shape === 'circle' ? `${piece.size}px` : `${piece.size * 0.6}px`, borderRadius: piece.shape === 'circle' ? '50%' : '2px', background: piece.color, boxShadow: `0 0 6px ${piece.color}80` }}
-              />
-            ))
-          : null}
-      </AnimatePresence>
-    </div>
-  )
+type TeamPalette = {
+  label: string
+  cssColor: string
+  deep: string
+  rgb: string
+  glow: string
+  textShadow: string
 }
 
-function BlurredBg({ accentColor }: { accentColor: string }) {
-  return (
-    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-      <div style={{ position: 'absolute', inset: 0, background: '#020817' }} />
-      <div style={{ position: 'absolute', top: '-20%', left: '-15%', width: '70%', height: '70%', borderRadius: '50%', background: 'radial-gradient(circle,#1e0d5c 0%,transparent 65%)', filter: 'blur(80px)', opacity: 0.9 }} />
-      <div style={{ position: 'absolute', top: '5%', right: '-20%', width: '65%', height: '60%', borderRadius: '50%', background: 'radial-gradient(circle,#0c2060 0%,transparent 65%)', filter: 'blur(70px)', opacity: 0.8 }} />
-      <div style={{ position: 'absolute', bottom: '-15%', left: '10%', width: '80%', height: '65%', borderRadius: '50%', background: 'radial-gradient(circle,#16084a 0%,transparent 65%)', filter: 'blur(80px)', opacity: 1 }} />
-      <motion.div animate={{ opacity: [0.4, 0.7, 0.4] }} transition={{ duration: 4, repeat: Infinity }} style={{ position: 'absolute', top: '30%', left: '40%', width: '40%', height: '40%', borderRadius: '50%', background: `radial-gradient(circle,${accentColor}22 0%,transparent 65%)`, filter: 'blur(60px)' }} />
-      <div style={{ position: 'absolute', inset: 0, opacity: 0.035, backgroundImage: 'linear-gradient(rgba(140,170,255,0.9) 1px,transparent 1px),linear-gradient(90deg,rgba(140,170,255,0.9) 1px,transparent 1px)', backgroundSize: '44px 44px' }} />
-    </div>
-  )
+const TEAM_META: Record<TeamCode, TeamPalette> = {
+  A: {
+    label: 'СИНЯЯ КОМАНДА',
+    cssColor: 'var(--color-blue)',
+    deep: 'var(--color-blue-deep)',
+    rgb: '56,189,248',
+    glow: 'rgba(56,189,248,0.6)',
+    textShadow: '0 0 24px rgba(56,189,248,0.67), 0 0 60px rgba(56,189,248,0.33)',
+  },
+  B: {
+    label: 'ОРАНЖЕВАЯ КОМАНДА',
+    cssColor: 'var(--color-orange)',
+    deep: 'var(--color-orange-deep)',
+    rgb: '251,146,60',
+    glow: 'rgba(251,146,60,0.6)',
+    textShadow: '0 0 24px rgba(251,146,60,0.67), 0 0 60px rgba(251,146,60,0.33)',
+  },
 }
 
-function PlayerResultRow({
-  player,
-  color,
-  delay,
-  isWinnerTeam,
-  maxGuessed,
-}: {
-  player: TeamResultPlayer
+function getInitial(name: string): string {
+  return name.trim().charAt(0).toUpperCase() || '?'
+}
+
+/* ── Ambient (win palette) ──────────────────────────────────── */
+
+const Ambient: FC = () => (
+  <div
+    aria-hidden="true"
+    style={{
+      position: 'absolute',
+      inset: 0,
+      pointerEvents: 'none',
+      zIndex: 0,
+      background: [
+        'radial-gradient(ellipse 80% 60% at 50% 20%, rgba(56,189,248,0.40), transparent 65%)',
+        'radial-gradient(ellipse 60% 50% at 50% 80%, rgba(124,58,237,0.30), transparent 65%)',
+      ].join(', '),
+    }}
+  />
+)
+
+/* ── Confetti (CSS keyframe) ────────────────────────────────── */
+
+const CONFETTI_COLORS = [
+  'var(--color-blue)',
+  'var(--color-orange)',
+  'var(--color-accent)',
+  'var(--color-warn)',
+  'var(--color-success)',
+  '#FFFFFF',
+]
+
+type ConfettiPiece = {
+  id: number
+  left: string
   color: string
+  size: number
+  shape: 'circle' | 'rect'
+  duration: number
   delay: number
-  isWinnerTeam: boolean
-  maxGuessed: number
-}) {
-  const isTopScorer = player.guessed === maxGuessed && maxGuessed > 0
-
-  return (
-    <motion.div initial={{ opacity: 0, x: isWinnerTeam ? -14 : 14 }} animate={{ opacity: 1, x: 0 }} transition={{ delay }} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', borderRadius: '12px', background: `${color}0c`, border: `1px solid ${color}18` }}>
-      <div style={{ width: '28px', height: '28px', borderRadius: '8px', flexShrink: 0, background: `linear-gradient(135deg,${color}cc,${color}55)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 900, color: '#fff' }}>{player.name[0]?.toUpperCase() ?? '?'}</div>
-      <span style={{ fontSize: '13px', fontWeight: 700, color: 'rgba(255,255,255,0.85)', flex: 1 }}>{player.name}</span>
-      <span style={{ fontSize: '11px', fontWeight: 700, color: 'rgba(255,255,255,0.45)', minWidth: '40px', textAlign: 'right' }}>
-        {player.guessed} сл.
-      </span>
-      <div style={{ display: 'flex', gap: '4px', alignItems: 'center', flexShrink: 0 }}>
-        {isTopScorer ? <span style={{ fontSize: '12px', color: C.yellow }}>🏆</span> : null}
-        {player.isHost ? <span style={{ fontSize: '12px' }}>⭐</span> : null}
-      </div>
-    </motion.div>
-  )
 }
 
-function GameResultScreenMobile({ winnerTeam = 'A', teamA = DEFAULT_TEAM_A, teamB = DEFAULT_TEAM_B, canPlayAgain = false, onPlayAgain, onHome }: GameResultScreenProps) {
-  const winnerColor = winnerTeam === 'A' ? C.blue : C.orange
-  const winnerLabel = winnerTeam === 'A' ? teamA.label : teamB.label
-  const [dispA, setDispA] = useState(0)
-  const [dispB, setDispB] = useState(0)
-  const rankedA = useMemo(() => [...teamA.players].sort((left, right) => right.guessed - left.guessed), [teamA.players])
-  const rankedB = useMemo(() => [...teamB.players].sort((left, right) => right.guessed - left.guessed), [teamB.players])
-  const maxGuessed = useMemo(
-    () => Math.max(0, ...teamA.players.map((player) => player.guessed), ...teamB.players.map((player) => player.guessed)),
-    [teamA.players, teamB.players],
+const Confetti: FC<{ pieces: ConfettiPiece[] }> = ({ pieces }) => (
+  <div
+    aria-hidden="true"
+    style={{
+      position: 'absolute',
+      inset: 0,
+      pointerEvents: 'none',
+      zIndex: 2,
+      overflow: 'hidden',
+    }}
+  >
+    {pieces.map((p) => (
+      <span
+        key={p.id}
+        style={{
+          position: 'absolute',
+          top: -20,
+          left: p.left,
+          width: p.size,
+          height: p.shape === 'circle' ? p.size : Math.round(p.size * 0.6),
+          borderRadius: p.shape === 'circle' ? '50%' : 2,
+          background: p.color,
+          boxShadow: `0 0 6px ${p.color}`,
+          animation: `confettiFall ${p.duration}s linear ${p.delay}s infinite`,
+        }}
+      />
+    ))}
+  </div>
+)
+
+function makeConfettiPieces(): ConfettiPiece[] {
+  return Array.from({ length: 50 }, (_, i) => ({
+    id: i,
+    left: `${(i * 1.93) % 100}%`,
+    color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+    size: 5 + (i % 4) * 2,
+    shape: i % 3 === 0 ? 'circle' : 'rect',
+    duration: 3 + ((i * 0.13) % 2),
+    delay: (i * 0.11) % 5,
+  }))
+}
+
+/* ── PlayerRow (MVP + counter) ──────────────────────────────── */
+
+const PlayerRow: FC<{
+  player: TeamResultPlayer
+  team: TeamPalette
+  isMvp: boolean
+}> = ({ player, team, isMvp }) => (
+  <div
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+      padding: '10px 0',
+    }}
+  >
+    <div
+      style={{
+        width: 38,
+        height: 38,
+        borderRadius: 12,
+        background: `linear-gradient(135deg, ${team.cssColor}, ${team.deep})`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 17,
+        fontWeight: 700,
+        color: '#0A0E1F',
+        flexShrink: 0,
+      }}
+    >
+      {getInitial(player.name)}
+    </div>
+    <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+      <span
+        style={{
+          fontSize: 16,
+          fontWeight: 600,
+          color: 'var(--color-text)',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {player.name}
+      </span>
+      {isMvp ? (
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            color: 'var(--color-warn)',
+            padding: '2px 8px',
+            borderRadius: 6,
+            background: 'rgba(250,204,21,0.15)',
+            border: '1px solid rgba(250,204,21,0.3)',
+            flexShrink: 0,
+            letterSpacing: 0.4,
+          }}
+        >
+          MVP
+        </span>
+      ) : null}
+    </div>
+    <span
+      style={{
+        fontSize: 13,
+        fontWeight: 600,
+        color: 'var(--color-text-sec)',
+        flexShrink: 0,
+      }}
+    >
+      {player.guessed} слов
+    </span>
+  </div>
+)
+
+/* ── TeamCard ───────────────────────────────────────────────── */
+
+const TeamCard: FC<{
+  team: TeamPalette
+  result: TeamResult
+  isWinner: boolean
+  showMvp: boolean
+  scoreFontSize: number
+  padding: number
+  variant: 'winner' | 'loser'
+}> = ({ team, result, isWinner, showMvp, scoreFontSize, padding, variant }) => {
+  const isWinnerVariant = variant === 'winner'
+  const ranked = useMemo(
+    () => [...result.players].sort((l, r) => r.guessed - l.guessed),
+    [result.players],
   )
+  const maxGuessed = ranked[0]?.guessed ?? 0
+  const mvpId = showMvp && maxGuessed > 0 ? ranked[0]?.id : null
 
-  useEffect(() => {
-    let frame = 0
-    const total = 40
-    const timer = window.setInterval(() => {
-      frame += 1
-      const pct = Math.min(frame / total, 1)
-      const ease = 1 - Math.pow(1 - pct, 3)
-      setDispA(Math.round(ease * teamA.score))
-      setDispB(Math.round(ease * teamB.score))
-      if (frame >= total) window.clearInterval(timer)
-    }, 28)
-
-    return () => window.clearInterval(timer)
-  }, [teamA.score, teamB.score])
+  const borderAlpha = isWinnerVariant ? 0.33 : 0.19
+  const shadow = isWinnerVariant ? `0 24px 60px rgba(${team.rgb},0.13)` : 'none'
 
   return (
-    <div style={{ position: 'relative', height: '100dvh', minHeight: '100dvh', width: '100vw', overflow: 'hidden', display: 'flex', flexDirection: 'column', fontFamily: "'Arial Black', 'Impact', system-ui, sans-serif", maxWidth: '100vw', margin: '0', borderRadius: '0', border: 'none' }}>
-      <BlurredBg accentColor={winnerColor} />
-      <Confetti active />
-
-      <div style={{ position: 'relative', zIndex: 10, flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '24px 16px 0', gap: '14px' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ marginBottom: '4px', color: C.yellow, fontSize: '22px' }}>♛</div>
-          <h1 style={{ margin: 0, fontSize: 'clamp(3rem, 16vw, 4.6rem)', fontWeight: 900, color: '#fff', textShadow: `0 0 30px ${winnerColor}` }}>ПОБЕДА!</h1>
-          <div style={{ marginTop: '8px', display: 'inline-block', padding: '5px 18px', borderRadius: '9999px', border: `1.5px solid ${winnerColor}60`, background: `${winnerColor}20` }}>
-            <span style={{ fontSize: '13px', fontWeight: 900, letterSpacing: '0.16em', textTransform: 'uppercase', color: winnerColor }}>{winnerLabel}</span>
-          </div>
-        </div>
-
-        <GlassPanel style={{ padding: '14px 14px 10px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ fontSize: '46px', fontWeight: 900, color: '#fff', textShadow: `0 0 20px ${C.blue}` }}>{dispA}</span>
-            <span style={{ fontSize: '46px', fontWeight: 900, color: 'rgba(255,255,255,0.45)' }}>{dispB}</span>
-          </div>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ delay: 0.9, duration: 0.7 }}
-            style={{ height: '8px', borderRadius: '9999px', background: `linear-gradient(90deg,${C.blue} 0%,${C.blue} ${(teamA.score / Math.max(teamA.score + teamB.score, 1)) * 100}%,${C.orange} ${(teamA.score / Math.max(teamA.score + teamB.score, 1)) * 100}%,${C.orange} 100%)`, transformOrigin: 'left', boxShadow: `0 0 12px ${C.blue}60` }}
-          />
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
-            <span style={{ fontSize: '9px', fontWeight: 700, color: `${C.blue}80`, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Команда А</span>
-            <span style={{ fontSize: '9px', fontWeight: 700, color: `${C.orange}80`, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Команда Б</span>
-          </div>
-        </GlassPanel>
-
-        <GlassPanel color={`${C.blue}10`} border={`${C.blue}40`} style={{ padding: '12px 12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.blue }}>{teamA.label}</span>
-            {winnerTeam === 'A' ? <span style={{ marginLeft: 'auto', fontSize: '9px', fontWeight: 900, padding: '2px 8px', borderRadius: '6px', background: `${C.yellow}22`, border: `1px solid ${C.yellow}40`, color: C.yellow }}>ПОБЕДА</span> : null}
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {rankedA.map((player, index) => {
-              const isBest = player.guessed === maxGuessed && maxGuessed > 0
-              return (
-                <motion.div key={player.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.45 + index * 0.08 }} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '12px', background: isBest ? `${C.yellow}10` : `${C.blue}0c`, border: isBest ? `1px solid ${C.yellow}33` : `1px solid ${C.blue}18` }}>
-                  <div style={{ width: '30px', height: '30px', borderRadius: '10px', background: `linear-gradient(135deg,${C.blue}cc,${C.blue}55)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 900, color: '#fff', flexShrink: 0 }}>{player.name[0]?.toUpperCase() ?? '?'}</div>
-                  <span style={{ fontSize: '15px', fontWeight: 800, color: '#fff', flex: 1 }}>{player.name}</span>
-                  <span style={{ fontSize: '14px', fontWeight: 900, color: isBest ? C.yellow : 'rgba(255,255,255,0.45)' }}>{player.guessed} сл.</span>
-                  {isBest ? <span style={{ fontSize: '14px', color: C.yellow }}>🏆</span> : null}
-                </motion.div>
-              )
-            })}
-          </div>
-        </GlassPanel>
-
-        <GlassPanel color={`${C.orange}08`} border={`${C.orange}30`} style={{ padding: '12px 12px', marginBottom: '4px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.orange }}>{teamB.label}</span>
-            {winnerTeam === 'B' ? <span style={{ marginLeft: 'auto', fontSize: '9px', fontWeight: 900, padding: '2px 8px', borderRadius: '6px', background: `${C.yellow}22`, border: `1px solid ${C.yellow}40`, color: C.yellow }}>ПОБЕДА</span> : null}
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {rankedB.map((player, index) => {
-              const isBest = player.guessed === maxGuessed && maxGuessed > 0
-              return (
-                <motion.div key={player.id} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 + index * 0.08 }} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '12px', background: isBest ? `${C.yellow}10` : `${C.orange}0c`, border: isBest ? `1px solid ${C.yellow}33` : `1px solid ${C.orange}18` }}>
-                  <div style={{ width: '30px', height: '30px', borderRadius: '10px', background: `linear-gradient(135deg,${C.orange}cc,${C.orange}55)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 900, color: '#fff', flexShrink: 0 }}>{player.name[0]?.toUpperCase() ?? '?'}</div>
-                  <span style={{ fontSize: '15px', fontWeight: 800, color: 'rgba(255,255,255,0.86)', flex: 1 }}>{player.name}</span>
-                  <span style={{ fontSize: '14px', fontWeight: 900, color: isBest ? C.yellow : 'rgba(255,255,255,0.45)' }}>{player.guessed} сл.</span>
-                  {isBest ? <span style={{ fontSize: '14px', color: C.yellow }}>🏆</span> : null}
-                </motion.div>
-              )
-            })}
-          </div>
-        </GlassPanel>
+    <div
+      style={{
+        padding,
+        borderRadius: 28,
+        background: `linear-gradient(180deg, rgba(${team.rgb},0.14), transparent)`,
+        border: `1.5px solid rgba(${team.rgb},${borderAlpha})`,
+        boxShadow: shadow,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16,
+        fontFamily: FONT_SANS,
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: 999,
+            background: team.cssColor,
+            boxShadow: `0 0 10px ${team.cssColor}`,
+          }}
+        />
+        <span
+          style={{
+            fontSize: 12,
+            fontWeight: 700,
+            color: team.cssColor,
+            letterSpacing: 1,
+            textTransform: 'uppercase',
+            textShadow: `0 0 12px ${team.glow}`,
+          }}
+        >
+          {team.label}
+        </span>
+        {isWinner && isWinnerVariant ? (
+          <span
+            style={{
+              marginLeft: 'auto',
+              fontSize: 10,
+              fontWeight: 700,
+              color: 'var(--color-warn)',
+              padding: '3px 8px',
+              borderRadius: 6,
+              background: 'rgba(250,204,21,0.15)',
+              border: '1px solid rgba(250,204,21,0.3)',
+              letterSpacing: 0.4,
+            }}
+          >
+            ★ Победа
+          </span>
+        ) : null}
       </div>
 
-      <div style={{ position: 'relative', zIndex: 10, padding: '12px 16px 32px', display: 'flex', flexDirection: 'column', gap: '10px', background: 'linear-gradient(0deg, rgba(2,8,23,0.95) 60%, transparent 100%)' }}>
-        {canPlayAgain ? (
-          <button type="button" onClick={onPlayAgain} style={{ width: '100%', padding: '16px', borderRadius: '14px', border: 'none', background: `linear-gradient(135deg, #22c55e, ${C.green}, #16a34a)`, color: '#fff', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer' }}>↻ Сыграть ещё раз</button>
-        ) : (
-          <div style={{ width: '100%', padding: '14px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.5)', fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', textAlign: 'center' }}>Ждем нового хоста</div>
-        )}
-        <button type="button" onClick={onHome} style={{ width: '100%', padding: '12px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.45)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer' }}>⌂ На главную</button>
+      <div
+        style={{
+          fontSize: scoreFontSize,
+          fontWeight: 900,
+          color: 'var(--color-text)',
+          letterSpacing: -3,
+          lineHeight: 1,
+        }}
+      >
+        {result.score}
+      </div>
+
+      <div style={{ height: 1, background: `rgba(${team.rgb},0.13)` }} />
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+        {ranked.map((player) => (
+          <PlayerRow key={player.id} player={player} team={team} isMvp={mvpId === player.id} />
+        ))}
       </div>
     </div>
   )
 }
 
-function GameResultScreenDesktop({ winnerTeam = 'A', teamA = DEFAULT_TEAM_A, teamB = DEFAULT_TEAM_B, canPlayAgain = false, onPlayAgain, onHome }: GameResultScreenProps) {
-  const winnerColor = winnerTeam === 'A' ? C.blue : C.orange
-  const winnerLabel = winnerTeam === 'A' ? teamA.label : teamB.label
-  const [dispA, setDispA] = useState(0)
-  const [dispB, setDispB] = useState(0)
+/* ── Buttons ────────────────────────────────────────────────── */
 
-  const rankedA = useMemo(
-    () => [...teamA.players].sort((left, right) => right.guessed - left.guessed),
-    [teamA.players],
-  )
-  const rankedB = useMemo(
-    () => [...teamB.players].sort((left, right) => right.guessed - left.guessed),
-    [teamB.players],
-  )
-  const maxGuessed = useMemo(
-    () => Math.max(0, ...teamA.players.map((player) => player.guessed), ...teamB.players.map((player) => player.guessed)),
-    [teamA.players, teamB.players],
-  )
+const PrimaryButton: FC<{ label: string; onClick?: () => void; style?: CSSProperties }> = ({
+  label,
+  onClick,
+  style,
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    style={{
+      height: 60,
+      borderRadius: 22,
+      background: 'var(--color-accent)',
+      color: '#fff',
+      border: 'none',
+      boxShadow: 'var(--shadow-btn-primary)',
+      fontFamily: FONT_SANS,
+      fontSize: 17,
+      fontWeight: 700,
+      letterSpacing: 0.1,
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...style,
+    }}
+  >
+    {label}
+  </button>
+)
 
-  useEffect(() => {
-    let frame = 0
-    const total = 40
-    const timer = window.setInterval(() => {
-      frame += 1
-      const pct = Math.min(frame / total, 1)
-      const ease = 1 - Math.pow(1 - pct, 3)
-      setDispA(Math.round(ease * teamA.score))
-      setDispB(Math.round(ease * teamB.score))
-      if (frame >= total) window.clearInterval(timer)
-    }, 28)
+const GhostButton: FC<{ label: string; onClick?: () => void; style?: CSSProperties }> = ({
+  label,
+  onClick,
+  style,
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    style={{
+      height: 60,
+      borderRadius: 22,
+      background: 'transparent',
+      color: 'var(--color-text)',
+      border: '1.5px solid var(--color-border-hi)',
+      fontFamily: FONT_SANS,
+      fontSize: 17,
+      fontWeight: 700,
+      letterSpacing: 0.1,
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...style,
+    }}
+  >
+    {label}
+  </button>
+)
 
-    return () => window.clearInterval(timer)
-  }, [teamA.score, teamB.score])
+/* ── Mode / palette helpers ─────────────────────────────────── */
+
+type Mode =
+  | { kind: 'winner'; winner: TeamCode; loser: TeamCode }
+  | { kind: 'tie' }
+
+function resolveMode(winnerTeam: TeamCode | undefined, a: TeamResult, b: TeamResult): Mode {
+  if (!winnerTeam || a.score === b.score) return { kind: 'tie' }
+  const loser: TeamCode = winnerTeam === 'A' ? 'B' : 'A'
+  return { kind: 'winner', winner: winnerTeam, loser }
+}
+
+const NEUTRAL_HEADLINE_SHADOW =
+  '0 0 24px rgba(124,58,237,0.45), 0 0 60px rgba(56,189,248,0.25)'
+
+/* ── Mobile ─────────────────────────────────────────────────── */
+
+function GameResultScreenMobile({
+  winnerTeam,
+  teamA = DEFAULT_TEAM_A,
+  teamB = DEFAULT_TEAM_B,
+  canPlayAgain = false,
+  onPlayAgain,
+  onHome,
+}: GameResultScreenProps) {
+  const mode = resolveMode(winnerTeam, teamA, teamB)
+  const confettiPieces = useMemo(makeConfettiPieces, [])
+
+  const winnerResult = mode.kind === 'winner' ? (mode.winner === 'A' ? teamA : teamB) : null
+  const loserResult = mode.kind === 'winner' ? (mode.loser === 'A' ? teamA : teamB) : null
+  const winnerMeta = mode.kind === 'winner' ? TEAM_META[mode.winner] : null
+  const loserMeta = mode.kind === 'winner' ? TEAM_META[mode.loser] : null
+
+  const kicker = mode.kind === 'winner' ? '★ ПОБЕДА ★' : '★ НИЧЬЯ ★'
+  const kickerColor = mode.kind === 'winner' ? 'var(--color-warn)' : 'var(--color-text-mute)'
+  const headline =
+    mode.kind === 'winner' && winnerResult ? winnerResult.label : 'Игра окончена'
+  const headlineShadow = winnerMeta ? winnerMeta.textShadow : NEUTRAL_HEADLINE_SHADOW
+  const subtext =
+    mode.kind === 'winner' && winnerResult && loserResult
+      ? `Со счётом ${winnerResult.score} : ${loserResult.score}`
+      : `${teamA.score} : ${teamB.score}`
 
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', minHeight: '640px', marginLeft: 'calc(50% - 50vw)', display: 'flex', overflow: 'hidden', fontFamily: "'Arial Black',system-ui,sans-serif" }}>
-      <BlurredBg accentColor={winnerColor} />
-      <Confetti active />
+    <div
+      style={{
+        position: 'relative',
+        minHeight: '100dvh',
+        width: '100vw',
+        overflow: 'hidden',
+        background: 'var(--color-bg-deep)',
+        fontFamily: FONT_SANS,
+        color: 'var(--color-text)',
+      }}
+    >
+      <Ambient />
+      {mode.kind === 'winner' ? <Confetti pieces={confettiPieces} /> : null}
 
-      <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'grid', gridTemplateColumns: '1fr 420px 1fr', gap: 0, padding: 0 }}>
-        <div style={{ padding: '28px 20px 28px 36px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '12px' }}>
-          <GlassPanel color={`${C.blue}10`} border={`${C.blue}55`} style={{ padding: '20px', boxShadow: `0 0 0 1px ${C.blue}15,0 8px 32px rgba(0,0,0,0.5),0 0 60px ${C.blue}22` }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-              <span style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.blue, textShadow: `0 0 12px ${C.blue}` }}>{teamA.label}</span>
-              {winnerTeam === 'A' ? <span style={{ marginLeft: 'auto', fontSize: '9px', fontWeight: 900, padding: '3px 8px', borderRadius: '6px', background: `${C.yellow}22`, border: `1px solid ${C.yellow}40`, color: C.yellow }}>ПОБЕДА</span> : null}
-            </div>
-            <motion.div animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.8, 0.5] }} transition={{ duration: 2, repeat: Infinity }} style={{ fontSize: '64px', fontWeight: 900, color: '#fff', textShadow: `0 0 40px ${C.blue},0 0 80px ${C.blue}60`, textAlign: 'center', lineHeight: 1, marginBottom: '14px' }}>{dispA}</motion.div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {rankedA.map((player, index) => (
-                <PlayerResultRow key={player.id} player={player} color={C.blue} delay={0.6 + index * 0.1} isWinnerTeam maxGuessed={maxGuessed} />
-              ))}
-            </div>
-          </GlassPanel>
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 3,
+          padding: '60px 20px 30px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 20,
+        }}
+      >
+        {/* Headline */}
+        <div style={{ textAlign: 'center' }}>
+          <div
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: kickerColor,
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              marginBottom: 12,
+            }}
+          >
+            {kicker}
+          </div>
+          <h1
+            style={{
+              margin: 0,
+              fontSize: 60,
+              fontWeight: 900,
+              color: 'var(--color-text)',
+              letterSpacing: -2,
+              lineHeight: 1,
+              textShadow: headlineShadow,
+            }}
+          >
+            {headline}
+          </h1>
+          <div
+            style={{
+              marginTop: 8,
+              fontSize: 14,
+              fontWeight: 500,
+              color: 'var(--color-text-sec)',
+            }}
+          >
+            {subtext}
+          </div>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '28px 16px', gap: '18px', borderLeft: '1px solid rgba(255,255,255,0.06)', borderRight: '1px solid rgba(255,255,255,0.06)' }}>
-          <motion.div initial={{ y: -50, opacity: 0, scale: 0.7 }} animate={{ y: 0, opacity: 1, scale: 1 }} transition={{ type: 'spring', stiffness: 280, damping: 18 }} style={{ textAlign: 'center' }}>
-            <h1 style={{ margin: 0, fontSize: 'clamp(2.5rem,4vw,4rem)', fontWeight: 900, color: '#fff', lineHeight: 0.95, textShadow: `0 0 40px ${winnerColor},0 0 80px ${winnerColor}70` }}>ПОБЕДА!</h1>
-            <div style={{ padding: '5px 18px', borderRadius: '9999px', border: `1.5px solid ${winnerColor}60`, background: `${winnerColor}20`, boxShadow: `0 0 20px ${winnerColor}35`, display: 'inline-block', marginTop: '10px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 900, letterSpacing: '0.16em', textTransform: 'uppercase', color: winnerColor, textShadow: `0 0 12px ${winnerColor}` }}>{winnerLabel}</span>
-            </div>
-          </motion.div>
+        {/* Winner card */}
+        {mode.kind === 'winner' && winnerMeta && winnerResult ? (
+          <TeamCard
+            team={winnerMeta}
+            result={winnerResult}
+            isWinner
+            showMvp
+            scoreFontSize={72}
+            padding={24}
+            variant="winner"
+          />
+        ) : null}
 
-          <div style={{ width: '100%', padding: '14px 18px', borderRadius: '16px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ fontSize: '20px', fontWeight: 900, color: '#fff', textShadow: `0 0 20px ${C.blue}` }}>{dispA}</span>
-              <span style={{ fontSize: '20px', fontWeight: 900, color: 'rgba(255,255,255,0.4)' }}>{dispB}</span>
-            </div>
-            <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1, duration: 0.7 }} style={{ height: '8px', borderRadius: '9999px', background: `linear-gradient(90deg,${C.blue} 0%,${C.blue} ${(teamA.score / Math.max(teamA.score + teamB.score, 1)) * 100}%,${C.orange} ${(teamA.score / Math.max(teamA.score + teamB.score, 1)) * 100}%,${C.orange} 100%)`, transformOrigin: 'left', boxShadow: `0 0 12px ${C.blue}60` }} />
+        {/* Loser card (winner mode) */}
+        {mode.kind === 'winner' && loserMeta && loserResult ? (
+          <TeamCard
+            team={loserMeta}
+            result={loserResult}
+            isWinner={false}
+            showMvp={false}
+            scoreFontSize={40}
+            padding={16}
+            variant="loser"
+          />
+        ) : null}
+
+        {/* Tie mode: show both as loser variant (no MVP, no winner badge) */}
+        {mode.kind === 'tie' ? (
+          <>
+            <TeamCard
+              team={TEAM_META.A}
+              result={teamA}
+              isWinner={false}
+              showMvp={false}
+              scoreFontSize={56}
+              padding={20}
+              variant="loser"
+            />
+            <TeamCard
+              team={TEAM_META.B}
+              result={teamB}
+              isWinner={false}
+              showMvp={false}
+              scoreFontSize={56}
+              padding={20}
+              variant="loser"
+            />
+          </>
+        ) : null}
+
+        {/* Actions */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 4 }}>
+          {canPlayAgain ? (
+            <PrimaryButton
+              label="Сыграть снова"
+              onClick={onPlayAgain}
+              style={{ width: '100%' }}
+            />
+          ) : null}
+          <GhostButton label="На главную" onClick={onHome} style={{ width: '100%' }} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ── Desktop ────────────────────────────────────────────────── */
+
+function GameResultScreenDesktop({
+  winnerTeam,
+  teamA = DEFAULT_TEAM_A,
+  teamB = DEFAULT_TEAM_B,
+  canPlayAgain = false,
+  onPlayAgain,
+  onHome,
+}: GameResultScreenProps) {
+  const mode = resolveMode(winnerTeam, teamA, teamB)
+  const confettiPieces = useMemo(makeConfettiPieces, [])
+
+  const winnerResult = mode.kind === 'winner' ? (mode.winner === 'A' ? teamA : teamB) : null
+  const loserResult = mode.kind === 'winner' ? (mode.loser === 'A' ? teamA : teamB) : null
+  const winnerMeta = mode.kind === 'winner' ? TEAM_META[mode.winner] : null
+  const loserMeta = mode.kind === 'winner' ? TEAM_META[mode.loser] : null
+
+  const kicker = mode.kind === 'winner' ? '★ ПОБЕДА ★' : '★ НИЧЬЯ ★'
+  const kickerColor = mode.kind === 'winner' ? 'var(--color-warn)' : 'var(--color-text-mute)'
+  const headline =
+    mode.kind === 'winner' && winnerResult ? winnerResult.label : 'Игра окончена'
+  const headlineShadow = winnerMeta ? winnerMeta.textShadow : NEUTRAL_HEADLINE_SHADOW
+  const subtext =
+    mode.kind === 'winner' && winnerResult && loserResult
+      ? `Со счётом ${winnerResult.score} : ${loserResult.score}`
+      : `${teamA.score} : ${teamB.score}`
+
+  // Tie: A on left, B on right. Winner: winner on left, loser on right.
+  const leftMeta = mode.kind === 'winner' ? winnerMeta : TEAM_META.A
+  const leftResult = mode.kind === 'winner' ? winnerResult : teamA
+  const rightMeta = mode.kind === 'winner' ? loserMeta : TEAM_META.B
+  const rightResult = mode.kind === 'winner' ? loserResult : teamB
+
+  return (
+    <div
+      style={{
+        position: 'relative',
+        width: '100vw',
+        minHeight: '100vh',
+        marginLeft: 'calc(50% - 50vw)',
+        background: 'var(--color-bg-deep)',
+        overflow: 'hidden',
+        fontFamily: FONT_SANS,
+        color: 'var(--color-text)',
+      }}
+    >
+      <Ambient />
+      {mode.kind === 'winner' ? <Confetti pieces={confettiPieces} /> : null}
+
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 3,
+          padding: 60,
+          minHeight: '100vh',
+          boxSizing: 'border-box',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1.4fr 1fr',
+          gap: 40,
+          alignItems: 'center',
+        }}
+      >
+        {/* Left column */}
+        {leftMeta && leftResult ? (
+          <TeamCard
+            team={leftMeta}
+            result={leftResult}
+            isWinner={mode.kind === 'winner'}
+            showMvp={mode.kind === 'winner'}
+            scoreFontSize={96}
+            padding={32}
+            variant={mode.kind === 'winner' ? 'winner' : 'loser'}
+          />
+        ) : (
+          <div />
+        )}
+
+        {/* Center column */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+          }}
+        >
+          <div
+            style={{
+              fontSize: 14,
+              fontWeight: 700,
+              color: kickerColor,
+              letterSpacing: '0.3em',
+              textTransform: 'uppercase',
+              marginBottom: 20,
+            }}
+          >
+            {kicker}
+          </div>
+          <h1
+            style={{
+              margin: 0,
+              fontSize: 96,
+              fontWeight: 900,
+              color: 'var(--color-text)',
+              letterSpacing: -3,
+              lineHeight: 1,
+              textShadow: headlineShadow,
+            }}
+          >
+            {headline}
+          </h1>
+          <div
+            style={{
+              marginTop: 12,
+              fontSize: 18,
+              fontWeight: 500,
+              color: 'var(--color-text-sec)',
+            }}
+          >
+            {subtext}
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: 16,
+              marginTop: 40,
+            }}
+          >
             {canPlayAgain ? (
-              <motion.button whileTap={{ scale: 0.97, y: 3 }} whileHover={{ scale: 1.01 }} type="button" onClick={onPlayAgain} style={{ width: '100%', padding: '15px', borderRadius: '16px', border: `2px solid ${C.green}60`, background: `linear-gradient(135deg,#22c55e,${C.green},#16a34a)`, boxShadow: 'none', cursor: 'pointer' }}>
-                <span style={{ fontSize: '15px', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff' }}>Сыграть еще раз</span>
-              </motion.button>
-            ) : (
-              <div style={{ width: '100%', padding: '14px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.04)', textAlign: 'center' }}>
-                <span style={{ fontSize: '12px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>Ждем нового хоста</span>
-              </div>
-            )}
-            <motion.button whileTap={{ scale: 0.97 }} type="button" onClick={onHome} style={{ width: '100%', padding: '11px', borderRadius: '14px', border: '1.5px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.04)', cursor: 'pointer' }}>
-              <span style={{ fontSize: '13px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)' }}>На главную</span>
-            </motion.button>
+              <PrimaryButton
+                label="Сыграть снова"
+                onClick={onPlayAgain}
+                style={{ width: 240 }}
+              />
+            ) : null}
+            <GhostButton label="На главную" onClick={onHome} style={{ width: 240 }} />
           </div>
         </div>
 
-        <div style={{ padding: '28px 36px 28px 20px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '12px' }}>
-          <GlassPanel color={`${C.orange}08`} border={`${C.orange}30`} style={{ padding: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-              <span style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.orange }}>{teamB.label}</span>
-              {winnerTeam === 'B' ? <span style={{ marginLeft: 'auto', fontSize: '9px', fontWeight: 900, padding: '3px 8px', borderRadius: '6px', background: `${C.yellow}22`, border: `1px solid ${C.yellow}40`, color: C.yellow }}>ПОБЕДА</span> : null}
-            </div>
-            <div style={{ fontSize: '64px', fontWeight: 900, color: 'rgba(255,255,255,0.45)', textAlign: 'center', lineHeight: 1, marginBottom: '14px' }}>{dispB}</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {rankedB.map((player, index) => (
-                <PlayerResultRow key={player.id} player={player} color={C.orange} delay={0.7 + index * 0.1} isWinnerTeam={false} maxGuessed={maxGuessed} />
-              ))}
-            </div>
-          </GlassPanel>
-        </div>
+        {/* Right column */}
+        {rightMeta && rightResult ? (
+          <TeamCard
+            team={rightMeta}
+            result={rightResult}
+            isWinner={false}
+            showMvp={false}
+            scoreFontSize={60}
+            padding={32}
+            variant="loser"
+          />
+        ) : (
+          <div />
+        )}
       </div>
     </div>
   )
