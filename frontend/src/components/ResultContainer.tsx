@@ -248,16 +248,16 @@ export default function ResultContainer() {
             zIndex: 1000,
             maxWidth: 520,
             margin: '0 auto',
-            borderRadius: 16,
-            background: 'rgba(26, 29, 41, 0.95)',
-            border: '1px solid rgba(255, 255, 255, 0.14)',
+            borderRadius: 'var(--radius-lg)',
+            background: 'var(--color-surface-hi)',
+            border: '1px solid var(--color-border-hi)',
             backdropFilter: 'blur(10px)',
             padding: 14,
-            boxShadow: '0 12px 30px rgba(0, 0, 0, 0.35)',
+            boxShadow: 'var(--shadow-lg)',
           }}
         >
-          <p style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#F8FAFC' }}>Добавить на домашний экран</p>
-          <p style={{ margin: '6px 0 12px', fontSize: 13, lineHeight: 1.4, color: 'rgba(248, 250, 252, 0.8)' }}>
+          <p style={{ margin: 0, fontSize: 16, fontWeight: 700, color: 'var(--color-text)' }}>Добавить на домашний экран</p>
+          <p style={{ margin: '6px 0 12px', fontSize: 13, lineHeight: 1.4, color: 'var(--color-text-sec)' }}>
             {installState.shouldShowIosHint
               ? 'На iPhone: Поделиться → На экран Домой.'
               : 'Установите игру как приложение для быстрого доступа и офлайн-работы.'}
@@ -269,13 +269,14 @@ export default function ResultContainer() {
                 onClick={() => void handleInstallClick()}
                 style={{
                   flex: 1,
-                  borderRadius: 10,
+                  borderRadius: 14,
                   border: 'none',
-                  padding: '10px 12px',
-                  background: '#FF6B00',
+                  padding: '12px 14px',
+                  background: 'var(--color-accent)',
                   color: '#FFFFFF',
                   fontSize: 13,
                   fontWeight: 700,
+                  boxShadow: 'var(--shadow-btn-primary)',
                 }}
               >
                 Добавить
@@ -286,11 +287,11 @@ export default function ResultContainer() {
               onClick={handleDismissInstallPrompt}
               style={{
                 flex: 1,
-                borderRadius: 10,
-                border: '1px solid rgba(248, 250, 252, 0.25)',
-                padding: '10px 12px',
+                borderRadius: 14,
+                border: '1px solid var(--color-border-hi)',
+                padding: '12px 14px',
                 background: 'transparent',
-                color: '#F8FAFC',
+                color: 'var(--color-text)',
                 fontSize: 13,
                 fontWeight: 600,
               }}
