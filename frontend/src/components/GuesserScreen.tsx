@@ -1,7 +1,5 @@
 import { useEffect } from 'react'
-import { motion } from 'framer-motion'
 import useBreakpoint from '../hooks/useBreakpoint'
-import C from '../constants/colors'
 
 type GuesserScreenProps = {
   teamAScore?: number
@@ -20,99 +18,343 @@ type GuesserScreenProps = {
   onSkip?: () => void
 }
 
-function ScorePill({ label, score, color, reverse, compact = false }: { label: string; score: number; color: string; reverse?: boolean; compact?: boolean }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: compact ? '6px' : '8px', flexDirection: reverse ? 'row-reverse' : 'row', padding: compact ? '7px 10px' : '8px 16px', borderRadius: compact ? '12px' : '14px', border: `1px solid ${color}30`, background: 'linear-gradient(135deg,rgba(8,8,28,0.88) 0%,rgba(16,8,40,0.92) 100%)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', boxShadow: `0 0 0 1px ${color}20,0 4px 20px rgba(0,0,0,0.55),0 0 24px ${color}18,inset 0 1px 0 rgba(255,255,255,0.07)` }}>
-      <span style={{ fontSize: compact ? '7px' : '9px', fontWeight: 900, letterSpacing: compact ? '0.12em' : '0.16em', color: `${color}99`, textTransform: 'uppercase', lineHeight: 1 }}>{label}</span>
-      <div style={{ width: '1px', height: compact ? '16px' : '18px', background: `${color}28`, flexShrink: 0 }} />
-      <span style={{ fontSize: compact ? '20px' : '26px', fontWeight: 900, color: '#fff', lineHeight: 1, textShadow: `0 0 14px ${color}cc,0 0 30px ${color}55` }}>{score}</span>
-    </div>
-  )
+type TeamKey = 'A' | 'B'
+
+const FONT_STACK = "var(--font-sans, Inter, system-ui, sans-serif)"
+const FONT_MONO = "var(--font-mono, ui-monospace, 'SF Mono', Menlo, monospace)"
+
+const TEAM_META: Record<TeamKey, { label: string; cssColor: string; ambientTop: string; ambientMid: string; soft: string; border: string; deep: string }> = {
+  A: {
+    label: 'Синяя',
+    cssColor: 'var(--color-blue)',
+    ambientTop: 'rgba(56,189,248,0.32)',
+    ambientMid: 'rgba(124,58,237,0.20)',
+    soft: 'rgba(56,189,248,0.14)',
+    border: 'rgba(56,189,248,0.3)',
+    deep: 'var(--color-blue-deep)',
+  },
+  B: {
+    label: 'Оранжевая',
+    cssColor: 'var(--color-orange)',
+    ambientTop: 'rgba(251,146,60,0.32)',
+    ambientMid: 'rgba(124,58,237,0.20)',
+    soft: 'rgba(251,146,60,0.14)',
+    border: 'rgba(251,146,60,0.3)',
+    deep: 'var(--color-orange-deep)',
+  },
 }
 
-function Timer({ seconds, compact = false }: { seconds: number; compact?: boolean }) {
-  const urgent = seconds <= 10
-  const color = urgent ? C.red : C.blue
-  const mm = Math.floor(Math.max(0, seconds) / 60)
-  const ss = String(Math.max(0, seconds) % 60).padStart(2, '0')
-
-  return (
-    <motion.div animate={urgent ? { scale: [1, 1.1, 1] } : { scale: 1 }} transition={urgent ? { repeat: Infinity, duration: 0.65 } : {}} style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ position: 'absolute', inset: '-16px', background: `radial-gradient(circle,${color}40 0%,transparent 70%)`, filter: 'blur(12px)', pointerEvents: 'none' }} />
-      <span style={{ fontSize: compact ? '30px' : '40px', fontWeight: 900, letterSpacing: '-0.03em', color, textShadow: `0 0 18px ${color},0 0 42px ${color}80`, fontVariantNumeric: 'tabular-nums', position: 'relative' }}>
-        {mm}:{ss}
-      </span>
-    </motion.div>
-  )
+function getInitial(name: string): string {
+  const trimmed = name.trim()
+  if (!trimmed) return '?'
+  return trimmed.charAt(0).toUpperCase()
 }
 
-function RoundTimerPill({ roundNum, seconds }: { roundNum: number; seconds: number }) {
-  const safeSeconds = Math.max(0, seconds)
-  const urgent = safeSeconds <= 10
-  const tColor = urgent ? C.red : '#fff'
-  const mm = Math.floor(safeSeconds / 60)
-  const ss = String(safeSeconds % 60).padStart(2, '0')
+function formatTime(seconds: number): string {
+  const safe = Math.max(0, Math.floor(seconds))
+  const mm = Math.floor(safe / 60)
+  const ss = String(safe % 60).padStart(2, '0')
+  return `${mm}:${ss}`
+}
 
+function Ambient({ team }: { team: TeamKey }) {
+  const meta = TEAM_META[team]
   return (
-    <motion.div
-      animate={urgent ? { scale: [1, 1.05, 1] } : { scale: 1 }}
-      transition={urgent ? { repeat: Infinity, duration: 0.65 } : {}}
+    <div
+      aria-hidden="true"
       style={{
-        display: 'flex',
+        position: 'absolute',
+        inset: 0,
+        pointerEvents: 'none',
+        zIndex: 0,
+        background: [
+          `radial-gradient(ellipse 80% 60% at 50% 0%, ${meta.ambientTop}, transparent 65%)`,
+          `radial-gradient(ellipse 50% 40% at 80% 60%, ${meta.ambientMid}, transparent 65%)`,
+        ].join(', '),
+      }}
+    />
+  )
+}
+
+function MicSvg({ size = 14, color = 'currentColor' }: { size?: number; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M7 1a3 3 0 013 3v3a3 3 0 01-6 0V4a3 3 0 013-3z" fill={color} />
+    </svg>
+  )
+}
+
+function EyeSvg({ size = 14, color = 'currentColor' }: { size?: number; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M3 5a4 4 0 018 0v2a4 4 0 01-8 0V5z" stroke={color} strokeWidth="1.4" />
+    </svg>
+  )
+}
+
+function HeadphonesSvg({ size = 14, color = 'currentColor' }: { size?: number; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M2 9V7a5 5 0 0110 0v2" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
+      <rect x="1" y="8.5" width="2.5" height="4.5" rx="1.25" fill={color} />
+      <rect x="10.5" y="8.5" width="2.5" height="4.5" rx="1.25" fill={color} />
+    </svg>
+  )
+}
+
+function ScoreMini({ teamAScore, teamBScore, activeTeam }: { teamAScore: number; teamBScore: number; activeTeam: TeamKey }) {
+  const aActive = activeTeam === 'A'
+  const bActive = activeTeam === 'B'
+  return (
+    <div
+      style={{
+        display: 'inline-flex',
         alignItems: 'center',
-        gap: 0,
-        borderRadius: '9999px',
-        overflow: 'hidden',
-        background: 'linear-gradient(135deg,rgba(14,10,44,0.92),rgba(8,6,28,0.96))',
-        border: `1.5px solid ${urgent ? `${C.red}60` : `${C.purple}50`}`,
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        boxShadow: `0 0 0 1px ${urgent ? C.red : C.purple}20,0 4px 24px rgba(0,0,0,0.5),0 0 30px ${urgent ? C.red : C.purple}20`,
+        height: 36,
+        padding: '0 10px 0 6px',
+        borderRadius: 999,
+        background: 'rgba(255,255,255,0.04)',
+        border: '1px solid var(--color-border)',
+        gap: 8,
+        fontFamily: FONT_STACK,
       }}
     >
-      <div style={{ padding: '10px 20px 10px 22px', display: 'flex', alignItems: 'center' }}>
-        <span style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.22em', textTransform: 'uppercase', color: C.purple, textShadow: `0 0 10px ${C.purple}` }}>
-          РАУНД {Math.max(1, roundNum)}
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <span
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: 999,
+            background: 'var(--color-blue)',
+            boxShadow: aActive ? '0 0 8px var(--color-blue)' : 'none',
+          }}
+        />
+        <span
+          style={{
+            fontSize: aActive ? 16 : 14,
+            fontWeight: aActive ? 700 : 600,
+            color: aActive ? 'var(--color-text)' : 'var(--color-text-mute)',
+            lineHeight: 1,
+          }}
+        >
+          {teamAScore}
         </span>
-      </div>
-      <div style={{ width: '1px', height: '28px', background: 'rgba(255,255,255,0.15)' }} />
-      <div style={{ padding: '10px 22px 10px 20px', display: 'flex', alignItems: 'center' }}>
-        <span style={{ fontSize: '26px', fontWeight: 900, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums', color: tColor, textShadow: `0 0 18px ${urgent ? C.red : '#ffffff80'}` }}>
-          {mm}:{ss}
+      </span>
+      <span style={{ width: 1, height: 18, background: 'var(--color-border)' }} />
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <span
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: 999,
+            background: 'var(--color-orange)',
+            boxShadow: bActive ? '0 0 8px var(--color-orange)' : 'none',
+          }}
+        />
+        <span
+          style={{
+            fontSize: bActive ? 16 : 14,
+            fontWeight: bActive ? 700 : 600,
+            color: bActive ? 'var(--color-text)' : 'var(--color-text-mute)',
+            lineHeight: 1,
+          }}
+        >
+          {teamBScore}
         </span>
-      </div>
-    </motion.div>
-  )
-}
-
-function BlurredBg() {
-  return (
-    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-      <div style={{ position: 'absolute', inset: 0, background: '#04061a' }} />
-      <div style={{ position: 'absolute', top: '-25%', left: '-35%', width: '95%', height: '75%', borderRadius: '50%', background: 'radial-gradient(circle, #2a1472 0%, transparent 68%)', filter: 'blur(65px)', opacity: 0.9 }} />
-      <div style={{ position: 'absolute', top: '5%', right: '-25%', width: '75%', height: '65%', borderRadius: '50%', background: 'radial-gradient(circle, #0d3060 0%, transparent 68%)', filter: 'blur(60px)', opacity: 0.8 }} />
-      <div style={{ position: 'absolute', inset: 0, opacity: 0.038, backgroundImage: 'linear-gradient(rgba(140,170,255,0.9) 1px, transparent 1px), linear-gradient(90deg, rgba(140,170,255,0.9) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+      </span>
     </div>
   )
 }
 
-function MicIcon({ size = 11, color = '#fff' }: { size?: number; color?: string }) {
+function MobileTimer({ seconds }: { seconds: number }) {
+  const safe = Math.max(0, seconds)
+  const urgent = safe <= 10
   return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <rect x="5" y="1" width="6" height="9" rx="3" fill={color} fillOpacity="0.9" />
-      <path d="M2.5 8.5C2.5 11.5376 5.18629 14 8 14C10.8137 14 13.5 11.5376 13.5 8.5" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
-      <line x1="8" y1="14" x2="8" y2="15.5" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
+    <span
+      style={{
+        fontSize: 40,
+        fontWeight: 900,
+        color: urgent ? 'var(--color-danger)' : 'var(--color-text)',
+        fontFamily: FONT_MONO,
+        fontVariantNumeric: 'tabular-nums',
+        letterSpacing: -0.5,
+        lineHeight: 1,
+        animation: urgent ? 'pulse 0.65s infinite' : undefined,
+      }}
+    >
+      {formatTime(safe)}
+    </span>
   )
 }
 
-function HeadphonesIcon({ size = 13, color = 'rgba(255,255,255,0.45)' }: { size?: number; color?: string }) {
+function RoleBanner({ team, size = 'mobile' }: { team: TeamKey; size?: 'mobile' | 'desktop' }) {
+  const meta = TEAM_META[team]
+  const fontSize = size === 'desktop' ? 16 : 13
+  const padding = size === 'desktop' ? '12px 22px' : '8px 16px'
+  const iconSize = size === 'desktop' ? 16 : 14
   return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <path d="M2 10V8a6 6 0 0112 0v2" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
-      <rect x="1" y="9.5" width="3" height="5" rx="1.5" fill={color} />
-      <rect x="12" y="9.5" width="3" height="5" rx="1.5" fill={color} />
-    </svg>
+    <div
+      style={{
+        alignSelf: 'center',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 8,
+        padding,
+        borderRadius: 999,
+        background: meta.soft,
+        border: `1px solid ${meta.border}`,
+        color: meta.cssColor,
+        fontSize,
+        fontWeight: 700,
+        fontFamily: FONT_STACK,
+      }}
+    >
+      <HeadphonesSvg size={iconSize} color="currentColor" />
+      Ты угадываешь · {meta.label} команда
+    </div>
+  )
+}
+
+function ExplainerStatusPill({
+  team,
+  explainerName,
+  size = 'mobile',
+}: {
+  team: TeamKey
+  explainerName: string
+  size?: 'mobile' | 'desktop'
+}) {
+  const meta = TEAM_META[team]
+  const isDesktop = size === 'desktop'
+  return (
+    <div
+      style={{
+        alignSelf: 'center',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 8,
+        height: isDesktop ? 32 : 28,
+        padding: isDesktop ? '6px 16px' : '5px 14px',
+        borderRadius: 999,
+        background: 'rgba(255,255,255,0.04)',
+        border: '1px solid var(--color-border)',
+        fontFamily: FONT_STACK,
+      }}
+    >
+      <span
+        style={{
+          width: 7,
+          height: 7,
+          borderRadius: 999,
+          background: meta.cssColor,
+          boxShadow: `0 0 8px ${meta.cssColor}`,
+          animation: 'dotPulse 1.2s ease-in-out infinite',
+        }}
+      />
+      <span
+        style={{
+          fontSize: isDesktop ? 12 : 11,
+          fontWeight: 700,
+          color: 'var(--color-text-mute)',
+          letterSpacing: isDesktop ? 1.3 : 1.2,
+          textTransform: 'uppercase',
+        }}
+      >
+        Объясняет
+      </span>
+      <span
+        style={{
+          fontSize: isDesktop ? 12 : 11,
+          fontWeight: 900,
+          color: meta.cssColor,
+        }}
+      >
+        {explainerName}
+      </span>
+    </div>
+  )
+}
+
+function ListenCard({
+  isRoundActive,
+  size = 'mobile',
+}: {
+  isRoundActive: boolean
+  size?: 'mobile' | 'desktop'
+}) {
+  const isDesktop = size === 'desktop'
+  return (
+    <div
+      style={{
+        background: 'linear-gradient(180deg, var(--color-surface-hi), var(--color-surface))',
+        borderRadius: isDesktop ? 36 : 32,
+        padding: isDesktop ? '64px 64px 40px' : '36px 24px 22px',
+        border: '1.5px solid var(--color-border-hi)',
+        boxShadow: isDesktop
+          ? '0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)'
+          : '0 24px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)',
+        width: '100%',
+        maxWidth: isDesktop ? 580 : undefined,
+        position: 'relative',
+        fontFamily: FONT_STACK,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <div
+        style={{
+          fontSize: isDesktop ? 12 : 11,
+          color: 'var(--color-text-mute)',
+          letterSpacing: isDesktop ? 1.6 : 1.4,
+          textTransform: 'uppercase',
+          fontWeight: 700,
+          textAlign: 'center',
+          marginBottom: isDesktop ? 28 : 20,
+        }}
+      >
+        Что объясняют
+      </div>
+      {isRoundActive ? (
+        <div
+          style={{
+            fontSize: isDesktop ? 96 : 48,
+            fontWeight: 900,
+            color: 'var(--color-text-mute)',
+            textAlign: 'center',
+            letterSpacing: '0.2em',
+            lineHeight: 1,
+          }}
+        >
+          ● ● ●
+        </div>
+      ) : (
+        <div
+          style={{
+            fontSize: isDesktop ? 28 : 28,
+            fontWeight: 700,
+            color: 'var(--color-text-mute)',
+            textAlign: 'center',
+            lineHeight: 1.1,
+          }}
+        >
+          Раунд не идёт
+        </div>
+      )}
+      <div
+        style={{
+          marginTop: isDesktop ? 24 : 18,
+          fontSize: isDesktop ? 16 : 13,
+          fontWeight: 500,
+          color: 'var(--color-text-sec)',
+          textAlign: 'center',
+          maxWidth: 260,
+          lineHeight: 1.4,
+        }}
+      >
+        Слушай объясняющего и предлагай команде варианты
+      </div>
+    </div>
   )
 }
 
@@ -122,63 +364,238 @@ function GuesserScreenMobile({
   timeRemaining = 0,
   explainerName = '—',
   isRoundActive = true,
+  roundNumber = 1,
+  activeTeam = 'A',
+  myTeam = 'A',
 }: GuesserScreenProps) {
   return (
-    <div style={{ position: 'relative', height: '100dvh', minHeight: '100dvh', width: '100vw', overflow: 'hidden', display: 'flex', flexDirection: 'column', fontFamily: "'Arial Black', 'Impact', system-ui, sans-serif", maxWidth: '100vw', margin: '0', borderRadius: '0', border: 'none' }}>
-      <BlurredBg />
-
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 16px 14px', gap: '8px' }}>
-        <ScorePill label="Команда А" score={teamAScore} color={C.blue} compact />
-        <Timer seconds={timeRemaining} compact />
-        <ScorePill label="Команда Б" score={teamBScore} color={C.orange} reverse compact />
-      </div>
-
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'center', paddingTop: '8px' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 18px', borderRadius: '9999px', background: `linear-gradient(135deg, ${C.blue}18, ${C.blue}0a)`, border: `1px solid ${C.blue}40`, boxShadow: `0 0 20px ${C.blue}18` }}>
-          <HeadphonesIcon size={15} color={C.blue} />
-          <span style={{ fontSize: '13px', fontWeight: 900, letterSpacing: '0.08em', color: '#fff' }}>
-            <span style={{ color: 'rgba(255,255,255,0.55)' }}>Ты </span>
-            <span style={{ color: C.blue, textShadow: `0 0 12px ${C.blue}80` }}>угадываешь слова</span>
+    <div
+      style={{
+        position: 'relative',
+        height: '100dvh',
+        minHeight: '100dvh',
+        width: '100vw',
+        overflow: 'hidden',
+        fontFamily: FONT_STACK,
+        background: 'var(--color-bg)',
+        color: 'var(--color-text)',
+      }}
+    >
+      <Ambient team={activeTeam} />
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          padding: '60px 20px 30px',
+          display: 'flex',
+          flexDirection: 'column',
+          zIndex: 1,
+        }}
+      >
+        {/* top bar */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: 14,
+            gap: 8,
+          }}
+        >
+          <ScoreMini teamAScore={teamAScore} teamBScore={teamBScore} activeTeam={activeTeam} />
+          <MobileTimer seconds={timeRemaining} />
+          <span style={{ fontSize: 13, color: 'var(--color-text-mute)', fontWeight: 600 }}>
+            Раунд {Math.max(1, roundNumber)}
           </span>
         </div>
-      </div>
 
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'center', paddingTop: '8px' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '5px 16px', borderRadius: '9999px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
-          <motion.div animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.2, repeat: Infinity }} style={{ width: '7px', height: '7px', borderRadius: '50%', background: C.orange, boxShadow: `0 0 8px ${C.orange}` }} />
-          <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase' }}>Объясняет:</span>
-          <span style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.08em', color: C.orange, textShadow: `0 0 12px ${C.orange}80` }}>{explainerName}</span>
+        {/* role banner */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
+          <RoleBanner team={myTeam} size="mobile" />
         </div>
-      </div>
 
-      <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 20px' }}>
-        <div style={{ width: '100%', maxWidth: '320px' }}>
-          <div style={{ height: '22px' }} />
-          <div style={{ position: 'relative', borderRadius: '28px', overflow: 'hidden', background: 'linear-gradient(148deg, #1e1640 0%, #160f38 45%, #0e0a26 100%)', boxShadow: '0 0 0 1px rgba(255,255,255,0.07), 0 8px 32px rgba(0,0,0,0.7), 0 28px 64px rgba(0,0,0,0.85)', height: '310px', outline: '2px dashed rgba(255,255,255,0.1)', outlineOffset: '-8px' }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '35%', background: 'linear-gradient(180deg, rgba(255,255,255,0.055) 0%, transparent 100%)', borderRadius: '28px 28px 0 0', pointerEvents: 'none' }} />
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.04, backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.6) 4px)', backgroundSize: '100% 4px' }} />
-            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
-              <motion.div animate={{ opacity: [0.55, 0.85, 0.55] }} transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}>
-                <span style={{ fontSize: '48px', color: 'rgba(255,255,255,0.22)' }}>🔒</span>
-              </motion.div>
-              <h2 style={{ margin: 0, fontSize: isRoundActive ? '54px' : '36px', fontWeight: 900, color: 'rgba(255,255,255,0.28)', textAlign: 'center', lineHeight: 1.08, textTransform: 'uppercase' }}>
-                {isRoundActive ? (
-                  <>СЛОВО<br />СКРЫТО</>
-                ) : (
-                  <>ЖДЕМ НАЧАЛА<br />НОВОГО РАУНДА</>
-                )}
-              </h2>
-              <span style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.15)', textTransform: 'uppercase' }}>Угадай по объяснению</span>
-            </div>
-            <div style={{ position: 'absolute', bottom: '18px', left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
-              <div style={{ width: '44px', height: '4px', borderRadius: '9999px', background: 'rgba(255,255,255,0.08)' }} />
-            </div>
+        {/* explainer status */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+          <ExplainerStatusPill team={activeTeam} explainerName={explainerName} size="mobile" />
+        </div>
+
+        {/* center listen card */}
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <ListenCard isRoundActive={isRoundActive} size="mobile" />
+          <div
+            style={{
+              textAlign: 'center',
+              marginTop: 16,
+              fontSize: 12,
+              color: 'var(--color-text-mute)',
+              fontWeight: 500,
+            }}
+          >
+            Услышал слово — крикни! Очки начислит объясняющий
           </div>
-          <div style={{ height: '22px' }} />
         </div>
       </div>
+    </div>
+  )
+}
 
-      <div style={{ height: '26px' }} />
+function DesktopGameSidebar({
+  team,
+  score,
+  active,
+  players,
+}: {
+  team: TeamKey
+  score: number
+  active: boolean
+  players: Array<{ id: string; name: string; connected: boolean; role: 'explainer' | 'guesser' | 'spectator' }>
+}) {
+  const meta = TEAM_META[team]
+  return (
+    <div
+      style={{
+        padding: 22,
+        borderRadius: 24,
+        background: active
+          ? team === 'A'
+            ? 'var(--color-blue-soft)'
+            : 'var(--color-orange-soft)'
+          : 'rgba(255,255,255,0.02)',
+        border: `1.5px solid ${active ? `${meta.cssColor}55` : 'var(--color-border)'}`,
+        boxShadow: active
+          ? team === 'A'
+            ? '0 8px 30px rgba(56,189,248,0.2)'
+            : '0 8px 30px rgba(251,146,60,0.2)'
+          : 'none',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 14,
+        fontFamily: FONT_STACK,
+      }}
+    >
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <span
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: 999,
+              background: meta.cssColor,
+              boxShadow: active ? `0 0 12px ${meta.cssColor}` : 'none',
+            }}
+          />
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: meta.cssColor,
+              letterSpacing: 1,
+              textTransform: 'uppercase',
+            }}
+          >
+            {meta.label.toUpperCase()}
+          </span>
+          {active ? (
+            <span
+              style={{
+                marginLeft: 'auto',
+                fontSize: 10,
+                fontWeight: 700,
+                color: meta.cssColor,
+                padding: '2px 8px',
+                borderRadius: 999,
+                background: team === 'A' ? 'rgba(56,189,248,0.12)' : 'rgba(251,146,60,0.12)',
+                border: `1px solid ${team === 'A' ? 'rgba(56,189,248,0.27)' : 'rgba(251,146,60,0.27)'}`,
+                letterSpacing: 0.6,
+                textTransform: 'uppercase',
+              }}
+            >
+              играет
+            </span>
+          ) : null}
+        </div>
+        <div
+          style={{
+            fontSize: 64,
+            fontWeight: 900,
+            color: 'var(--color-text)',
+            letterSpacing: -2,
+            lineHeight: 1,
+          }}
+        >
+          {score}
+        </div>
+      </div>
+      <div style={{ height: 1, background: 'var(--color-border)' }} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {players.length === 0 ? (
+          <div style={{ fontSize: 13, color: 'var(--color-text-mute)', fontWeight: 500 }}>
+            Нет игроков
+          </div>
+        ) : (
+          players.map((p) => {
+            const isExplaining = p.role === 'explainer'
+            return (
+              <div
+                key={p.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  padding: '10px 12px',
+                  borderRadius: 14,
+                  background: isExplaining ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.02)',
+                  border: `1px solid ${isExplaining ? 'var(--color-border-hi)' : 'var(--color-border)'}`,
+                  opacity: p.connected ? 1 : 0.55,
+                }}
+              >
+                <div
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 10,
+                    background: `linear-gradient(135deg, ${meta.cssColor}, ${meta.deep})`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: '#0A0E1F',
+                  }}
+                >
+                  {getInitial(p.name)}
+                </div>
+                <span
+                  style={{
+                    flex: 1,
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: 'var(--color-text)',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {p.name}
+                </span>
+                {p.role === 'explainer' ? (
+                  <MicSvg size={14} color={meta.cssColor} />
+                ) : p.role === 'guesser' ? (
+                  <EyeSvg size={14} color={meta.cssColor} />
+                ) : null}
+              </div>
+            )
+          })
+        )}
+      </div>
     </div>
   )
 }
@@ -190,6 +607,10 @@ function GuesserScreenDesktop({
   explainerName = '—',
   isRoundActive = true,
   roundNumber = 1,
+  activeTeam = 'A',
+  myTeam = 'A',
+  teamAPlayers = [],
+  teamBPlayers = [],
   onCorrect,
   onSkip,
 }: GuesserScreenProps) {
@@ -210,57 +631,107 @@ function GuesserScreenDesktop({
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [onCorrect, onSkip])
 
+  const safe = Math.max(0, timeRemaining)
+  const urgent = safe <= 10
+
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', minHeight: '640px', marginLeft: 'calc(50% - 50vw)', display: 'flex', overflow: 'hidden', fontFamily: "'Arial Black',system-ui,sans-serif" }}>
-      <BlurredBg />
+    <div
+      style={{
+        position: 'relative',
+        width: '100vw',
+        height: '100vh',
+        minHeight: '640px',
+        marginLeft: 'calc(50% - 50vw)',
+        overflow: 'hidden',
+        fontFamily: FONT_STACK,
+        background: 'var(--color-bg)',
+        color: 'var(--color-text)',
+      }}
+    >
+      <Ambient team={activeTeam} />
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'grid',
+          gridTemplateColumns: '280px 1fr 280px',
+          padding: 32,
+          gap: 24,
+          zIndex: 1,
+        }}
+      >
+        <DesktopGameSidebar
+          team="A"
+          score={teamAScore}
+          active={activeTeam === 'A'}
+          players={teamAPlayers}
+        />
 
-      <div style={{ position: 'absolute', top: '28px', left: '96px', zIndex: 12 }}>
-        <ScorePill label="Team A" score={teamAScore} color={C.blue} />
-      </div>
-      <div style={{ position: 'absolute', top: '28px', right: '96px', zIndex: 12 }}>
-        <ScorePill label="Team B" score={teamBScore} color={C.orange} reverse />
-      </div>
-
-      <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px', padding: '84px 60px 40px' }}>
-        <RoundTimerPill roundNum={Math.max(1, roundNumber)} seconds={timeRemaining} />
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 20px', borderRadius: '9999px', background: `linear-gradient(135deg,${C.blue}18,${C.blue}0a)`, border: `1px solid ${C.blue}40`, boxShadow: `0 0 20px ${C.blue}18` }}>
-          <HeadphonesIcon size={14} color={C.blue} />
-          <span style={{ fontSize: '12px', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)' }}>Ты</span>
-          <span style={{ fontSize: '12px', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.blue, textShadow: `0 0 14px ${C.blue}80` }}>угадываешь слова</span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '5px 16px', borderRadius: '9999px', background: 'rgba(251,146,60,0.1)', border: `1px solid ${C.orange}35` }}>
-          <motion.div animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.2, repeat: Infinity }} style={{ width: '7px', height: '7px', borderRadius: '50%', background: C.orange, boxShadow: `0 0 8px ${C.orange}` }} />
-          <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase' }}>Объясняет:</span>
-          <MicIcon size={11} color={C.orange} />
-          <span style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.08em', color: C.orange, textShadow: `0 0 12px ${C.orange}80` }}>{explainerName}</span>
-        </div>
-
-        <div style={{ width: '100%', maxWidth: '400px' }}>
-          <div style={{ position: 'relative', borderRadius: '28px', overflow: 'hidden', background: 'linear-gradient(148deg,#1e1640 0%,#160f38 45%,#0e0a26 100%)', boxShadow: '0 0 0 1px rgba(255,255,255,0.07),0 8px 32px rgba(0,0,0,0.7),0 28px 64px rgba(0,0,0,0.85)', height: '300px', outline: '2px dashed rgba(255,255,255,0.08)', outlineOffset: '-8px' }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '35%', background: 'linear-gradient(180deg,rgba(255,255,255,0.055) 0%,transparent 100%)', pointerEvents: 'none' }} />
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.04, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,0.6) 4px)', backgroundSize: '100% 4px' }} />
-            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
-              <motion.div animate={{ opacity: [0.55, 0.85, 0.55] }} transition={{ duration: 2.8, repeat: Infinity }}>
-                <span style={{ fontSize: '48px', color: 'rgba(255,255,255,0.22)' }}>🔒</span>
-              </motion.div>
-
-              {isRoundActive ? (
-                <>
-                  <span style={{ fontSize: '28px', fontWeight: 900, letterSpacing: '0.04em', color: 'rgba(255,255,255,0.25)', lineHeight: 1.1, textTransform: 'uppercase' }}>СЛОВО</span>
-                  <span style={{ fontSize: '28px', fontWeight: 900, letterSpacing: '0.04em', color: 'rgba(255,255,255,0.25)', lineHeight: 1.1, textTransform: 'uppercase' }}>СКРЫТО</span>
-                  <span style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.14)', textTransform: 'uppercase' }}>УГАДАЙ СЛОВО</span>
-                </>
-              ) : (
-                <>
-                  <span style={{ fontSize: '24px', fontWeight: 900, letterSpacing: '0.02em', color: 'rgba(255,255,255,0.28)', lineHeight: 1.08, textTransform: 'uppercase', textAlign: 'center' }}>ЖДЕМ НАЧАЛА</span>
-                  <span style={{ fontSize: '24px', fontWeight: 900, letterSpacing: '0.02em', color: 'rgba(255,255,255,0.28)', lineHeight: 1.08, textTransform: 'uppercase', textAlign: 'center' }}>НОВОГО РАУНДА</span>
-                </>
-              )}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 24,
+            justifyContent: 'center',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+            <span
+              style={{
+                fontSize: 13,
+                color: 'var(--color-text-mute)',
+                fontWeight: 700,
+                letterSpacing: 1.4,
+                textTransform: 'uppercase',
+              }}
+            >
+              Раунд {Math.max(1, roundNumber)}
+            </span>
+            <div
+              style={{
+                padding: '12px 28px',
+                borderRadius: 999,
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid var(--color-border)',
+                fontSize: 56,
+                fontWeight: 900,
+                color: urgent ? 'var(--color-danger)' : 'var(--color-text)',
+                letterSpacing: -2,
+                fontFamily: FONT_MONO,
+                fontVariantNumeric: 'tabular-nums',
+                lineHeight: 1,
+                animation: urgent ? 'pulse 0.65s infinite' : undefined,
+              }}
+            >
+              {formatTime(safe)}
             </div>
           </div>
+
+          <RoleBanner team={myTeam} size="desktop" />
+
+          <ExplainerStatusPill team={activeTeam} explainerName={explainerName} size="desktop" />
+
+          <ListenCard isRoundActive={isRoundActive} size="desktop" />
+
+          <div
+            style={{
+              fontSize: 13,
+              color: 'var(--color-text-mute)',
+              fontWeight: 500,
+              textAlign: 'center',
+            }}
+          >
+            Жми (пробел) когда команда угадала · (↓) если хочешь пропустить
+          </div>
         </div>
+
+        <DesktopGameSidebar
+          team="B"
+          score={teamBScore}
+          active={activeTeam === 'B'}
+          players={teamBPlayers}
+        />
       </div>
     </div>
   )
