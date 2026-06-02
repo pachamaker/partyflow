@@ -713,17 +713,6 @@ function GuesserScreenDesktop({
           <ExplainerStatusPill team={activeTeam} explainerName={explainerName} size="desktop" />
 
           <ListenCard isRoundActive={isRoundActive} size="desktop" />
-
-          <div
-            style={{
-              fontSize: 13,
-              color: 'var(--color-text-mute)',
-              fontWeight: 500,
-              textAlign: 'center',
-            }}
-          >
-            Жми (пробел) когда команда угадала · (↓) если хочешь пропустить
-          </div>
         </div>
 
         <DesktopGameSidebar

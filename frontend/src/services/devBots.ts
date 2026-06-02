@@ -88,6 +88,25 @@ export class DevBotManager {
       session.onHintChange?.(hint)
     })
 
+    // Clear the cached hint as soon as the word changes so the UI doesn't show
+    // a stale hint while waiting for the next EXPLAINER_HINT to arrive.
+    const clearHint = () => {
+      if (session.explainerHint === null) return
+      session.explainerHint = null
+      session.onHintChange?.(null)
+    }
+    socket.on('SCORE_UPDATED', (payload: { currentWord?: { id?: number; word?: string } | null }) => {
+      if (payload?.currentWord) {
+        clearHint()
+      }
+    })
+    socket.on('ROUND_STARTED', () => {
+      clearHint()
+    })
+    socket.on('ROUND_ENDED', () => {
+      clearHint()
+    })
+
     return session
   }
 
@@ -116,5 +135,60 @@ export class DevBotManager {
 
   getAll(): BotSession[] {
     return Array.from(this.bots.values())
+  }
+
+  async reconnectBot(playerId: string): Promise<boolean> {
+    const session = this.bots.get(playerId)
+    if (!session) return false
+    if (session.socket.connected) return true
+
+    return new Promise<boolean>((resolve) => {
+      let settled = false
+      const cleanup = () => {
+        session.socket.off('connect', onConnect)
+        session.socket.off('connect_error', onError)
+        clearTimeout(timer)
+      }
+      const onConnect = () => {
+        if (settled) return
+        settled = true
+        cleanup()
+        resolve(true)
+      }
+      const onError = () => {
+        if (settled) return
+        settled = true
+        cleanup()
+        resolve(false)
+      }
+      const timer = setTimeout(() => {
+        if (settled) return
+        settled = true
+        cleanup()
+        resolve(false)
+      }, 3000)
+      session.socket.once('connect', onConnect)
+      session.socket.once('connect_error', onError)
+      try {
+        session.socket.connect()
+      } catch {
+        if (settled) return
+        settled = true
+        cleanup()
+        resolve(false)
+      }
+    })
+  }
+
+  async ensureAllConnected(): Promise<void> {
+    const tasks: Promise<boolean>[] = []
+    for (const session of this.bots.values()) {
+      if (!session.socket.connected) {
+        tasks.push(this.reconnectBot(session.playerId))
+      }
+    }
+    if (tasks.length > 0) {
+      await Promise.all(tasks)
+    }
   }
 }

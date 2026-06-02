@@ -74,21 +74,40 @@ export default function GameContainer() {
   const { isDesktop } = useBreakpoint()
   const { roomState, currentPlayerId, isJoining, roundStats, explainerHint, emit } = useGameSession() as GameSessionLike
 
-  const { viewAsPlayerId, getBotSocket, getBotHint, bots, setViewAsPlayerId } = useDevSession()
+  const { viewAsPlayerId, getBotSocket, getBotHint, bots, setViewAsPlayerId, reconnectBot } = useDevSession()
 
   const effectivePlayerId = viewAsPlayerId ?? currentPlayerId
 
   const effectiveEmit = (event: string, payload?: unknown, ack?: (response: unknown) => void) => {
     if (viewAsPlayerId) {
       const botSocket = getBotSocket(viewAsPlayerId)
-      if (botSocket) {
+      if (!botSocket) {
+        console.error(
+          '[dev] cannot emit ' + event + ' — viewing as ' + viewAsPlayerId + ' but bot session is gone',
+        )
+        return
+      }
+      const emitOnSocket = () => {
         if (ack) {
           botSocket.emit(event, payload, ack)
         } else {
           botSocket.emit(event, payload)
         }
+      }
+      if (botSocket.connected) {
+        emitOnSocket()
         return
       }
+      void reconnectBot(viewAsPlayerId).then((ok) => {
+        if (ok) {
+          emitOnSocket()
+        } else {
+          console.error(
+            '[dev] cannot emit ' + event + ' — bot ' + viewAsPlayerId + ' socket reconnect failed',
+          )
+        }
+      })
+      return
     }
     emit(event, payload, ack)
   }
@@ -108,21 +127,6 @@ export default function GameContainer() {
     if (!activeId) return
     setViewAsPlayerId(botIdsRef.current.has(activeId) ? activeId : null)
   }, [roomState?.game.activeExplainerId, setViewAsPlayerId])
-
-  // Auto-start round when the next explainer is a bot.
-  const autoStartedRoundRef = useRef<number>(0)
-  useEffect(() => {
-    if (!import.meta.env.DEV) return
-    if (roomState?.game.phase !== 'ROUND_END') return
-    if (!viewAsPlayerId || !botIdsRef.current.has(viewAsPlayerId)) return
-    if (viewAsPlayerId !== roomState.game.activeExplainerId) return
-    const round = roomState.game.currentRound ?? 0
-    if (autoStartedRoundRef.current === round) return
-    const botSocket = getBotSocket(viewAsPlayerId)
-    if (!botSocket) return
-    autoStartedRoundRef.current = round
-    botSocket.emit('start_round', { roomId: roomState.roomId })
-  }, [roomState?.game.phase, viewAsPlayerId, roomState?.game.activeExplainerId, roomState?.game.currentRound, roomState?.roomId, getBotSocket])
 
   const safeScore = roomState?.game.score ?? { A: 0, B: 0 }
   const safeRemainingSeconds = roomState?.game.remainingSeconds ?? 0

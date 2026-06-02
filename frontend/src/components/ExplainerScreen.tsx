@@ -1,3 +1,4 @@
+import { motion, type PanInfo } from 'framer-motion'
 import useBreakpoint from '../hooks/useBreakpoint'
 
 type ExplainerScreenProps = {
@@ -239,6 +240,30 @@ function RoleBanner({ team, size = 'mobile' }: { team: TeamKey; size?: 'mobile' 
   )
 }
 
+// Picks a font size that lets the word fit on a single line whenever possible.
+// "Length" is measured by the longest whitespace-separated token, not the whole
+// string — multi-word phrases ("ТОКСИЧНАЯ ПОЗИТИВНОСТЬ") wrap at the space and
+// don't deserve to be shrunk as if they were one giant token.
+function pickWordFontSize(word: string, isDesktop: boolean): number {
+  const tokens = word.trim().split(/\s+/).filter(Boolean)
+  const longestToken = tokens.reduce((max, t) => Math.max(max, t.length), 0)
+  const len = Math.max(longestToken, 1)
+  if (isDesktop) {
+    if (len <= 5) return 112
+    if (len <= 7) return 92
+    if (len <= 10) return 72
+    if (len <= 13) return 56
+    if (len <= 16) return 44
+    return 36
+  }
+  if (len <= 5) return 60
+  if (len <= 7) return 48
+  if (len <= 10) return 38
+  if (len <= 13) return 30
+  if (len <= 16) return 26
+  return 22
+}
+
 function WordCard({
   word,
   hint,
@@ -250,12 +275,13 @@ function WordCard({
 }) {
   const isDesktop = size === 'desktop'
   const normalizedHint = hint?.trim() ?? ''
+  const wordFontSize = pickWordFontSize(word, isDesktop)
   return (
     <div
       style={{
         background: 'linear-gradient(180deg, var(--color-surface-hi), var(--color-surface))',
         borderRadius: isDesktop ? 36 : 32,
-        padding: isDesktop ? '64px 64px 40px' : '36px 24px 22px',
+        padding: isDesktop ? '56px 40px 36px' : '32px 20px 22px',
         border: '1.5px solid var(--color-border-hi)',
         boxShadow: isDesktop
           ? '0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)'
@@ -281,14 +307,19 @@ function WordCard({
       </div>
       <div
         style={{
-          fontSize: isDesktop ? 120 : 64,
+          fontSize: wordFontSize,
           fontWeight: 900,
           color: 'var(--color-text)',
           textAlign: 'center',
-          letterSpacing: isDesktop ? -4 : -2,
-          lineHeight: 1,
+          letterSpacing: isDesktop ? -wordFontSize * 0.02 : -wordFontSize * 0.015,
+          lineHeight: 1.05,
           textShadow: isDesktop ? '0 8px 60px rgba(124,58,237,0.5)' : '0 4px 30px rgba(124,58,237,0.4)',
-          wordBreak: 'break-word',
+          // Break only at whitespace; only fall back to mid-word break if a
+          // single token still cannot fit (extremely long unbroken word).
+          whiteSpace: 'normal',
+          wordBreak: 'normal',
+          overflowWrap: 'break-word',
+          hyphens: 'manual',
         }}
       >
         {word}
@@ -465,7 +496,7 @@ function GuessedButton({
       <CheckSvg size={isDesktop ? 22 : 20} color="currentColor" />
       Угадали
       {isDesktop ? (
-        <span style={{ fontSize: 13, opacity: 0.6, fontWeight: 600 }}>(пробел)</span>
+        <span style={{ fontSize: 13, opacity: 0.6, fontWeight: 600 }}></span>
       ) : null}
     </button>
   )
@@ -536,14 +567,52 @@ function ExplainerScreenMobile({
         </div>
 
         {/* center area */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            paddingBottom: !showStart ? 110 : 0,
+          }}
+        >
           {showStart ? (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <StartRoundButton onClick={onStartRound} size="mobile" />
             </div>
           ) : showWord ? (
             <>
-              <WordCard word={upperWord} hint={hint} size="mobile" />
+              <div
+                style={{
+                  maxHeight: 'calc(100dvh - 280px)',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                {isRoundActive && onGuessed && onSkipped ? (
+                  <motion.div
+                    key={word}
+                    drag="y"
+                    dragConstraints={{ top: -200, bottom: 200 }}
+                    dragElastic={0.2}
+                    dragSnapToOrigin
+                    whileDrag={{ scale: 0.98 }}
+                    onDragEnd={(_event, info: PanInfo) => {
+                      if (info.offset.y < -80 || info.velocity.y < -500) {
+                        onGuessed?.()
+                      } else if (info.offset.y > 80 || info.velocity.y > 500) {
+                        onSkipped?.()
+                      }
+                    }}
+                    style={{ width: '100%', touchAction: 'none' }}
+                  >
+                    <WordCard word={upperWord} hint={hint} size="mobile" />
+                  </motion.div>
+                ) : (
+                  <WordCard word={upperWord} hint={hint} size="mobile" />
+                )}
+              </div>
               <div
                 style={{
                   textAlign: 'center',
@@ -570,11 +639,25 @@ function ExplainerScreenMobile({
           )}
         </div>
 
-        {/* action buttons */}
+        {/* action buttons (sticky bottom strip) */}
         {!showStart ? (
-          <div style={{ display: 'flex', gap: 12 }}>
-            <SkipButton onClick={onSkipped} disabled={!isRoundActive} size="mobile" />
-            <GuessedButton onClick={onGuessed} disabled={!isRoundActive} size="mobile" />
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              padding: '12px 20px 30px',
+              zIndex: 5,
+              background:
+                'linear-gradient(180deg, rgba(6,8,23,0) 0%, rgba(6,8,23,0.92) 30%, var(--color-bg) 100%)',
+              pointerEvents: 'none',
+            }}
+          >
+            <div style={{ display: 'flex', gap: 12, pointerEvents: 'auto' }}>
+              <SkipButton onClick={onSkipped} disabled={!isRoundActive} size="mobile" />
+              <GuessedButton onClick={onGuessed} disabled={!isRoundActive} size="mobile" />
+            </div>
           </div>
         ) : null}
       </div>
@@ -796,10 +879,11 @@ function ExplainerScreenDesktop({
             flexDirection: 'column',
             alignItems: 'center',
             gap: 24,
-            justifyContent: 'center',
+            minHeight: 0,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+          {/* top bar: round label + big timer */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexShrink: 0 }}>
             <span
               style={{
                 fontSize: 13,
@@ -831,30 +915,61 @@ function ExplainerScreenDesktop({
             </div>
           </div>
 
-          <RoleBanner team={activeTeam} size="desktop" />
+          <div style={{ flexShrink: 0 }}>
+            <RoleBanner team={activeTeam} size="desktop" />
+          </div>
 
-          {showStart ? (
-            <StartRoundButton onClick={onStartRound} size="desktop" />
-          ) : showWord ? (
-            <>
-              <WordCard word={upperWord} hint={hint} size="desktop" />
-              <div style={{ display: 'flex', gap: 16, width: '100%', maxWidth: 580 }}>
-                <SkipButton onClick={onSkipped} disabled={!isRoundActive} size="desktop" />
-                <GuessedButton onClick={onGuessed} disabled={!isRoundActive} size="desktop" />
+          {/* center area takes remaining height and centers its content; if the
+              word card grows past the viewport, it shrinks/scrolls instead of
+              pushing the action buttons below the fold. */}
+          <div
+            style={{
+              flex: 1,
+              minHeight: 0,
+              width: '100%',
+              maxWidth: 580,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+            }}
+          >
+            {showStart ? (
+              <StartRoundButton onClick={onStartRound} size="desktop" />
+            ) : showWord ? (
+              <div
+                style={{
+                  width: '100%',
+                  maxHeight: '100%',
+                  overflowY: 'auto',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+              >
+                <WordCard word={upperWord} hint={hint} size="desktop" />
               </div>
-            </>
-          ) : (
-            <div
-              style={{
-                fontSize: 16,
-                color: 'var(--color-text-mute)',
-                fontWeight: 600,
-                marginTop: 12,
-              }}
-            >
-              Ждём начала раунда…
+            ) : (
+              <div
+                style={{
+                  fontSize: 16,
+                  color: 'var(--color-text-mute)',
+                  fontWeight: 600,
+                }}
+              >
+                Ждём начала раунда…
+              </div>
+            )}
+          </div>
+
+          {/* sticky bottom: action row, only when a round is live */}
+          {showWord ? (
+            <div style={{ display: 'flex', gap: 16, width: '100%', maxWidth: 580, flexShrink: 0 }}>
+              <SkipButton onClick={onSkipped} disabled={!isRoundActive} size="desktop" />
+              <GuessedButton onClick={onGuessed} disabled={!isRoundActive} size="desktop" />
             </div>
-          )}
+          ) : null}
         </div>
 
         <DesktopGameSidebar

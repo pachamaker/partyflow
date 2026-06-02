@@ -633,7 +633,7 @@ function SettingsModal({
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 22 }}>
         <Stepper
           kicker="Длина раунда"
-          hint="от 30 до 120 сек"
+          hint="от 20 до 120 сек"
           value={timer}
           unit="сек"
           tone="blue"
@@ -644,7 +644,7 @@ function SettingsModal({
         />
         <Stepper
           kicker="Слов до победы"
-          hint="от 20 до 100"
+          hint="от 10 до 100"
           value={score}
           unit="слов"
           tone="orange"
@@ -1014,7 +1014,7 @@ function LandingScreenMobile({
           <GhostButton disabled={joinDisabled} onClick={() => setJoinOpen(true)}>
             Войти по коду
           </GhostButton>
-          <HowToPlayButton />
+          {/* <HowToPlayButton /> */}
           {errorMessage ? (
             <p
               style={{
