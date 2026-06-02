@@ -109,21 +109,6 @@ export default function GameContainer() {
     setViewAsPlayerId(botIdsRef.current.has(activeId) ? activeId : null)
   }, [roomState?.game.activeExplainerId, setViewAsPlayerId])
 
-  // Auto-start round when the next explainer is a bot.
-  const autoStartedRoundRef = useRef<number>(0)
-  useEffect(() => {
-    if (!import.meta.env.DEV) return
-    if (roomState?.game.phase !== 'ROUND_END') return
-    if (!viewAsPlayerId || !botIdsRef.current.has(viewAsPlayerId)) return
-    if (viewAsPlayerId !== roomState.game.activeExplainerId) return
-    const round = roomState.game.currentRound ?? 0
-    if (autoStartedRoundRef.current === round) return
-    const botSocket = getBotSocket(viewAsPlayerId)
-    if (!botSocket) return
-    autoStartedRoundRef.current = round
-    botSocket.emit('start_round', { roomId: roomState.roomId })
-  }, [roomState?.game.phase, viewAsPlayerId, roomState?.game.activeExplainerId, roomState?.game.currentRound, roomState?.roomId, getBotSocket])
-
   const safeScore = roomState?.game.score ?? { A: 0, B: 0 }
   const safeRemainingSeconds = roomState?.game.remainingSeconds ?? 0
   const gamePhase = roomState?.game.phase ?? 'LOBBY'
