@@ -11,6 +11,8 @@ type DevSessionContextValue = {
   setViewAsPlayerId: (id: string | null) => void
   getBotSocket: (playerId: string) => Socket | null
   getBotHint: (playerId: string) => string | null
+  reconnectBot: (playerId: string) => Promise<boolean>
+  ensureAllConnected: () => Promise<void>
 }
 
 const DevSessionContext = createContext<DevSessionContextValue>({
@@ -21,6 +23,8 @@ const DevSessionContext = createContext<DevSessionContextValue>({
   setViewAsPlayerId: () => {},
   getBotSocket: () => null,
   getBotHint: () => null,
+  reconnectBot: async () => false,
+  ensureAllConnected: async () => undefined,
 })
 
 export function DevSessionContextProvider({ children }: { children: React.ReactNode }) {
@@ -60,9 +64,40 @@ export function DevSessionContextProvider({ children }: { children: React.ReactN
     return bot?.explainerHint ?? null
   }, [])
 
+  const reconnectBot = useCallback((playerId: string) => {
+    return managerRef.current.reconnectBot(playerId)
+  }, [])
+
+  const ensureAllConnected = useCallback(() => {
+    return managerRef.current.ensureAllConnected()
+  }, [])
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    const handler = () => {
+      if (document.visibilityState === 'visible') {
+        void managerRef.current.ensureAllConnected()
+      }
+    }
+    document.addEventListener('visibilitychange', handler)
+    return () => {
+      document.removeEventListener('visibilitychange', handler)
+    }
+  }, [])
+
   return (
     <DevSessionContext.Provider
-      value={{ bots, viewAsPlayerId, spawnBots, destroyAllBots, setViewAsPlayerId, getBotSocket, getBotHint }}
+      value={{
+        bots,
+        viewAsPlayerId,
+        spawnBots,
+        destroyAllBots,
+        setViewAsPlayerId,
+        getBotSocket,
+        getBotHint,
+        reconnectBot,
+        ensureAllConnected,
+      }}
     >
       {children}
     </DevSessionContext.Provider>

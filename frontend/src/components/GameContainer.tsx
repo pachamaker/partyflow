@@ -74,21 +74,40 @@ export default function GameContainer() {
   const { isDesktop } = useBreakpoint()
   const { roomState, currentPlayerId, isJoining, roundStats, explainerHint, emit } = useGameSession() as GameSessionLike
 
-  const { viewAsPlayerId, getBotSocket, getBotHint, bots, setViewAsPlayerId } = useDevSession()
+  const { viewAsPlayerId, getBotSocket, getBotHint, bots, setViewAsPlayerId, reconnectBot } = useDevSession()
 
   const effectivePlayerId = viewAsPlayerId ?? currentPlayerId
 
   const effectiveEmit = (event: string, payload?: unknown, ack?: (response: unknown) => void) => {
     if (viewAsPlayerId) {
       const botSocket = getBotSocket(viewAsPlayerId)
-      if (botSocket) {
+      if (!botSocket) {
+        console.error(
+          '[dev] cannot emit ' + event + ' — viewing as ' + viewAsPlayerId + ' but bot session is gone',
+        )
+        return
+      }
+      const emitOnSocket = () => {
         if (ack) {
           botSocket.emit(event, payload, ack)
         } else {
           botSocket.emit(event, payload)
         }
+      }
+      if (botSocket.connected) {
+        emitOnSocket()
         return
       }
+      void reconnectBot(viewAsPlayerId).then((ok) => {
+        if (ok) {
+          emitOnSocket()
+        } else {
+          console.error(
+            '[dev] cannot emit ' + event + ' — bot ' + viewAsPlayerId + ' socket reconnect failed',
+          )
+        }
+      })
+      return
     }
     emit(event, payload, ack)
   }
