@@ -555,7 +555,15 @@ function ExplainerScreenMobile({
         </div>
 
         {/* center area */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            paddingBottom: !showStart ? 110 : 0,
+          }}
+        >
           {showStart ? (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <StartRoundButton onClick={onStartRound} size="mobile" />
@@ -598,11 +606,25 @@ function ExplainerScreenMobile({
           )}
         </div>
 
-        {/* action buttons */}
+        {/* action buttons (sticky bottom strip) */}
         {!showStart ? (
-          <div style={{ display: 'flex', gap: 12 }}>
-            <SkipButton onClick={onSkipped} disabled={!isRoundActive} size="mobile" />
-            <GuessedButton onClick={onGuessed} disabled={!isRoundActive} size="mobile" />
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              padding: '12px 20px 30px',
+              zIndex: 5,
+              background:
+                'linear-gradient(180deg, rgba(6,8,23,0) 0%, rgba(6,8,23,0.92) 30%, var(--color-bg) 100%)',
+              pointerEvents: 'none',
+            }}
+          >
+            <div style={{ display: 'flex', gap: 12, pointerEvents: 'auto' }}>
+              <SkipButton onClick={onSkipped} disabled={!isRoundActive} size="mobile" />
+              <GuessedButton onClick={onGuessed} disabled={!isRoundActive} size="mobile" />
+            </div>
           </div>
         ) : null}
       </div>
