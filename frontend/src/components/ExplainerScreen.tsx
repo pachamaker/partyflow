@@ -311,12 +311,15 @@ function WordCard({
           fontWeight: 900,
           color: 'var(--color-text)',
           textAlign: 'center',
-          letterSpacing: isDesktop ? -wordFontSize * 0.025 : -wordFontSize * 0.02,
+          letterSpacing: isDesktop ? -wordFontSize * 0.02 : -wordFontSize * 0.015,
           lineHeight: 1.05,
           textShadow: isDesktop ? '0 8px 60px rgba(124,58,237,0.5)' : '0 4px 30px rgba(124,58,237,0.4)',
-          wordBreak: 'break-word',
-          overflowWrap: 'anywhere',
-          hyphens: 'auto',
+          // Break only at whitespace; only fall back to mid-word break if a
+          // single token still cannot fit (extremely long unbroken word).
+          whiteSpace: 'normal',
+          wordBreak: 'normal',
+          overflowWrap: 'break-word',
+          hyphens: 'manual',
         }}
       >
         {word}
@@ -876,10 +879,11 @@ function ExplainerScreenDesktop({
             flexDirection: 'column',
             alignItems: 'center',
             gap: 24,
-            justifyContent: 'center',
+            minHeight: 0,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+          {/* top bar: round label + big timer */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexShrink: 0 }}>
             <span
               style={{
                 fontSize: 13,
@@ -911,30 +915,61 @@ function ExplainerScreenDesktop({
             </div>
           </div>
 
-          <RoleBanner team={activeTeam} size="desktop" />
+          <div style={{ flexShrink: 0 }}>
+            <RoleBanner team={activeTeam} size="desktop" />
+          </div>
 
-          {showStart ? (
-            <StartRoundButton onClick={onStartRound} size="desktop" />
-          ) : showWord ? (
-            <>
-              <WordCard word={upperWord} hint={hint} size="desktop" />
-              <div style={{ display: 'flex', gap: 16, width: '100%', maxWidth: 580 }}>
-                <SkipButton onClick={onSkipped} disabled={!isRoundActive} size="desktop" />
-                <GuessedButton onClick={onGuessed} disabled={!isRoundActive} size="desktop" />
+          {/* center area takes remaining height and centers its content; if the
+              word card grows past the viewport, it shrinks/scrolls instead of
+              pushing the action buttons below the fold. */}
+          <div
+            style={{
+              flex: 1,
+              minHeight: 0,
+              width: '100%',
+              maxWidth: 580,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+            }}
+          >
+            {showStart ? (
+              <StartRoundButton onClick={onStartRound} size="desktop" />
+            ) : showWord ? (
+              <div
+                style={{
+                  width: '100%',
+                  maxHeight: '100%',
+                  overflowY: 'auto',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+              >
+                <WordCard word={upperWord} hint={hint} size="desktop" />
               </div>
-            </>
-          ) : (
-            <div
-              style={{
-                fontSize: 16,
-                color: 'var(--color-text-mute)',
-                fontWeight: 600,
-                marginTop: 12,
-              }}
-            >
-              Ждём начала раунда…
+            ) : (
+              <div
+                style={{
+                  fontSize: 16,
+                  color: 'var(--color-text-mute)',
+                  fontWeight: 600,
+                }}
+              >
+                Ждём начала раунда…
+              </div>
+            )}
+          </div>
+
+          {/* sticky bottom: action row, only when a round is live */}
+          {showWord ? (
+            <div style={{ display: 'flex', gap: 16, width: '100%', maxWidth: 580, flexShrink: 0 }}>
+              <SkipButton onClick={onSkipped} disabled={!isRoundActive} size="desktop" />
+              <GuessedButton onClick={onGuessed} disabled={!isRoundActive} size="desktop" />
             </div>
-          )}
+          ) : null}
         </div>
 
         <DesktopGameSidebar
