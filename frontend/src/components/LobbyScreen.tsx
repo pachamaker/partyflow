@@ -69,7 +69,7 @@ const AmbientBg: FC<{ variant: 'mix' | 'win' }> = ({ variant }) => {
 
 /* ── Header (kicker + monospace code + kebab) ───────────────── */
 
-const LobbyHeader: FC<{ code: string; onMenu?: () => void }> = ({ code, onMenu }) => (
+const LobbyHeader: FC<{ code: string; onMenu?: () => void }> = ({ code }) => (
   <div
     style={{
       display: 'flex',
@@ -103,7 +103,7 @@ const LobbyHeader: FC<{ code: string; onMenu?: () => void }> = ({ code, onMenu }
         {code}
       </div>
     </div>
-    <button
+    {/* <button
       type="button"
       onClick={onMenu}
       aria-label="Меню лобби"
@@ -126,7 +126,7 @@ const LobbyHeader: FC<{ code: string; onMenu?: () => void }> = ({ code, onMenu }
         <circle cx="9" cy="4" r="1.5" fill="currentColor" />
         <circle cx="14" cy="4" r="1.5" fill="currentColor" />
       </svg>
-    </button>
+    </button> */}
   </div>
 )
 
