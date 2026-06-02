@@ -239,6 +239,22 @@ function RoleBanner({ team, size = 'mobile' }: { team: TeamKey; size?: 'mobile' 
   )
 }
 
+function pickWordFontSize(word: string, isDesktop: boolean): number {
+  const len = word.length
+  if (isDesktop) {
+    if (len <= 6) return 120
+    if (len <= 10) return 92
+    if (len <= 14) return 68
+    if (len <= 18) return 52
+    return 42
+  }
+  if (len <= 6) return 64
+  if (len <= 10) return 50
+  if (len <= 14) return 40
+  if (len <= 18) return 32
+  return 26
+}
+
 function WordCard({
   word,
   hint,
@@ -250,6 +266,7 @@ function WordCard({
 }) {
   const isDesktop = size === 'desktop'
   const normalizedHint = hint?.trim() ?? ''
+  const wordFontSize = pickWordFontSize(word, isDesktop)
   return (
     <div
       style={{
@@ -281,14 +298,16 @@ function WordCard({
       </div>
       <div
         style={{
-          fontSize: isDesktop ? 120 : 64,
+          fontSize: wordFontSize,
           fontWeight: 900,
           color: 'var(--color-text)',
           textAlign: 'center',
-          letterSpacing: isDesktop ? -4 : -2,
-          lineHeight: 1,
+          letterSpacing: isDesktop ? -wordFontSize * 0.025 : -wordFontSize * 0.02,
+          lineHeight: 1.05,
           textShadow: isDesktop ? '0 8px 60px rgba(124,58,237,0.5)' : '0 4px 30px rgba(124,58,237,0.4)',
           wordBreak: 'break-word',
+          overflowWrap: 'anywhere',
+          hyphens: 'auto',
         }}
       >
         {word}
@@ -465,7 +484,7 @@ function GuessedButton({
       <CheckSvg size={isDesktop ? 22 : 20} color="currentColor" />
       Угадали
       {isDesktop ? (
-        <span style={{ fontSize: 13, opacity: 0.6, fontWeight: 600 }}>(пробел)</span>
+        <span style={{ fontSize: 13, opacity: 0.6, fontWeight: 600 }}></span>
       ) : null}
     </button>
   )
@@ -543,7 +562,16 @@ function ExplainerScreenMobile({
             </div>
           ) : showWord ? (
             <>
-              <WordCard word={upperWord} hint={hint} size="mobile" />
+              <div
+                style={{
+                  maxHeight: 'calc(100dvh - 280px)',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <WordCard word={upperWord} hint={hint} size="mobile" />
+              </div>
               <div
                 style={{
                   textAlign: 'center',
