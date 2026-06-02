@@ -581,9 +581,11 @@ function ExplainerScreenMobile({
               >
                 {isRoundActive && onGuessed && onSkipped ? (
                   <motion.div
+                    key={word}
                     drag="y"
                     dragConstraints={{ top: -200, bottom: 200 }}
                     dragElastic={0.2}
+                    dragSnapToOrigin
                     whileDrag={{ scale: 0.98 }}
                     onDragEnd={(_event, info: PanInfo) => {
                       if (info.offset.y < -80 || info.velocity.y < -500) {
