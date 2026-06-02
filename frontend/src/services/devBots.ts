@@ -88,6 +88,25 @@ export class DevBotManager {
       session.onHintChange?.(hint)
     })
 
+    // Clear the cached hint as soon as the word changes so the UI doesn't show
+    // a stale hint while waiting for the next EXPLAINER_HINT to arrive.
+    const clearHint = () => {
+      if (session.explainerHint === null) return
+      session.explainerHint = null
+      session.onHintChange?.(null)
+    }
+    socket.on('SCORE_UPDATED', (payload: { currentWord?: { id?: number; word?: string } | null }) => {
+      if (payload?.currentWord) {
+        clearHint()
+      }
+    })
+    socket.on('ROUND_STARTED', () => {
+      clearHint()
+    })
+    socket.on('ROUND_ENDED', () => {
+      clearHint()
+    })
+
     return session
   }
 
