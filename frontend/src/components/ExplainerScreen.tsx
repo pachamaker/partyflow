@@ -1,3 +1,4 @@
+import { motion, type PanInfo } from 'framer-motion'
 import useBreakpoint from '../hooks/useBreakpoint'
 
 type ExplainerScreenProps = {
@@ -578,7 +579,26 @@ function ExplainerScreenMobile({
                   flexDirection: 'column',
                 }}
               >
-                <WordCard word={upperWord} hint={hint} size="mobile" />
+                {isRoundActive && onGuessed && onSkipped ? (
+                  <motion.div
+                    drag="y"
+                    dragConstraints={{ top: -200, bottom: 200 }}
+                    dragElastic={0.2}
+                    whileDrag={{ scale: 0.98 }}
+                    onDragEnd={(_event, info: PanInfo) => {
+                      if (info.offset.y < -80 || info.velocity.y < -500) {
+                        onGuessed?.()
+                      } else if (info.offset.y > 80 || info.velocity.y > 500) {
+                        onSkipped?.()
+                      }
+                    }}
+                    style={{ width: '100%', touchAction: 'none' }}
+                  >
+                    <WordCard word={upperWord} hint={hint} size="mobile" />
+                  </motion.div>
+                ) : (
+                  <WordCard word={upperWord} hint={hint} size="mobile" />
+                )}
               </div>
               <div
                 style={{
