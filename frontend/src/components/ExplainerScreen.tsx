@@ -240,20 +240,28 @@ function RoleBanner({ team, size = 'mobile' }: { team: TeamKey; size?: 'mobile' 
   )
 }
 
+// Picks a font size that lets the word fit on a single line whenever possible.
+// "Length" is measured by the longest whitespace-separated token, not the whole
+// string — multi-word phrases ("ТОКСИЧНАЯ ПОЗИТИВНОСТЬ") wrap at the space and
+// don't deserve to be shrunk as if they were one giant token.
 function pickWordFontSize(word: string, isDesktop: boolean): number {
-  const len = word.length
+  const tokens = word.trim().split(/\s+/).filter(Boolean)
+  const longestToken = tokens.reduce((max, t) => Math.max(max, t.length), 0)
+  const len = Math.max(longestToken, 1)
   if (isDesktop) {
-    if (len <= 6) return 120
-    if (len <= 10) return 92
-    if (len <= 14) return 68
-    if (len <= 18) return 52
-    return 42
+    if (len <= 5) return 112
+    if (len <= 7) return 92
+    if (len <= 10) return 72
+    if (len <= 13) return 56
+    if (len <= 16) return 44
+    return 36
   }
-  if (len <= 6) return 64
-  if (len <= 10) return 50
-  if (len <= 14) return 40
-  if (len <= 18) return 32
-  return 26
+  if (len <= 5) return 60
+  if (len <= 7) return 48
+  if (len <= 10) return 38
+  if (len <= 13) return 30
+  if (len <= 16) return 26
+  return 22
 }
 
 function WordCard({
@@ -273,7 +281,7 @@ function WordCard({
       style={{
         background: 'linear-gradient(180deg, var(--color-surface-hi), var(--color-surface))',
         borderRadius: isDesktop ? 36 : 32,
-        padding: isDesktop ? '64px 64px 40px' : '36px 24px 22px',
+        padding: isDesktop ? '56px 40px 36px' : '32px 20px 22px',
         border: '1.5px solid var(--color-border-hi)',
         boxShadow: isDesktop
           ? '0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)'
