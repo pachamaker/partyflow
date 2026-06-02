@@ -1,8 +1,5 @@
-import { useMemo, useState, type FC } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { useMemo, type CSSProperties, type FC, type ReactNode } from 'react'
 import useBreakpoint from '../hooks/useBreakpoint'
-import C from '../constants/colors'
-import GlassPanel from './ui/GlassPanel'
 import QRCodeUi from './ui/QRCode'
 
 type LobbyPlayer = {
@@ -20,339 +17,977 @@ type LobbyScreenProps = {
   onStart?: () => void
 }
 
-function BlurredBg() {
+export type { LobbyPlayer, LobbyScreenProps }
+
+const FONT_SANS = 'var(--font-sans)'
+const FONT_MONO = 'ui-monospace, "SF Mono", Menlo, monospace'
+
+type Team = 'blue' | 'orange'
+
+const TEAM_COLORS: Record<Team, { solid: string; deep: string; rgb: string }> = {
+  blue: { solid: '#38BDF8', deep: '#0EA5E9', rgb: '56,189,248' },
+  orange: { solid: '#FB923C', deep: '#F97316', rgb: '251,146,60' },
+}
+
+function getInitial(name: string): string {
+  return name.trim().charAt(0).toUpperCase() || '?'
+}
+
+function copyToClipboard(value: string) {
+  if (typeof navigator !== 'undefined' && navigator.clipboard) {
+    navigator.clipboard.writeText(value).catch(() => undefined)
+  }
+}
+
+/* ── Ambient background ─────────────────────────────────────── */
+
+const AmbientBg: FC<{ variant: 'mix' | 'win' }> = ({ variant }) => {
+  const gradients =
+    variant === 'win'
+      ? [
+          'radial-gradient(ellipse 80% 60% at 50% 20%, rgba(56,189,248,0.40), transparent 65%)',
+          'radial-gradient(ellipse 60% 50% at 50% 80%, rgba(124,58,237,0.30), transparent 65%)',
+        ]
+      : [
+          'radial-gradient(ellipse 60% 40% at 20% 0%, rgba(124,58,237,0.35), transparent 60%)',
+          'radial-gradient(ellipse 50% 35% at 90% 25%, rgba(56,189,248,0.18), transparent 60%)',
+          'radial-gradient(ellipse 70% 50% at 50% 100%, rgba(251,146,60,0.10), transparent 60%)',
+        ]
   return (
-    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-      <div style={{ position: 'absolute', inset: 0, background: '#04061a' }} />
-      <div style={{ position: 'absolute', top: '-25%', left: '-35%', width: '95%', height: '75%', borderRadius: '50%', background: 'radial-gradient(circle, #2a1472 0%, transparent 68%)', filter: 'blur(65px)', opacity: 0.9 }} />
-      <div style={{ position: 'absolute', top: '5%', right: '-25%', width: '75%', height: '65%', borderRadius: '50%', background: 'radial-gradient(circle, #0d3060 0%, transparent 68%)', filter: 'blur(60px)', opacity: 0.8 }} />
-      <div style={{ position: 'absolute', bottom: '-20%', left: '5%', width: '85%', height: '70%', borderRadius: '50%', background: 'radial-gradient(circle, #1a0e5a 0%, transparent 68%)', filter: 'blur(72px)', opacity: 0.95 }} />
-      <div style={{ position: 'absolute', bottom: '10%', right: '-15%', width: '60%', height: '50%', borderRadius: '50%', background: `radial-gradient(circle, ${C.purple}32 0%, transparent 68%)`, filter: 'blur(55px)', opacity: 0.65 }} />
-      <div style={{ position: 'absolute', inset: 0, opacity: 0.038, backgroundImage: 'linear-gradient(rgba(140,170,255,0.9) 1px, transparent 1px), linear-gradient(90deg, rgba(140,170,255,0.9) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-    </div>
+    <div
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        background: gradients.join(', '),
+        pointerEvents: 'none',
+        zIndex: 0,
+      }}
+    />
   )
 }
 
-const PlayerRow: FC<{ name: string; isHost: boolean; color: string; index: number }> = ({ name, isHost, color, index }) => (
-  <motion.div
-    initial={{ opacity: 0, x: -12 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ delay: index * 0.06, type: 'spring', stiffness: 340, damping: 28 }}
-    style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '7px 10px', borderRadius: '10px', background: `${color}0d`, border: `1px solid ${color}20` }}
+/* ── Header (kicker + monospace code + kebab) ───────────────── */
+
+const LobbyHeader: FC<{ code: string; onMenu?: () => void }> = ({ code, onMenu }) => (
+  <div
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 18,
+    }}
   >
-    <div
+    <div>
+      <div
+        style={{
+          fontSize: 11,
+          fontWeight: 700,
+          color: 'var(--color-text-mute)',
+          letterSpacing: 1.6,
+          textTransform: 'uppercase',
+        }}
+      >
+        Комната
+      </div>
+      <div
+        style={{
+          fontSize: 22,
+          fontWeight: 800,
+          color: 'var(--color-text)',
+          marginTop: 2,
+          fontFamily: FONT_MONO,
+          letterSpacing: 1.5,
+        }}
+      >
+        {code}
+      </div>
+    </div>
+    <button
+      type="button"
+      onClick={onMenu}
+      aria-label="Меню лобби"
       style={{
-        width: '28px',
-        height: '28px',
-        borderRadius: '50%',
-        flexShrink: 0,
-        background: `linear-gradient(135deg, ${color}cc 0%, ${color}55 100%)`,
-        boxShadow: `0 0 10px ${color}60`,
+        width: 40,
+        height: 40,
+        borderRadius: 12,
+        background: 'rgba(255,255,255,0.05)',
+        border: '1px solid var(--color-border)',
+        color: 'var(--color-text-sec)',
+        cursor: 'pointer',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '11px',
-        fontWeight: 900,
-        color: '#fff',
+        padding: 0,
       }}
     >
-      {name[0]?.toUpperCase() ?? '?'}
-    </div>
-
-    <span style={{ fontSize: '13px', fontWeight: 700, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.02em', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-      {name}
-    </span>
-
-    {isHost ? (
-      <span style={{ fontSize: '8px', fontWeight: 900, letterSpacing: '0.15em', textTransform: 'uppercase', color: C.purple, padding: '2px 6px', borderRadius: '4px', background: `${C.purple}18`, border: `1px solid ${C.purple}35` }}>
-        HOST
-      </span>
-    ) : null}
-  </motion.div>
-)
-
-const WaitingSlot: FC<{ color: string }> = ({ color }) => (
-  <motion.div
-    animate={{ opacity: [0.3, 0.55, 0.3] }}
-    transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-    style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '7px 10px', borderRadius: '10px', border: `1px dashed ${color}25` }}
-  >
-    <div style={{ width: '28px', height: '28px', borderRadius: '50%', border: `1.5px dashed ${color}35`, flexShrink: 0 }} />
-    <span style={{ fontSize: '12px', fontWeight: 600, color: `${color}40`, letterSpacing: '0.08em', fontStyle: 'italic' }}>Ожидание...</span>
-  </motion.div>
-)
-
-const TeamPanel: FC<{ label: string; color: string; players: LobbyPlayer[]; maxPlayers?: number }> = ({ label, color, players, maxPlayers = 5 }) => {
-  const slots = maxPlayers - players.length
-
-  return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0', borderRadius: '16px', border: `1.5px solid ${color}50`, background: `linear-gradient(160deg, ${color}0a 0%, rgba(4,6,26,0.7) 100%)`, backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', boxShadow: `0 0 0 1px ${color}15, 0 4px 24px rgba(0,0,0,0.5), 0 0 40px ${color}18`, overflow: 'hidden' }}>
-      <div style={{ padding: '10px 12px 8px', borderBottom: `1px solid ${color}20`, background: `linear-gradient(90deg, ${color}15 0%, transparent 100%)`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.18em', color, textTransform: 'uppercase', textShadow: `0 0 14px ${color}` }}>{label}</span>
-        <span style={{ fontSize: '10px', fontWeight: 700, color: `${color}80`, letterSpacing: '0.06em' }}>
-          {players.length}/{maxPlayers}
-        </span>
-      </div>
-
-      <div style={{ padding: '8px', display: 'flex', flexDirection: 'column', gap: '5px', flex: 1 }}>
-        {players.map((p, i) => (
-          <PlayerRow key={`${p.name}-${i}`} name={p.name} isHost={p.isHost} color={color} index={i} />
-        ))}
-        {Array.from({ length: Math.max(0, slots) }).map((_, i) => (
-          <WaitingSlot key={`wait-${label}-${i}`} color={color} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function RoomCodeBadge({ code }: { code: string }) {
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = () => {
-    navigator.clipboard?.writeText(code).catch(() => undefined)
-    setCopied(true)
-    window.setTimeout(() => setCopied(false), 1800)
-  }
-
-  return (
-    <motion.button
-      type="button"
-      onClick={handleCopy}
-      whileTap={{ scale: 0.96 }}
-      style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 16px', borderRadius: '12px', background: 'linear-gradient(135deg, rgba(8,8,28,0.9) 0%, rgba(20,12,50,0.95) 100%)', border: `1px solid ${C.purple}45`, boxShadow: `0 0 0 1px ${C.purple}15, 0 4px 20px rgba(0,0,0,0.5), 0 0 28px ${C.purple}18`, cursor: 'pointer', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
-    >
-      <div>
-        <div style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.2em', color: `${C.purple}88`, textTransform: 'uppercase', marginBottom: '2px' }}>КОД КОМНАТЫ</div>
-        <div style={{ fontSize: '22px', fontWeight: 900, letterSpacing: '0.14em', color: '#fff', textShadow: `0 0 20px ${C.purple}cc, 0 0 40px ${C.purple}60` }}>{code}</div>
-      </div>
-
-      <AnimatePresence mode="wait">
-        {copied ? (
-          <motion.div key="check" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }}>
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-              <path d="M3 9L7 13L15 5" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </motion.div>
-        ) : (
-          <motion.div key="copy" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <rect x="5" y="1" width="10" height="10" rx="2" stroke="rgba(255,255,255,0.3)" strokeWidth="1.4" />
-              <path d="M1 5v9a2 2 0 0 0 2 2h9" stroke="rgba(255,255,255,0.3)" strokeWidth="1.4" strokeLinecap="round" />
-            </svg>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.button>
-  )
-}
-
-const StartButton: FC<{ onClick?: () => void; canStart: boolean; wordsExhausted?: boolean }> = ({ onClick, canStart, wordsExhausted = false }) => (
-  <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
-    <button
-      type="button"
-      onClick={canStart ? onClick : undefined}
-      style={{ width: '100%', padding: '18px 0', borderRadius: '16px', border: canStart ? `2px solid ${C.green}70` : '2px solid rgba(255,255,255,0.1)', background: canStart ? `linear-gradient(135deg, ${C.green}dd 0%, #22c55e 50%, #16a34a 100%)` : 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)', boxShadow: 'none', cursor: canStart ? 'pointer' : 'not-allowed', position: 'relative', overflow: 'hidden', transition: 'none' }}
-    >
-      <span style={{ fontSize: '17px', fontWeight: 900, letterSpacing: '0.18em', textTransform: 'uppercase', color: canStart ? '#fff' : 'rgba(255,255,255,0.25)', textShadow: canStart ? '0 1px 8px rgba(0,0,0,0.3)' : 'none', position: 'relative' }}>
-        {wordsExhausted ? 'Все слова разыграны. На главную' : canStart ? 'НАЧАТЬ ИГРУ' : 'ОЖИДАНИЕ НАЧАЛА ИГРЫ...'}
-      </span>
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <circle cx="4" cy="4" r="1.5" fill="currentColor" />
+        <circle cx="9" cy="4" r="1.5" fill="currentColor" />
+        <circle cx="14" cy="4" r="1.5" fill="currentColor" />
+      </svg>
     </button>
   </div>
 )
 
-function QRPanel({ roomCode, lobbyUrl }: { roomCode: string; lobbyUrl: string }) {
+/* ── PlayerCardLg ───────────────────────────────────────────── */
+
+const PlayerCardLg: FC<{ name: string; team: Team; role?: string; isYou?: boolean }> = ({
+  name,
+  team,
+  role,
+  isYou,
+}) => {
+  const c = TEAM_COLORS[team]
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', padding: '14px 12px', borderRadius: '16px', background: 'linear-gradient(160deg, rgba(167,139,250,0.08) 0%, rgba(4,6,26,0.7) 100%)', border: `1px solid ${C.purple}35`, backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', boxShadow: `0 0 0 1px ${C.purple}12, 0 4px 20px rgba(0,0,0,0.45), 0 0 30px ${C.purple}15` }}>
-      <span style={{ fontSize: '8px', fontWeight: 900, letterSpacing: '0.22em', textTransform: 'uppercase', color: `${C.purple}80` }}>СКАНИРУЙ</span>
-      <div style={{ padding: '6px', borderRadius: '10px', background: 'rgba(255,255,255,0.96)', boxShadow: `0 0 0 1px ${C.purple}40, 0 0 20px ${C.purple}50` }}>
-        <QRCodeUi size={88} value={lobbyUrl} />
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
+        padding: '12px 14px',
+        background: 'rgba(255,255,255,0.04)',
+        border: '1px solid var(--color-border)',
+        borderRadius: 16,
+      }}
+    >
+      <div
+        style={{
+          width: 38,
+          height: 38,
+          borderRadius: 12,
+          background: `linear-gradient(135deg, ${c.solid}, ${c.deep})`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: 17,
+          fontWeight: 700,
+          color: '#0A0E1F',
+          flexShrink: 0,
+        }}
+      >
+        {getInitial(name)}
       </div>
-      <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase' }}>или введи код</span>
-      <div style={{ padding: '4px 10px', borderRadius: '8px', background: `${C.purple}18`, border: `1px solid ${C.purple}35` }}>
-        <span style={{ fontSize: '14px', fontWeight: 900, letterSpacing: '0.18em', color: C.purple, textShadow: `0 0 12px ${C.purple}` }}>{roomCode}</span>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div
+          style={{
+            fontSize: 16,
+            fontWeight: 600,
+            color: 'var(--color-text)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+          }}
+        >
+          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {name}
+          </span>
+          {isYou ? (
+            <span
+              style={{
+                fontSize: 11,
+                fontWeight: 600,
+                color: 'var(--color-accent)',
+                padding: '2px 6px',
+                borderRadius: 6,
+                background: 'rgba(124,58,237,0.15)',
+                flexShrink: 0,
+              }}
+            >
+              ты
+            </span>
+          ) : null}
+        </div>
+        {role ? (
+          <div style={{ fontSize: 12, color: 'var(--color-text-sec)', marginTop: 2 }}>{role}</div>
+        ) : null}
       </div>
     </div>
   )
 }
 
+/* ── PlayerChip (compact) ───────────────────────────────────── */
+
+const PlayerChip: FC<{ name: string; team: Team; isYou?: boolean; host?: boolean }> = ({
+  name,
+  team,
+  isYou,
+  host,
+}) => {
+  const c = TEAM_COLORS[team]
+  return (
+    <div
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 8,
+        height: 36,
+        padding: '0 12px 0 6px',
+        borderRadius: 999,
+        background: `rgba(${c.rgb},0.10)`,
+        border: `1px solid rgba(${c.rgb},0.22)`,
+      }}
+    >
+      <div
+        style={{
+          width: 26,
+          height: 26,
+          borderRadius: 999,
+          background: `linear-gradient(135deg, ${c.solid}, ${c.deep})`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: 13,
+          fontWeight: 700,
+          color: '#0A0E1F',
+          flexShrink: 0,
+        }}
+      >
+        {getInitial(name)}
+      </div>
+      <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text)' }}>{name}</span>
+      {isYou ? (
+        <span style={{ fontSize: 10, color: c.solid, fontWeight: 700, marginLeft: -2 }}>· ТЫ</span>
+      ) : null}
+      {host ? (
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M2 9l1.5-5L6 7l2.5-3L10 9H2z" fill="var(--color-warn)" />
+        </svg>
+      ) : null}
+    </div>
+  )
+}
+
+/* ── EmptySlot ──────────────────────────────────────────────── */
+
+const EmptySlot: FC<{ label?: string }> = ({ label = 'Ждём игрока…' }) => (
+  <div
+    style={{
+      padding: '14px 16px',
+      borderRadius: 16,
+      border: '1px dashed var(--color-border)',
+      fontSize: 13,
+      color: 'var(--color-text-mute)',
+      fontWeight: 500,
+    }}
+  >
+    {label}
+  </div>
+)
+
+/* ── TeamSection ────────────────────────────────────────────── */
+
+const TeamSection: FC<{
+  team: Team
+  label: string
+  count: number
+  total: number
+  compact?: boolean
+  children: ReactNode
+}> = ({ team, label, count, total, compact = false, children }) => {
+  const c = TEAM_COLORS[team]
+  return (
+    <div>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 10,
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: 999,
+              background: c.solid,
+              boxShadow: `0 0 10px ${c.solid}`,
+            }}
+          />
+          <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-text)' }}>{label}</span>
+        </div>
+        <span
+          style={{
+            fontSize: 12,
+            color: c.solid,
+            fontWeight: 700,
+            fontFamily: FONT_MONO,
+          }}
+        >
+          {count}/{total}
+        </span>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: compact ? 'row' : 'column',
+          flexWrap: 'wrap',
+          gap: compact ? 6 : 8,
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  )
+}
+
+/* ── Copy-link button ───────────────────────────────────────── */
+
+const CopyLinkButton: FC<{ onClick: () => void }> = ({ onClick }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    style={{
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      background: 'rgba(56,189,248,0.10)',
+      border: '1px solid rgba(56,189,248,0.25)',
+      color: 'var(--color-blue)',
+      padding: '12px 16px',
+      borderRadius: 14,
+      fontWeight: 600,
+      fontSize: 14,
+      cursor: 'pointer',
+      fontFamily: FONT_SANS,
+    }}
+  >
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path
+        d="M5 9l4-4M3 7L1 9a2.83 2.83 0 004 4l2-2M7 5l2-2a2.83 2.83 0 014 4l-2 2"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+    Скопировать ссылку
+  </button>
+)
+
+/* ── QR invite card (mobile, waiting state) ─────────────────── */
+
+const QrInviteCard: FC<{ roomCode: string; lobbyUrl: string; onCopy: () => void }> = ({
+  roomCode,
+  lobbyUrl,
+  onCopy,
+}) => (
+  <div
+    style={{
+      background: 'var(--color-surface)',
+      borderRadius: 24,
+      padding: 18,
+      border: '1px solid var(--color-border)',
+    }}
+  >
+    <div
+      style={{
+        fontSize: 13,
+        color: 'var(--color-text-sec)',
+        fontWeight: 600,
+        marginBottom: 14,
+        textAlign: 'center',
+      }}
+    >
+      Позови друзей
+    </div>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div
+        style={{
+          padding: 6,
+          borderRadius: 10,
+          background: '#fff',
+          display: 'inline-flex',
+        }}
+      >
+        <QRCodeUi size={148} value={lobbyUrl} />
+      </div>
+    </div>
+    <div
+      style={{
+        fontSize: 12,
+        color: 'var(--color-text-mute)',
+        textAlign: 'center',
+        marginTop: 10,
+        lineHeight: 1.4,
+      }}
+    >
+      Сканируйте камерой телефона
+      <br />
+      или введите код{' '}
+      <span style={{ color: 'var(--color-text)', fontWeight: 700, fontFamily: FONT_MONO }}>
+        {roomCode}
+      </span>{' '}
+      на главном экране
+    </div>
+    <div style={{ height: 1, background: 'var(--color-border)', margin: '14px 0' }} />
+    <CopyLinkButton onClick={onCopy} />
+  </div>
+)
+
+/* ── Ready banner (mobile, ready state) ─────────────────────── */
+
+const ReadyBanner: FC<{ totalPlayers: number }> = ({ totalPlayers }) => (
+  <div
+    style={{
+      padding: '14px 16px',
+      borderRadius: 18,
+      background: 'rgba(34,197,94,0.10)',
+      border: '1px solid rgba(34,197,94,0.25)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+      marginBottom: 18,
+    }}
+  >
+    <div
+      style={{
+        width: 36,
+        height: 36,
+        borderRadius: 999,
+        background: 'rgba(34,197,94,0.18)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+      }}
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path
+          d="M3 8l3.5 3.5L13 5"
+          stroke="var(--color-success)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </div>
+    <div>
+      <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-text)' }}>
+        Комната готова
+      </div>
+      <div style={{ fontSize: 13, color: 'var(--color-text-sec)' }}>
+        {totalPlayers} игроков · команды сбалансированы
+      </div>
+    </div>
+  </div>
+)
+
+/* ── Sticky CTA button ──────────────────────────────────────── */
+
+type CtaKind = 'success' | 'disabled'
+
+const CtaButton: FC<{
+  kind: CtaKind
+  label: string
+  onClick?: () => void
+}> = ({ kind, label, onClick }) => {
+  const isSuccess = kind === 'success'
+  const style: CSSProperties = {
+    width: '100%',
+    height: 60,
+    borderRadius: 22,
+    border: '1.5px solid transparent',
+    background: isSuccess ? 'var(--color-success)' : 'rgba(255,255,255,0.05)',
+    color: isSuccess ? '#02160A' : 'var(--color-text-mute)',
+    boxShadow: isSuccess ? 'var(--shadow-btn-success)' : 'none',
+    fontFamily: FONT_SANS,
+    fontSize: 17,
+    fontWeight: 700,
+    letterSpacing: 0.1,
+    cursor: isSuccess ? 'pointer' : 'not-allowed',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  }
+  if (!isSuccess) {
+    style.borderColor = 'var(--color-border)'
+  }
+  return (
+    <button type="button" onClick={isSuccess ? onClick : undefined} style={style}>
+      {label}
+    </button>
+  )
+}
+
+const StickyCTA: FC<{ kind: CtaKind; label: string; onClick?: () => void }> = ({
+  kind,
+  label,
+  onClick,
+}) => (
+  <div
+    style={{
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      padding: '12px 20px 30px',
+      background:
+        'linear-gradient(180deg, rgba(6,8,23,0) 0%, rgba(6,8,23,0.92) 30%, var(--color-bg-deep) 100%)',
+      zIndex: 30,
+    }}
+  >
+    <CtaButton kind={kind} label={label} onClick={onClick} />
+  </div>
+)
+
+/* ── Helpers: assemble team rows ────────────────────────────── */
+
+function renderTeamMembers(
+  team: Team,
+  players: LobbyPlayer[],
+  maxPerTeam: number,
+  compact: boolean,
+): ReactNode[] {
+  const nodes: ReactNode[] = []
+  players.forEach((p, i) => {
+    if (compact) {
+      nodes.push(
+        <PlayerChip
+          key={`p-${team}-${i}`}
+          name={p.name}
+          team={team}
+          isYou={p.isHost}
+          host={p.isHost}
+        />,
+      )
+    } else {
+      nodes.push(
+        <PlayerCardLg
+          key={`p-${team}-${i}`}
+          name={p.name}
+          team={team}
+          role={p.isHost ? 'Организатор · ты' : undefined}
+          isYou={p.isHost}
+        />,
+      )
+    }
+  })
+  if (!compact) {
+    const empty = Math.max(0, maxPerTeam - players.length)
+    for (let i = 0; i < empty; i += 1) {
+      nodes.push(
+        <EmptySlot key={`e-${team}-${i}`} label={players.length === 0 && i === 0 ? 'Пока никого' : 'Ждём игрока…'} />,
+      )
+    }
+  }
+  return nodes
+}
+
+/* ── Demo defaults ──────────────────────────────────────────── */
+
 const DEMO_A: LobbyPlayer[] = [
-  { name: 'Viper_X', isHost: true },
-  { name: 'NeonDrift', isHost: false },
-  { name: 'CyberPunk', isHost: false },
+  { name: 'Паша', isHost: true },
+  { name: 'Маша', isHost: false },
 ]
 
 const DEMO_B: LobbyPlayer[] = [
-  { name: 'Rogue_1', isHost: false },
-  { name: 'Blaze_Op', isHost: false },
+  { name: 'Алёша', isHost: false },
+  { name: 'Петя', isHost: false },
 ]
 
-function LobbyScreenMobile({ roomCode = 'XPVVK4', teamA = DEMO_A, teamB = DEMO_B, maxPlayers = 5, isHost = true, wordsExhausted = false, onStart }: LobbyScreenProps) {
+/* ── Mobile lobby ───────────────────────────────────────────── */
+
+function LobbyScreenMobile({
+  roomCode = 'AF9LAL',
+  teamA = DEMO_A,
+  teamB = DEMO_B,
+  maxPlayers = 5,
+  isHost = true,
+  wordsExhausted = false,
+  onStart,
+}: LobbyScreenProps) {
+  const totalPlayers = teamA.length + teamB.length
   const canStart = isHost && teamA.length >= 2 && teamB.length >= 2
+  const compact = totalPlayers >= 6
+  const ready = totalPlayers >= 4
+
   const lobbyUrl = useMemo(() => {
     const base = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
     return `${base}/lobby/${roomCode}`
   }, [roomCode])
 
+  const handleCopy = () => copyToClipboard(lobbyUrl)
+  const handleMenu = () => {
+    // eslint-disable-next-line no-console
+    console.log('lobby menu')
+  }
+
+  let ctaKind: CtaKind = 'disabled'
+  let ctaLabel = `Нужно ещё ${Math.max(0, 4 - totalPlayers)} игрока`
+  if (wordsExhausted) {
+    ctaKind = 'disabled'
+    ctaLabel = 'Все слова разыграны. На главную'
+  } else if (canStart) {
+    ctaKind = 'success'
+    ctaLabel = 'Начать игру'
+  }
+
   return (
-    <div style={{ position: 'relative', height: '100dvh', minHeight: '100dvh', width: '100vw', overflow: 'hidden', display: 'flex', flexDirection: 'column', fontFamily: "'Arial Black', 'Impact', system-ui, sans-serif", maxWidth: '100vw', margin: '0', borderRadius: '0', border: 'none' }}>
-      <BlurredBg />
+    <div
+      style={{
+        position: 'relative',
+        height: '100dvh',
+        minHeight: '100dvh',
+        width: '100vw',
+        overflow: 'hidden',
+        background: 'var(--color-bg-deep)',
+        fontFamily: FONT_SANS,
+        color: 'var(--color-text)',
+      }}
+    >
+      <AmbientBg variant={ready ? 'win' : 'mix'} />
 
-      {[C.blue, C.purple, C.green, C.orange, C.purple, C.blue].map((col, i) => (
-        <motion.div
-          key={`${col}-${i}`}
-          style={{ position: 'absolute', zIndex: 1, width: `${3 + (i % 3) * 2}px`, height: `${3 + (i % 3) * 2}px`, borderRadius: '50%', left: `${10 + i * 16}%`, top: `${10 + (i % 5) * 16}%`, background: col, boxShadow: `0 0 8px ${col}`, pointerEvents: 'none' }}
-          animate={{ y: [-10, 10, -10], opacity: [0.3, 0.65, 0.3] }}
-          transition={{ duration: 2.8 + i * 0.45, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      ))}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          padding: '24px 20px 110px',
+          display: 'flex',
+          flexDirection: 'column',
+          overflowY: 'auto',
+          zIndex: 1,
+        }}
+      >
+        <LobbyHeader code={roomCode} onMenu={handleMenu} />
 
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '22px 16px 14px', gap: '12px' }}>
-        <div>
-          <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', marginBottom: '2px' }}>ЛОББИ</div>
-          <h1 style={{ margin: 0, fontSize: '26px', fontWeight: 900, letterSpacing: '-0.01em', color: '#fff', lineHeight: 1, textShadow: `0 0 30px ${C.purple}80` }}>ПОЯСНИ</h1>
-        </div>
+        {ready ? (
+          <ReadyBanner totalPlayers={totalPlayers} />
+        ) : (
+          <QrInviteCard roomCode={roomCode} lobbyUrl={lobbyUrl} onCopy={handleCopy} />
+        )}
 
-        <RoomCodeBadge code={roomCode} />
-      </div>
-
-      <div style={{ position: 'relative', zIndex: 10, height: '1px', opacity: 0.18, marginBottom: '2px', background: `linear-gradient(90deg, transparent, ${C.blue}88, ${C.purple}, ${C.orange}88, transparent)` }} />
-
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 14px 0' }}>
-        <QRPanel roomCode={roomCode} lobbyUrl={lobbyUrl} />
-
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px', alignSelf: 'stretch', justifyContent: 'center' }}>
-          <div style={{ padding: '12px 14px', borderRadius: '14px', background: 'linear-gradient(135deg, rgba(8,8,28,0.88) 0%, rgba(16,8,40,0.92) 100%)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-            <span style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase' }}>ИГРОКОВ</span>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-              <span style={{ fontSize: '32px', fontWeight: 900, color: '#fff', lineHeight: 1, textShadow: `0 0 20px ${C.blue}` }}>{teamA.length + teamB.length}</span>
-              <span style={{ fontSize: '14px', fontWeight: 700, color: 'rgba(255,255,255,0.3)' }}>/ {maxPlayers * 2}</span>
-            </div>
-          </div>
-
-          <div style={{ padding: '10px 12px', borderRadius: '12px', background: `${C.blue}0f`, border: `1px solid ${C.blue}28`, display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }} aria-hidden="true">
-              <circle cx="13" cy="3" r="2" stroke={C.blue} strokeWidth="1.4" />
-              <circle cx="13" cy="13" r="2" stroke={C.blue} strokeWidth="1.4" />
-              <circle cx="3" cy="8" r="2" stroke={C.blue} strokeWidth="1.4" />
-              <path d="M5 8.5L11 4M5 7.5L11 12" stroke={C.blue} strokeWidth="1.4" strokeLinecap="round" />
-            </svg>
-            <span style={{ fontSize: '10px', fontWeight: 700, color: `${C.blue}99`, lineHeight: 1.3 }}>
-              Поделись ссылкой,
-              <br />
-              чтобы позвать друзей
+        <div
+          style={{
+            marginTop: ready ? 0 : 16,
+            marginBottom: 14,
+            display: 'flex',
+            alignItems: 'baseline',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div>
+            <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--color-text)' }}>
+              {totalPlayers}
+            </span>
+            <span style={{ fontSize: 14, color: 'var(--color-text-mute)', fontWeight: 500 }}>
+              {' '}/ {maxPlayers * 2} игроков
             </span>
           </div>
+          {!ready ? (
+            <span style={{ fontSize: 13, color: 'var(--color-warn)', fontWeight: 600 }}>
+              Нужно ещё {Math.max(0, 4 - totalPlayers)} для старта
+            </span>
+          ) : null}
         </div>
+
+        <TeamSection
+          team="blue"
+          label="Синяя команда"
+          count={teamA.length}
+          total={maxPlayers}
+          compact={compact}
+        >
+          {renderTeamMembers('blue', teamA, maxPlayers, compact)}
+        </TeamSection>
+        <div style={{ height: 14 }} />
+        <TeamSection
+          team="orange"
+          label="Оранжевая команда"
+          count={teamB.length}
+          total={maxPlayers}
+          compact={compact}
+        >
+          {renderTeamMembers('orange', teamB, maxPlayers, compact)}
+        </TeamSection>
       </div>
 
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', gap: '10px', padding: '12px 14px 0', flex: 1, minHeight: 0 }}>
-        <TeamPanel label="Team A" color={C.blue} players={teamA} maxPlayers={maxPlayers} />
-        <TeamPanel label="Team B" color={C.orange} players={teamB} maxPlayers={maxPlayers} />
-      </div>
+      <StickyCTA kind={ctaKind} label={ctaLabel} onClick={onStart} />
+    </div>
+  )
+}
 
-      <div style={{ position: 'relative', zIndex: 10, padding: '14px 14px 32px' }}>
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: canStart ? `radial-gradient(ellipse 70% 80% at 50% 100%, ${C.green}18 0%, transparent 65%)` : 'none' }} />
-        <StartButton onClick={onStart} canStart={canStart} wordsExhausted={wordsExhausted} />
+/* ── Desktop team column ────────────────────────────────────── */
+
+const DesktopTeamCol: FC<{
+  team: Team
+  label: string
+  players: LobbyPlayer[]
+  maxPerTeam: number
+}> = ({ team, label, players, maxPerTeam }) => {
+  const c = TEAM_COLORS[team]
+  const teamSoftBg =
+    team === 'blue' ? 'var(--color-blue-soft)' : 'var(--color-orange-soft)'
+  return (
+    <div
+      style={{
+        padding: 24,
+        borderRadius: 24,
+        background: teamSoftBg,
+        border: `1px solid rgba(${c.rgb},0.25)`,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 14,
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span
+            style={{
+              fontSize: 14,
+              fontWeight: 700,
+              color: c.solid,
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              textShadow: `0 0 14px ${c.solid}`,
+            }}
+          >
+            {label}
+          </span>
+        </div>
+        <span
+          style={{
+            fontSize: 14,
+            color: c.solid,
+            fontWeight: 800,
+            fontFamily: FONT_MONO,
+          }}
+        >
+          {players.length}/{maxPerTeam}
+        </span>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {renderTeamMembers(team, players, maxPerTeam, false)}
       </div>
     </div>
   )
 }
 
-export type { LobbyPlayer, LobbyScreenProps }
+/* ── Desktop lobby ──────────────────────────────────────────── */
 
-function LobbyScreenDesktop({ roomCode = 'XPVVK4', teamA = DEMO_A, teamB = DEMO_B, maxPlayers = 5, isHost = true, wordsExhausted = false, onStart }: LobbyScreenProps) {
+function LobbyScreenDesktop({
+  roomCode = 'AF9LAL',
+  teamA = DEMO_A,
+  teamB = DEMO_B,
+  maxPlayers = 5,
+  isHost = true,
+  wordsExhausted = false,
+  onStart,
+}: LobbyScreenProps) {
   const totalPlayers = teamA.length + teamB.length
   const canStart = isHost && totalPlayers >= 4
+  const ready = totalPlayers >= 4
+
   const lobbyUrl = useMemo(() => {
     const base = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
     return `${base}/lobby/${roomCode}`
   }, [roomCode])
 
+  const handleCopy = () => copyToClipboard(lobbyUrl)
+
+  const kicker = ready ? 'Лобби · можно начинать' : 'Лобби · ожидание игроков'
+  const title = ready
+    ? `${totalPlayers} игроков · можно начинать`
+    : `${totalPlayers} игроков · ждём ещё ${Math.max(0, 4 - totalPlayers)}`
+
+  let ctaKind: CtaKind = 'disabled'
+  let ctaLabel = `Нужно ещё ${Math.max(0, 4 - totalPlayers)} игрока`
+  if (wordsExhausted) {
+    ctaKind = 'disabled'
+    ctaLabel = 'Все слова разыграны. На главную'
+  } else if (canStart) {
+    ctaKind = 'success'
+    ctaLabel = 'Начать игру'
+  }
+
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', minHeight: '640px', marginLeft: 'calc(50% - 50vw)', display: 'flex', flexDirection: 'column', overflow: 'hidden', fontFamily: "'Arial Black',system-ui,sans-serif" }}>
-      <BlurredBg />
-      {[C.blue, C.purple, C.green, C.orange, C.purple, C.blue].map((col, i) => (
-        <motion.div
-          key={`${col}-${i}`}
-          style={{ position: 'absolute', zIndex: 1, width: `${3 + (i % 3) * 2}px`, height: `${3 + (i % 3) * 2}px`, borderRadius: '50%', left: `${10 + i * 16}%`, top: `${10 + (i % 5) * 16}%`, background: col, boxShadow: `0 0 8px ${col}`, pointerEvents: 'none' }}
-          animate={{ y: [-10, 10, -10], opacity: [0.3, 0.65, 0.3] }}
-          transition={{ duration: 2.8 + i * 0.45, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      ))}
+    <div
+      style={{
+        position: 'relative',
+        width: '100vw',
+        minHeight: '100vh',
+        marginLeft: 'calc(50% - 50vw)',
+        background: 'var(--color-bg-deep)',
+        overflow: 'hidden',
+        fontFamily: FONT_SANS,
+        color: 'var(--color-text)',
+      }}
+    >
+      <AmbientBg variant={ready ? 'win' : 'mix'} />
 
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '22px 40px 16px' }}>
-        <div>
-          <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: '2px' }}>ЛОББИ · ОЖИДАНИЕ ИГРОКОВ</div>
-          <h1 style={{ margin: 0, fontSize: '28px', fontWeight: 900, color: '#fff', textShadow: `0 0 30px ${C.purple}60` }}>ПОЯСНИ</h1>
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          display: 'grid',
+          gridTemplateColumns: '380px 1fr',
+          padding: 40,
+          gap: 32,
+          minHeight: '100vh',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* Left: invite panel */}
+        <div
+          style={{
+            padding: 28,
+            borderRadius: 28,
+            background: 'var(--color-surface)',
+            border: '1px solid var(--color-border)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 20,
+            alignSelf: 'start',
+          }}
+        >
+          <div>
+            <div
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                color: 'var(--color-text-mute)',
+                letterSpacing: 1.6,
+                textTransform: 'uppercase',
+              }}
+            >
+              Код комнаты
+            </div>
+            <div
+              style={{
+                fontSize: 40,
+                fontWeight: 900,
+                color: 'var(--color-text)',
+                marginTop: 6,
+                fontFamily: FONT_MONO,
+                letterSpacing: 4,
+              }}
+            >
+              {roomCode}
+            </div>
+          </div>
+          <div
+            style={{
+              padding: 20,
+              borderRadius: 22,
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid var(--color-border)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 12,
+            }}
+          >
+            <div
+              style={{
+                padding: 8,
+                borderRadius: 12,
+                background: '#fff',
+                display: 'inline-flex',
+              }}
+            >
+              <QRCodeUi size={220} value={lobbyUrl} />
+            </div>
+            <div
+              style={{
+                fontSize: 13,
+                color: 'var(--color-text-sec)',
+                textAlign: 'center',
+                lineHeight: 1.5,
+              }}
+            >
+              Сканируйте камерой телефона
+            </div>
+          </div>
+          <CopyLinkButton onClick={handleCopy} />
         </div>
-        <RoomCodeBadge code={roomCode} />
-      </div>
-      <div style={{ height: '1px', opacity: 0.15, background: `linear-gradient(90deg,transparent,${C.blue}88,${C.purple},${C.orange}88,transparent)`, margin: '0 40px' }} />
 
-      <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'grid', gridTemplateColumns: '260px 1fr 1fr', gap: '20px', padding: '20px 40px 0', minHeight: 0, overflow: 'hidden' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          <GlassPanel color={`${C.purple}0a`} border={`${C.purple}30`} style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-            <div style={{ fontSize: '9px', fontWeight: 900, letterSpacing: '0.22em', textTransform: 'uppercase', color: `${C.purple}99`, marginBottom: '2px' }}>Пригласить</div>
-            <div style={{ padding: '8px', borderRadius: '12px', background: 'rgba(255,255,255,0.96)', boxShadow: `0 0 0 1px ${C.purple}40,0 0 24px ${C.purple}50` }}>
-              <QRCodeUi size={120} value={lobbyUrl} />
-            </div>
-            <span style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase' }}>или введи код</span>
-            <div style={{ padding: '4px 14px', borderRadius: '8px', background: `${C.purple}18`, border: `1px solid ${C.purple}35` }}>
-              <span style={{ fontSize: '16px', fontWeight: 900, letterSpacing: '0.18em', color: C.purple, textShadow: `0 0 12px ${C.purple}` }}>{roomCode}</span>
-            </div>
-          </GlassPanel>
-
-          <GlassPanel style={{ padding: '16px 20px', display: 'flex', gap: '16px', alignItems: 'center' }}>
+        {/* Right: teams + start */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              justifyContent: 'space-between',
+              gap: 16,
+            }}
+          >
             <div>
-              <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase' }}>ИГРОКОВ ОНЛАЙН</div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                <span style={{ fontSize: '28px', fontWeight: 900, color: '#fff', textShadow: `0 0 20px ${C.blue}` }}>{totalPlayers}</span>
-                <span style={{ fontSize: '14px', fontWeight: 700, color: 'rgba(255,255,255,0.3)' }}>/ {maxPlayers * 2}</span>
+              <div
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: 'var(--color-text-mute)',
+                  letterSpacing: 1.6,
+                  textTransform: 'uppercase',
+                }}
+              >
+                {kicker}
+              </div>
+              <div
+                style={{
+                  fontSize: 36,
+                  fontWeight: 800,
+                  color: 'var(--color-text)',
+                  marginTop: 4,
+                  letterSpacing: -0.5,
+                }}
+              >
+                {title}
               </div>
             </div>
-          </GlassPanel>
-
-          <GlassPanel color={`${C.blue}0a`} border={`${C.blue}25`} style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: `${C.blue}99`, lineHeight: 1.4 }}>Поделись ссылкой, чтобы позвать друзей в игру</span>
-          </GlassPanel>
-        </div>
-
-        <GlassPanel color={`${C.blue}09`} border={`${C.blue}50`} style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: `0 0 0 1px ${C.blue}12,0 8px 32px rgba(0,0,0,0.5),0 0 50px ${C.blue}18` }}>
-          <div style={{ padding: '14px 16px 10px', borderBottom: `1px solid ${C.blue}20`, background: `linear-gradient(90deg,${C.blue}12,transparent)`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '12px', fontWeight: 900, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.blue, textShadow: `0 0 14px ${C.blue}` }}>Team A</span>
-            <span style={{ fontSize: '10px', fontWeight: 700, color: `${C.blue}70` }}>{teamA.length}/{maxPlayers}</span>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+              <span style={{ fontSize: 36, fontWeight: 900, color: 'var(--color-text)' }}>
+                {totalPlayers}
+              </span>
+              <span style={{ fontSize: 16, color: 'var(--color-text-mute)', fontWeight: 500 }}>
+                / {maxPlayers * 2}
+              </span>
+            </div>
           </div>
-          <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, overflowY: 'auto' }}>
-            {teamA.map((p, i) => <PlayerRow key={`${p.name}-${i}`} {...p} color={C.blue} index={i} />)}
-            {Array.from({ length: Math.max(0, maxPlayers - teamA.length) }).map((_, i) => <WaitingSlot key={`a-${i}`} color={C.blue} />)}
-          </div>
-        </GlassPanel>
 
-        <GlassPanel color={`${C.orange}09`} border={`${C.orange}50`} style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: `0 0 0 1px ${C.orange}12,0 8px 32px rgba(0,0,0,0.5),0 0 50px ${C.orange}18` }}>
-          <div style={{ padding: '14px 16px 10px', borderBottom: `1px solid ${C.orange}20`, background: `linear-gradient(90deg,${C.orange}12,transparent)`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '12px', fontWeight: 900, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.orange, textShadow: `0 0 14px ${C.orange}` }}>Team B</span>
-            <span style={{ fontSize: '10px', fontWeight: 700, color: `${C.orange}70` }}>{teamB.length}/{maxPlayers}</span>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: 20,
+              flex: 1,
+              minHeight: 0,
+            }}
+          >
+            <DesktopTeamCol
+              team="blue"
+              label="Синяя команда"
+              players={teamA}
+              maxPerTeam={maxPlayers}
+            />
+            <DesktopTeamCol
+              team="orange"
+              label="Оранжевая команда"
+              players={teamB}
+              maxPerTeam={maxPlayers}
+            />
           </div>
-          <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, overflowY: 'auto' }}>
-            {teamB.map((p, i) => <PlayerRow key={`${p.name}-${i}`} {...p} color={C.orange} index={i} />)}
-            {Array.from({ length: Math.max(0, maxPlayers - teamB.length) }).map((_, i) => <WaitingSlot key={`b-${i}`} color={C.orange} />)}
-          </div>
-        </GlassPanel>
-      </div>
 
-      <div style={{ position: 'relative', zIndex: 10, padding: '16px 40px 28px' }}>
-        <div style={{ position: 'relative' }}>
-          <button type="button" onClick={canStart ? onStart : undefined} style={{ width: '100%', padding: '18px', borderRadius: '16px', border: canStart ? `2px solid ${C.green}60` : '2px solid rgba(255,255,255,0.08)', background: canStart ? `linear-gradient(135deg,#22c55e,${C.green},#16a34a)` : 'rgba(255,255,255,0.04)', boxShadow: 'none', cursor: canStart ? 'pointer' : 'not-allowed', transition: 'none' }}>
-            <span style={{ fontSize: '17px', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase', color: canStart ? '#fff' : 'rgba(255,255,255,0.2)', textShadow: canStart ? '0 1px 8px rgba(0,0,0,0.25)' : 'none' }}>
-              {wordsExhausted ? 'Все слова разыграны. На главную' : canStart ? '✦ НАЧАТЬ ИГРУ ✦' : 'ОЖИДАНИЕ НАЧАЛА ИГРЫ...'}
-            </span>
-          </button>
+          <div>
+            <CtaButton kind={ctaKind} label={ctaLabel} onClick={onStart} />
+          </div>
         </div>
       </div>
     </div>
   )
 }
+
+/* ── Default export ─────────────────────────────────────────── */
 
 export default function LobbyScreen(props: LobbyScreenProps) {
   const { isDesktop } = useBreakpoint()

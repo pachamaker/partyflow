@@ -7,7 +7,7 @@ export function AppShell() {
   const { isDesktop } = useBreakpoint()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-secondary via-slate-900 to-secondary text-white">
+    <div className="min-h-screen bg-bg-deep text-white">
       <main className={isDesktop ? '' : 'min-h-screen'}>
         <motion.div
           key={location.pathname}
